@@ -82,13 +82,15 @@ public class DeckViewLayoutAlgorithm<T> {
         mStackRect.inset(widthPadding, heightPadding);
 
         // Compute the task rect
-        int size = mStackRect.width();
-        int left = mStackRect.left + (mStackRect.width() - size) / 2;
+        float cardRatio = 0.63f;
+        int width = mStackRect.width();
+        int height = (int)Math.ceil(width * cardRatio);
+        int left = mStackRect.left + (mStackRect.width() - width) / 2;
         mTaskRect.set(left, mStackRect.top,
-                left + size, mStackRect.top + size);
+                left + width, mStackRect.top + height);
 
         // Update the affiliation offsets
-        float visibleTaskPct = 0.5f;
+        float visibleTaskPct = 1.0f;
         mWithinAffiliationOffset = mConfig.taskBarHeight;
         mBetweenAffiliationOffset = (int) (visibleTaskPct * mTaskRect.height());
     }

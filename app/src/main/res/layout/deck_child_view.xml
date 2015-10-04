@@ -27,6 +27,5 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <include layout="@layout/deck_child_view_header" />
     </FrameLayout>
 </com.sharad.deckview.views.DeckChildView>

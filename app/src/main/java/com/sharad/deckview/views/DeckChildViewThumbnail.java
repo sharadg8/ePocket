@@ -23,6 +23,9 @@ import android.view.View;
 
 import com.sharad.deckview.helpers.DeckViewConfig;
 import com.sharad.deckview.utilities.DVUtils;
+import com.sharad.epocket.R;
+
+import java.util.Random;
 
 /**
  * The task thumbnail view.  It implements an image view that allows for animating the dim and
@@ -52,11 +55,6 @@ public class DeckChildViewThumbnail extends View {
             updateThumbnailPaintFilter();
         }
     };
-
-    // Task bar clipping, the top of this thumbnail can be clipped against the opaque header
-    // bar that overlaps this thumbnail
-    View mTaskBar;
-    Rect mClipRect = new Rect();
 
     // Visibility optimization, if the thumbnail height is less than the height of the header
     // bar for the task view, then just mark this thumbnail view as invisible
@@ -146,6 +144,14 @@ public class DeckChildViewThumbnail extends View {
             int grey = mul + add;
             mDrawPaint.setColorFilter(null);
             mDrawPaint.setColor(Color.argb(255, grey, grey, grey));
+            /*int[] palette = getResources().getIntArray(R.array.palette);
+            Random r = new Random();
+            int color = palette[r.nextInt(1)];
+            mDrawPaint.setColor(Color.argb(255,
+                    (int) ((1.0f - mDimAlpha) * mThumbnailAlpha * Color.red(color)) + (int) ((1.0f - mDimAlpha) * (1 - mThumbnailAlpha) * Color.red(color)),
+                    (int) ((1.0f - mDimAlpha) * mThumbnailAlpha * Color.green(color)) + (int) ((1.0f - mDimAlpha) * (1 - mThumbnailAlpha) * Color.green(color)),
+                    (int) ((1.0f - mDimAlpha) * mThumbnailAlpha * Color.blue(color)) + (int) ((1.0f - mDimAlpha) * (1 - mThumbnailAlpha) * Color.blue(color))
+                    ));*/
         }
         invalidate();
     }
@@ -161,21 +167,10 @@ public class DeckChildViewThumbnail extends View {
     }
 
     /**
-     * Updates the clip rect based on the given task bar.
-     */
-    void updateClipToTaskBar(View taskBar) {
-        mTaskBar = taskBar;
-        int top = (int) Math.max(0, taskBar.getTranslationY() +
-                taskBar.getMeasuredHeight() - 1);
-        mClipRect.set(0, top, getMeasuredWidth(), getMeasuredHeight());
-        setClipBounds(mClipRect);
-    }
-
-    /**
      * Updates the visibility of the the thumbnail.
      */
     void updateThumbnailVisibility(int clipBottom) {
-        boolean invisible = mTaskBar != null && (getHeight() - clipBottom) <= mTaskBar.getHeight();
+        boolean invisible = false; //mTaskBar != null && (getHeight() - clipBottom) <= mTaskBar.getHeight();
         if (invisible != mInvisible) {
             mInvisible = invisible;
             if (!mInvisible) {

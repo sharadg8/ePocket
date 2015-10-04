@@ -63,13 +63,11 @@ public class DeckChildView<T> extends FrameLayout implements
     T mKey;
     boolean mTaskDataLoaded;
     boolean mIsFocused;
-    boolean mFocusAnimationsEnabled;
     boolean mClipViewInStack;
     AnimateableDeckChildViewBounds mViewBounds;
 
     View mContent;
     DeckChildViewThumbnail mThumbnailView;
-    DeckChildViewHeader mHeaderView;
     DeckChildViewCallbacks<T> mCb;
 
     public static final Interpolator ALPHA_IN = new PathInterpolator(0.4f, 0f, 1f, 1f);
@@ -145,9 +143,7 @@ public class DeckChildView<T> extends FrameLayout implements
     protected void onFinishInflate() {
         // Bind the views
         mContent = findViewById(R.id.task_view_content);
-        mHeaderView = (DeckChildViewHeader) findViewById(R.id.task_view_bar);
         mThumbnailView = (DeckChildViewThumbnail) findViewById(R.id.task_view_thumbnail);
-        mThumbnailView.updateClipToTaskBar(mHeaderView);
     }
 
     @Override
@@ -159,17 +155,14 @@ public class DeckChildView<T> extends FrameLayout implements
         int heightWithoutPadding = height - getPaddingTop() - getPaddingBottom();
 
         // Measure the content
-        mContent.measure(MeasureSpec.makeMeasureSpec(widthWithoutPadding, MeasureSpec.EXACTLY),
-                MeasureSpec.makeMeasureSpec(widthWithoutPadding, MeasureSpec.EXACTLY));
-
-        // Measure the bar view, and action button
-        mHeaderView.measure(MeasureSpec.makeMeasureSpec(widthWithoutPadding, MeasureSpec.EXACTLY),
-                MeasureSpec.makeMeasureSpec(mConfig.taskBarHeight, MeasureSpec.EXACTLY));
+        mContent.measure(
+                MeasureSpec.makeMeasureSpec(widthWithoutPadding, MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec(heightWithoutPadding, MeasureSpec.EXACTLY));
 
         // Measure the thumbnail to be square
         mThumbnailView.measure(
                 MeasureSpec.makeMeasureSpec(widthWithoutPadding, MeasureSpec.EXACTLY),
-                MeasureSpec.makeMeasureSpec(widthWithoutPadding, MeasureSpec.EXACTLY));
+                MeasureSpec.makeMeasureSpec(heightWithoutPadding, MeasureSpec.EXACTLY));
         setMeasuredDimension(width, height);
         invalidateOutline();
     }
@@ -340,8 +333,6 @@ public class DeckChildView<T> extends FrameLayout implements
                 anim.start();
             }
         } else {
-            // Hide the dismiss button
-            mHeaderView.startLaunchTaskDismissAnimation();
             // If this is another view in the task grouping and is in front of the launch task,
             // animate it away first
             if (occludesLaunchTarget) {
@@ -390,21 +381,18 @@ public class DeckChildView<T> extends FrameLayout implements
      * Animates this task view if the user does not interact with the stack after a certain time.
      */
     void startNoUserInteractionAnimation() {
-        mHeaderView.startNoUserInteractionAnimation();
     }
 
     /**
      * Mark this task view that the user does has not interacted with the stack after a certain time.
      */
     void setNoUserInteractionState() {
-        mHeaderView.setNoUserInteractionState();
     }
 
     /**
      * Resets the state tracking that the user has not interacted with the stack after a certain time.
      */
     void resetNoUserInteractionState() {
-        mHeaderView.resetNoUserInteractionState();
     }
 
     /**
@@ -478,9 +466,6 @@ public class DeckChildView<T> extends FrameLayout implements
             if (mThumbnailView != null) {
                 mThumbnailView.setDimAlpha(dimAlpha);
             }
-            if (mHeaderView != null) {
-                mHeaderView.setDimAlpha(dim);
-            }
         }
     }
 
@@ -532,10 +517,7 @@ public class DeckChildView<T> extends FrameLayout implements
      */
     public void setFocusedTask(boolean animateFocusedState) {
         mIsFocused = true;
-        if (mFocusAnimationsEnabled) {
-            // Focus the header bar
-            mHeaderView.onTaskViewFocusChanged(true, animateFocusedState);
-        }
+
         // Update the thumbnail alpha with the focus
         mThumbnailView.onFocusChanged(true);
         // Call the callback
@@ -556,10 +538,6 @@ public class DeckChildView<T> extends FrameLayout implements
      */
     void unsetFocusedTask() {
         mIsFocused = false;
-        if (mFocusAnimationsEnabled) {
-            // Un-focus the header bar
-            mHeaderView.onTaskViewFocusChanged(false, true);
-        }
 
         // Update the thumbnail alpha with the focus
         mThumbnailView.onFocusChanged(false);
@@ -592,12 +570,7 @@ public class DeckChildView<T> extends FrameLayout implements
      * Enables all focus animations.
      */
     void enableFocusAnimations() {
-        boolean wasFocusAnimationsEnabled = mFocusAnimationsEnabled;
-        mFocusAnimationsEnabled = true;
-        if (mIsFocused && !wasFocusAnimationsEnabled) {
-            // Re-notify the header if we were focused and animations were not previously enabled
-            mHeaderView.onTaskViewFocusChanged(true, true);
-        }
+
     }
 
     /**** TaskCallbacks Implementation ****/
@@ -633,31 +606,17 @@ public class DeckChildView<T> extends FrameLayout implements
         if (!isBound() || !mKey.equals(key))
             return;
 
-        if (mThumbnailView != null && mHeaderView != null) {
+        if (mThumbnailView != null) {
             // Bind each of the views to the new task data
             mThumbnailView.rebindToTask(thumbnail);
-            mHeaderView.rebindToTask(headerIcon, headerTitle, headerBgColor);
-            // Rebind any listeners
-            mHeaderView.mApplicationIcon.setOnClickListener(this);
-            mHeaderView.mDismissButton.setOnClickListener(this);
-
-            // TODO: Check if this functionality is needed
-            mHeaderView.mApplicationIcon.setOnLongClickListener(this);
         }
         mTaskDataLoaded = true;
     }
 
     public void onDataUnloaded() {
-        if (mThumbnailView != null && mHeaderView != null) {
+        if (mThumbnailView != null) {
             // Unbind each of the views from the task data and remove the task callback
             mThumbnailView.unbindFromTask();
-            mHeaderView.unbindFromTask();
-            // Unbind any listeners
-            mHeaderView.mApplicationIcon.setOnClickListener(null);
-            mHeaderView.mDismissButton.setOnClickListener(null);
-            if (DVConstants.DebugFlags.App.EnableDevAppInfoOnLongPress) {
-                mHeaderView.mApplicationIcon.setOnLongClickListener(null);
-            }
         }
         mTaskDataLoaded = false;
     }
@@ -682,13 +641,10 @@ public class DeckChildView<T> extends FrameLayout implements
             postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if (DVConstants.DebugFlags.App.EnableTaskFiltering
-                            && v == mHeaderView.mApplicationIcon) {
+                    if (DVConstants.DebugFlags.App.EnableTaskFiltering) {
                         if (mCb != null) {
                             mCb.onDeckChildViewAppIconClicked(tv);
                         }
-                    } else if (v == mHeaderView.mDismissButton) {
-                        dismissTask();
                     }
                 }
             }, 125);
@@ -705,12 +661,7 @@ public class DeckChildView<T> extends FrameLayout implements
 
     @Override
     public boolean onLongClick(View v) {
-        if (v == mHeaderView.mApplicationIcon) {
-            if (mCb != null) {
-                mCb.onDeckChildViewAppInfoClicked(this);
-                return true;
-            }
-        }
-        return false;
+
+        return true;
     }
 }
