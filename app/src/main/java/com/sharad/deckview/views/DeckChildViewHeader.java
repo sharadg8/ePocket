@@ -34,7 +34,7 @@ import com.sharad.deckview.utilities.DVUtils;
 import com.sharad.epocket.R;
 
 /**
- * Created by Vikram on 02/04/2015.
+ * Created by Sharad on 04/10/2015.
  */
 /* The task bar view */
 public class DeckChildViewHeader extends FrameLayout {
