@@ -1,12 +1,33 @@
 package com.sharad.epocket;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.Typeface;
+import android.graphics.drawable.ClipDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.InsetDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sharad.deckview.views.DeckChildView;
@@ -16,7 +37,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
 
     // View that stacks its children like a deck of cards
     DeckView<Datum> mDeckView;
@@ -38,6 +59,10 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        initToolbar();
+        initFab();
+
         mDeckView = (DeckView) findViewById(R.id.deckview);
         mDefaultThumbnail = BitmapFactory.decodeResource(getResources(),
                 R.drawable.default_thumbnail);
@@ -59,9 +84,7 @@ public class MainActivity extends Activity {
             for (int i = 1; i < 100; i++) {
                 Datum datum = new Datum();
                 datum.id = generateUniqueKey();
-                datum.link = "http://lorempixel.com/" + imageSize + "/" + imageSize
-                        + "/sports/" + "ID " + datum.id + "/";
-                datum.headerTitle = "Image ID " + datum.id;
+                datum.color = 0xffffff;
                 mEntries.add(datum);
             }
         }
@@ -92,7 +115,7 @@ public class MainActivity extends Activity {
             @Override
             public void onItemClick(Datum item) {
                 Toast.makeText(MainActivity.this,
-                        "Item with title: '" + item.headerTitle + "' clicked",
+                        "Item with id: '" + item.id + "' clicked",
                         Toast.LENGTH_SHORT).show();
             }
 
@@ -115,6 +138,159 @@ public class MainActivity extends Activity {
                 }
             });
         }
+    }
+
+    private void initFab() {
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fabButton);
+        fab.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    showColorPicker();
+                }
+                return true;
+            }
+        });
+    }
+
+    private void showColorPicker() {
+        final AlertDialog.Builder colorPicker = new AlertDialog.Builder(this);
+        final LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
+        final View viewLayout = inflater.inflate(R.layout.color_picker_dialog,
+                (ViewGroup) findViewById(R.id.color_picker_dialog));
+        final View colorView = viewLayout.findViewById(R.id.color_view);
+
+        colorPicker.setView(viewLayout);
+
+        //  SeekBar red
+        final SeekBar seekRed = (SeekBar) viewLayout.findViewById(R.id.color_bar_red);
+        final SeekBar seekGreen = (SeekBar) viewLayout.findViewById(R.id.color_bar_green);
+        final SeekBar seekBlue = (SeekBar) viewLayout.findViewById(R.id.color_bar_blue);
+
+        seekRed.setProgress(Color.red(((ColorDrawable) colorView.getBackground()).getColor()));
+        seekRed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                TextView valueRed = (TextView) viewLayout.findViewById(R.id.color_value_red);
+                int color = ((ColorDrawable)colorView.getBackground()).getColor();
+                colorView.setBackgroundColor(Color.rgb(progress, Color.green(color), Color.blue(color)));
+
+                updateColorBarValue(seekRed, valueRed);
+                updateColorBars(seekRed, seekGreen, seekBlue, color);
+            }
+
+            public void onStartTrackingTouch(SeekBar arg0) {
+            }
+
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
+        //  SeekBar green
+        seekGreen.setProgress(Color.green(((ColorDrawable) colorView.getBackground()).getColor()));
+        seekGreen.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                TextView valueGreen = (TextView) viewLayout.findViewById(R.id.color_value_green);
+                int color = ((ColorDrawable)colorView.getBackground()).getColor();
+                colorView.setBackgroundColor(Color.rgb(Color.red(color), progress, Color.blue(color)));
+
+                updateColorBarValue(seekGreen, valueGreen);
+                updateColorBars(seekRed, seekGreen, seekBlue, color);
+            }
+            public void onStartTrackingTouch(SeekBar arg0) { }
+            public void onStopTrackingTouch(SeekBar seekBar) { }
+        });
+
+        //  SeekBar blue
+        seekBlue.setProgress(Color.blue(((ColorDrawable) colorView.getBackground()).getColor()));
+        seekBlue.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                TextView valueBlue = (TextView) viewLayout.findViewById(R.id.color_value_blue);
+                int color = ((ColorDrawable) colorView.getBackground()).getColor();
+                colorView.setBackgroundColor(Color.rgb(Color.red(color), Color.green(color), progress));
+
+                updateColorBarValue(seekBlue, valueBlue);
+                updateColorBars(seekRed, seekGreen, seekBlue, color);
+            }
+
+            public void onStartTrackingTouch(SeekBar arg0) {
+            }
+
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
+        // Button OK
+        colorPicker.setPositiveButton("OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Datum datum = new Datum();
+                        datum.id = generateUniqueKey();
+                        datum.color = ((ColorDrawable) colorView.getBackground()).getColor();
+                        mEntries.add(datum);
+                        mDeckView.notifyDataSetChanged();
+                        dialog.dismiss();
+                    }
+                });
+        // Button CANCEL
+        colorPicker.setNegativeButton("CANCEL",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        colorPicker.create();
+        colorPicker.show();
+    }
+
+    private void updateColorBars(SeekBar seekRed, SeekBar seekGreen, SeekBar seekBlue, int color) {
+        /*
+        float seekHeight = (float)(seekRed.getMeasuredHeight() - seekRed.getPaddingTop() - seekRed.getPaddingBottom());
+        int padding = (int)(seekHeight * 0.34);
+
+        int[] colorsRed = new int[2];
+        colorsRed[0] = Color.rgb(0, Color.green(color), Color.blue(color));
+        colorsRed[1] = Color.rgb(255, Color.green(color), Color.blue(color));
+        GradientDrawable backColorRed = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, colorsRed);
+        InsetDrawable insetRed = new InsetDrawable(backColorRed, 0, padding, 0, padding);
+        LayerDrawable progressDrawableRed = (LayerDrawable)seekRed.getProgressDrawable();
+        progressDrawableRed.setDrawableByLayerId(android.R.id.secondaryProgress, insetRed);
+        seekRed.postInvalidate();
+
+        int[] colorsGreen = new int[2];
+        colorsGreen[0] = Color.rgb(Color.red(color), 0, Color.blue(color));
+        colorsGreen[1] = Color.rgb(Color.red(color), 255, Color.blue(color));
+        GradientDrawable backColorGreen = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, colorsGreen);
+        InsetDrawable insetGreen = new InsetDrawable(backColorGreen, 0, padding, 0, padding);
+        LayerDrawable progressDrawableGreen = (LayerDrawable)seekGreen.getProgressDrawable();
+        progressDrawableGreen.setDrawableByLayerId(android.R.id.secondaryProgress, insetGreen);
+        seekGreen.postInvalidate();
+
+        int[] colorsBlue = new int[2];
+        colorsBlue[0] = Color.rgb(Color.red(color), Color.green(color), 0);
+        colorsBlue[1] = Color.rgb(Color.red(color), Color.green(color), 255);
+        GradientDrawable backColorBlue = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, colorsBlue);
+        InsetDrawable insetBlue = new InsetDrawable(backColorBlue, 0, padding, 0, padding);
+        LayerDrawable progressDrawableBlue = (LayerDrawable)seekBlue.getProgressDrawable();
+        progressDrawableBlue.setDrawableByLayerId(android.R.id.secondaryProgress, insetBlue);
+        seekBlue.postInvalidate();
+        */
+    }
+
+    private void updateColorBarValue(SeekBar seek, TextView text) {
+        int progress = seek.getProgress();
+        float seekWidth = (float)(seek.getMeasuredWidth() - seek.getPaddingLeft() - seek.getPaddingRight());
+        Paint paint = new Paint();
+        Rect bounds = new Rect();
+        text.setText(String.valueOf(progress));
+        paint.setTextSize(text.getTextSize());
+        paint.getTextBounds(text.getText().toString(), 0, text.getText().toString().length(), bounds);
+        int seek_label_pos = (int)(seekWidth * ((float)progress / seek.getMax())) + seek.getPaddingLeft() - (bounds.width()/2);
+        text.setX(seek_label_pos);
+    }
+
+    private void initToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
     }
 /*
     void loadViewDataInternal(final Datum datum,

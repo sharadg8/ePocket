@@ -14,7 +14,7 @@ public class DVConstants {
             // Enables the filtering of tasks according to their grouping
             public static final boolean EnableTaskFiltering = false;
             // Enables clipping of tasks against each other
-            public static final boolean EnableTaskStackClipping = true;
+            public static final boolean EnableTaskStackClipping = false;
             // Enables tapping on the TaskBar to launch the task
             public static final boolean EnableTaskBarTouchEvents = true;
             // Enables app-info pane on long-pressing the icon

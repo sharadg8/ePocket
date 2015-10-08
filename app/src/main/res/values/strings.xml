@@ -7,4 +7,7 @@
 
     <!-- Content description to tell the user that this button will remove an application from recents -->
     <string name="accessibility_item_will_be_dismissed">Dismiss.</string>
+
+
+    <string name="transition_name_toolbar">transition:TOOLBAR</string>
 </resources>

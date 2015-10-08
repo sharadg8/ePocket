@@ -17,7 +17,7 @@ import android.os.Parcelable;
 public class Datum implements Parcelable {
 
     public int id;
-    public String headerTitle, link;
+    public int color;
 
     public Datum() {
         // Nothing
@@ -34,15 +34,13 @@ public class Datum implements Parcelable {
 
     public void readFromParcel(Parcel in) {
         id = in.readInt();
-        headerTitle = in.readString();
-        link = in.readString();
+        color = in.readInt();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
-        dest.writeString(headerTitle);
-        dest.writeString(link);
+        dest.writeInt(color);
     }
 
     public static final Creator<Datum> CREATOR = new Creator<Datum>() {

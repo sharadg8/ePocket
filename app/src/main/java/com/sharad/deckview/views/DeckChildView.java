@@ -144,6 +144,7 @@ public class DeckChildView<T> extends FrameLayout implements
         // Bind the views
         mContent = findViewById(R.id.task_view_content);
         mThumbnailView = (DeckChildViewThumbnail) findViewById(R.id.task_view_thumbnail);
+        //mThumbnailView.setVisibility(INVISIBLE);
     }
 
     @Override
