@@ -602,14 +602,13 @@ public class DeckChildView<T> extends FrameLayout implements
         return null;
     }
 
-    public void onDataLoaded(T key, Bitmap thumbnail, Drawable headerIcon,
-                             String headerTitle, int headerBgColor) {
+    public void onDataLoaded(T key, Bitmap thumbnail, int bgColor) {
         if (!isBound() || !mKey.equals(key))
             return;
 
         if (mThumbnailView != null) {
             // Bind each of the views to the new task data
-            mThumbnailView.rebindToTask(thumbnail);
+            mThumbnailView.rebindToTask(thumbnail, bgColor);
         }
         mTaskDataLoaded = true;
     }

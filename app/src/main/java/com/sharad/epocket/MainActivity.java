@@ -35,6 +35,7 @@ import com.sharad.deckview.views.DeckView;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Random;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -81,10 +82,12 @@ public class MainActivity extends AppCompatActivity {
         if (mEntries == null) {
             mEntries = new ArrayList<>();
 
-            for (int i = 1; i < 100; i++) {
+            int[] palette = getResources().getIntArray(R.array.palette);
+            Random r = new Random();
+            for (int i = 1; i < 10; i++) {
                 Datum datum = new Datum();
                 datum.id = generateUniqueKey();
-                datum.color = 0xffffff;
+                datum.color = palette[r.nextInt(palette.length)];
                 mEntries.add(datum);
             }
         }
@@ -98,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void loadViewData(WeakReference<DeckChildView<Datum>> dcv, Datum item) {
-                //loadViewDataInternal(item, dcv);
+                loadViewDataInternal(item, dcv);
             }
 
             @Override
@@ -159,6 +162,9 @@ public class MainActivity extends AppCompatActivity {
         final View viewLayout = inflater.inflate(R.layout.color_picker_dialog,
                 (ViewGroup) findViewById(R.id.color_picker_dialog));
         final View colorView = viewLayout.findViewById(R.id.color_view);
+        int[] palette = getResources().getIntArray(R.array.palette);
+        Random r = new Random();
+        colorView.setBackgroundColor(palette[r.nextInt(palette.length)]);
 
         colorPicker.setView(viewLayout);
 
@@ -292,46 +298,14 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
     }
-/*
+
     void loadViewDataInternal(final Datum datum,
                               final WeakReference<DeckChildView<Datum>> weakView) {
-        // datum.target can be null
-        Picasso.with(MainActivity.this).cancelRequest(datum.target);
-
-        datum.target = new Target() {
-            @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                // Pass loaded Bitmap to view
-                if (weakView.get() != null) {
-                    weakView.get().onDataLoaded(datum, bitmap,
-                            mDefaultHeaderIcon, datum.headerTitle, Color.DKGRAY);
-                }
-            }
-
-            @Override
-            public void onBitmapFailed(Drawable errorDrawable) {
-                // Loading failed. Pass default thumbnail instead
-                if (weakView.get() != null) {
-                    weakView.get().onDataLoaded(datum, mDefaultThumbnail,
-                            mDefaultHeaderIcon, datum.headerTitle + " Failed", Color.DKGRAY);
-                }
-            }
-
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {
-                // Pass the default thumbnail for now. It will
-                // be replaced once the target Bitmap has been loaded
-                if (weakView.get() != null) {
-                    weakView.get().onDataLoaded(datum, mDefaultThumbnail,
-                            mDefaultHeaderIcon, "Loading...", Color.DKGRAY);
-                }
-            }
-        };
-
-        // Begin loading
-        Picasso.with(MainActivity.this).load(datum.link).into(datum.target);
+        if (weakView.get() != null) {
+            weakView.get().onDataLoaded(datum, null, datum.color);
+        }
     }
-*/
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

@@ -143,15 +143,14 @@ public class DeckChildViewThumbnail extends View {
         } else {
             int grey = mul + add;
             mDrawPaint.setColorFilter(null);
-            mDrawPaint.setColor(Color.argb(255, grey, grey, grey));
-            /*int[] palette = getResources().getIntArray(R.array.palette);
+            int[] palette = getResources().getIntArray(R.array.palette);
             Random r = new Random();
             int color = palette[r.nextInt(1)];
             mDrawPaint.setColor(Color.argb(255,
-                    (int) ((1.0f - mDimAlpha) * mThumbnailAlpha * Color.red(color)) + (int) ((1.0f - mDimAlpha) * (1 - mThumbnailAlpha) * Color.red(color)),
-                    (int) ((1.0f - mDimAlpha) * mThumbnailAlpha * Color.green(color)) + (int) ((1.0f - mDimAlpha) * (1 - mThumbnailAlpha) * Color.green(color)),
-                    (int) ((1.0f - mDimAlpha) * mThumbnailAlpha * Color.blue(color)) + (int) ((1.0f - mDimAlpha) * (1 - mThumbnailAlpha) * Color.blue(color))
-                    ));*/
+                    (int) ((1.0f - mDimAlpha) * mThumbnailAlpha * Color.red(mColor)) + (int) ((1.0f - mDimAlpha) * (1 - mThumbnailAlpha) * Color.red(mColor)),
+                    (int) ((1.0f - mDimAlpha) * mThumbnailAlpha * Color.green(mColor)) + (int) ((1.0f - mDimAlpha) * (1 - mThumbnailAlpha) * Color.green(mColor)),
+                    (int) ((1.0f - mDimAlpha) * mThumbnailAlpha * Color.blue(mColor)) + (int) ((1.0f - mDimAlpha) * (1 - mThumbnailAlpha) * Color.blue(mColor))
+                    ));
         }
         invalidate();
     }
@@ -193,12 +192,13 @@ public class DeckChildViewThumbnail extends View {
      * Binds the thumbnail view to the task
      */
     //void rebindToTask(Task t) {
-    void rebindToTask(Bitmap thumbnail) {
+    void rebindToTask(Bitmap thumbnail, int color) {
         if (thumbnail != null) {
             setThumbnail(thumbnail);
         } else {
             setThumbnail(null);
         }
+        mColor = color;
     }
 
     /**
@@ -206,9 +206,11 @@ public class DeckChildViewThumbnail extends View {
      */
     void unbindFromTask() {
         setThumbnail(null);
+        mColor = 0xFFFFFFFF;
     }
 
     Bitmap mThumbnail;
+    int mColor;
 
     public Bitmap getThumbnail() {
         return mThumbnail;
