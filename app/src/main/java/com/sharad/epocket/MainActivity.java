@@ -81,15 +81,16 @@ public class MainActivity extends AppCompatActivity {
 
         if (mEntries == null) {
             mEntries = new ArrayList<>();
-
+/*
             int[] palette = getResources().getIntArray(R.array.palette);
             Random r = new Random();
-            for (int i = 1; i < 10; i++) {
+            for (int i = 0; i < 10; i++) {
                 Datum datum = new Datum();
                 datum.id = generateUniqueKey();
                 datum.color = palette[r.nextInt(palette.length)];
                 mEntries.add(datum);
             }
+*/
         }
 
         // Callback implementation

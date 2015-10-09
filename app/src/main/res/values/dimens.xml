@@ -53,4 +53,24 @@
     <!-- The size of the application icon in the recents task view. -->
     <dimen name="task_view_application_icon_size">48dp</dimen>
 
+    <!-- The size of the dots in the PIN unlock method. -->
+    <dimen name="password_dot_size">9dp</dimen>
+
+    <!-- The padding between chars of the password view. -->
+    <dimen name="password_char_padding">8dp</dimen>
+
+    <!-- The y translation to apply at the start in appear animations. -->
+    <dimen name="appear_y_translation_start">32dp</dimen>
+
+    <!-- Size of the generic status lines keyguard's status view  -->
+    <dimen name="kg_status_line_font_size">14sp</dimen>
+
+    <!-- Width of the sliding KeyguardSecurityContainer (includes 2x keyguard_security_view_margin) -->
+    <dimen name="keyguard_security_width">320dp</dimen>
+
+    <!-- Height of the sliding KeyguardSecurityContainer (includes 2x keyguard_security_view_margin) -->
+    <dimen name="keyguard_security_height">400dp</dimen>
+
+    <!-- Max Height of the sliding KeyguardSecurityContainer (includes 2x keyguard_security_view_margin) -->
+    <dimen name="keyguard_security_max_height">450dp</dimen>
 </resources>
