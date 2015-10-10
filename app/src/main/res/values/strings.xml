@@ -17,5 +17,7 @@
     <string name="kg_too_many_failed_attempts_countdown">Try again in 5000 seconds.</string>
     <!-- Message shown when user enters wrong password -->
     <string name="kg_wrong_password">Wrong Password</string>
+    <string name="title_activity_editor">EditorActivity</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>

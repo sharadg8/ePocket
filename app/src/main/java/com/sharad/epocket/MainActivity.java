@@ -2,6 +2,7 @@ package com.sharad.epocket;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -16,6 +17,9 @@ import android.graphics.drawable.InsetDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -81,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (mEntries == null) {
             mEntries = new ArrayList<>();
-/*
+
             int[] palette = getResources().getIntArray(R.array.palette);
             Random r = new Random();
             for (int i = 0; i < 10; i++) {
@@ -90,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
                 datum.color = palette[r.nextInt(palette.length)];
                 mEntries.add(datum);
             }
-*/
         }
 
         // Callback implementation
@@ -113,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onViewDismissed(Datum item) {
                 mEntries.remove(item);
+                mEntries.add(0, item);
                 mDeckView.notifyDataSetChanged();
             }
 
@@ -150,7 +154,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    showColorPicker();
+                    Intent intent = new Intent(MainActivity.this, EditorActivity.class);
+
+                    View movingView = findViewById(R.id.appBarLayout);
+                    Pair<View, String> pair1 = Pair.create(movingView, movingView.getTransitionName());
+
+                    ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            MainActivity.this, pair1
+                    );
+                    ActivityCompat.startActivity(MainActivity.this, intent, options.toBundle());
                 }
                 return true;
             }
