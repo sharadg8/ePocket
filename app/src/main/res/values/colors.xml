@@ -31,44 +31,100 @@
     <color name="mask_background">#18000000</color>
     <color name="light_white">#5BFFFFFF</color>
 
-    <color name="palette00">#f44336</color>
-    <color name="palette01">#E91E63</color>
-    <color name="palette02">#9C27B0</color>
-    <color name="palette03">#673AB7</color>
-    <color name="palette04">#3F51B5</color>
-    <color name="palette05">#2196F3</color>
-    <color name="palette06">#03A9F4</color>
-    <color name="palette07">#00BCD4</color>
-    <color name="palette08">#009688</color>
-    <color name="palette09">#4CAF50</color>
-    <color name="palette10">#8BC34A</color>
-    <color name="palette11">#CDDC39</color>
-    <color name="palette12">#FFC107</color>
-    <color name="palette13">#FF9800</color>
-    <color name="palette14">#FF5722</color>
-    <color name="palette15">#795548</color>
-    <color name="palette16">#9E9E9E</color>
-    <color name="palette17">#607D8B</color>
+    <color name="light_palette00">#f44336</color>
+    <color name="dark_palette00">#b71c1c</color>
 
-    <array name="palette">
-        <item>@color/palette00</item>
-        <item>@color/palette01</item>
-        <item>@color/palette02</item>
-        <item>@color/palette03</item>
-        <item>@color/palette04</item>
-        <item>@color/palette05</item>
-        <item>@color/palette06</item>
-        <item>@color/palette07</item>
-        <item>@color/palette08</item>
-        <item>@color/palette09</item>
-        <item>@color/palette10</item>
-        <item>@color/palette11</item>
-        <item>@color/palette12</item>
-        <item>@color/palette13</item>
-        <item>@color/palette14</item>
-        <item>@color/palette15</item>
-        <item>@color/palette16</item>
-        <item>@color/palette17</item>
+    <color name="light_palette01">#E91E63</color>
+    <color name="dark_palette01">#880E4F</color>
+
+    <color name="light_palette02">#9C27B0</color>
+    <color name="dark_palette02">#4A148C</color>
+
+    <color name="light_palette03">#673AB7</color>
+    <color name="dark_palette03">#311B92</color>
+
+    <color name="light_palette04">#3F51B5</color>
+    <color name="dark_palette04">#1A237E</color>
+
+    <color name="light_palette05">#2196F3</color>
+    <color name="dark_palette05">#0D47A1</color>
+
+    <color name="light_palette06">#03A9F4</color>
+    <color name="dark_palette06">#01579B</color>
+
+    <color name="light_palette07">#00BCD4</color>
+    <color name="dark_palette07">#006064</color>
+
+    <color name="light_palette08">#009688</color>
+    <color name="dark_palette08">#004D40</color>
+
+    <color name="light_palette09">#4CAF50</color>
+    <color name="dark_palette09">#1B5E20</color>
+
+    <color name="light_palette10">#8BC34A</color>
+    <color name="dark_palette10">#33691E</color>
+
+    <color name="light_palette11">#CDDC39</color>
+    <color name="dark_palette11">#827717</color>
+
+    <color name="light_palette12">#FFC107</color>
+    <color name="dark_palette12">#FF6F00</color>
+
+    <color name="light_palette13">#FF9800</color>
+    <color name="dark_palette13">#E65100</color>
+
+    <color name="light_palette14">#FF5722</color>
+    <color name="dark_palette14">#BF360C</color>
+
+    <color name="light_palette15">#795548</color>
+    <color name="dark_palette15">#3E2723</color>
+
+    <color name="light_palette16">#9E9E9E</color>
+    <color name="dark_palette16">#212121</color>
+
+    <color name="light_palette17">#607D8B</color>
+    <color name="dark_palette17">#263238</color>
+
+    <array name="light_palette">
+        <item>@color/light_palette00</item>
+        <item>@color/light_palette01</item>
+        <item>@color/light_palette02</item>
+        <item>@color/light_palette03</item>
+        <item>@color/light_palette04</item>
+        <item>@color/light_palette05</item>
+        <item>@color/light_palette06</item>
+        <item>@color/light_palette07</item>
+        <item>@color/light_palette08</item>
+        <item>@color/light_palette09</item>
+        <item>@color/light_palette10</item>
+        <item>@color/light_palette11</item>
+        <item>@color/light_palette12</item>
+        <item>@color/light_palette13</item>
+        <item>@color/light_palette14</item>
+        <item>@color/light_palette15</item>
+        <item>@color/light_palette16</item>
+        <item>@color/light_palette17</item>
+    </array>
+
+    <array name="dark_palette">
+        <item>@color/dark_palette00</item>
+        <item>@color/dark_palette01</item>
+        <item>@color/dark_palette02</item>
+        <item>@color/dark_palette03</item>
+        <item>@color/dark_palette04</item>
+        <item>@color/dark_palette05</item>
+        <item>@color/dark_palette06</item>
+        <item>@color/dark_palette07</item>
+        <item>@color/dark_palette08</item>
+        <item>@color/dark_palette09</item>
+        <item>@color/dark_palette10</item>
+        <item>@color/dark_palette11</item>
+        <item>@color/dark_palette12</item>
+        <item>@color/dark_palette13</item>
+        <item>@color/dark_palette14</item>
+        <item>@color/dark_palette15</item>
+        <item>@color/dark_palette16</item>
+        <item>@color/dark_palette17</item>
     </array>
 
 </resources>

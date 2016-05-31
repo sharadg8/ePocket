@@ -19,5 +19,6 @@
     <string name="kg_wrong_password">Wrong Password</string>
     <string name="title_activity_editor">EditorActivity</string>
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_add_category">AddCategoryActivity</string>
 
 </resources>
