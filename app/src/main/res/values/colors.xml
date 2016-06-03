@@ -31,6 +31,7 @@
     <color name="divider">#CFD8DC</color>
     <color name="mask_background">#18000000</color>
     <color name="light_white">#5BFFFFFF</color>
+    <color name="Error">#FF0000</color>
 
     <color name="light_palette00">#f44336</color>
     <color name="dark_palette00">#b71c1c</color>

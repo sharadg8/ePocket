@@ -15,21 +15,29 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.sharad.widgets.CircleButton;
 
 
 public class AddCategoryActivity extends ActionBarActivity {
+    public static final int UNASSIGNED = -1;
     private Toolbar mToolbar;
     private RelativeLayout mColorPicker;
     private RelativeLayout mIconPicker;
 
     private CircleButton mColorButtons[];
-    private ImageButton mIconButtons[];
+    private CircleButton mIconButtons[];
+
+    private int mColorId = UNASSIGNED;
+    private int mIconId = UNASSIGNED;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +54,18 @@ public class AddCategoryActivity extends ActionBarActivity {
         FloatingActionButton myFab = (FloatingActionButton) this.findViewById(R.id.fabButton);
         myFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                onBackPressed();
+                if(mColorId == UNASSIGNED) {
+                    mColorPicker.startAnimation(getBlinkAnimation());
+                    Toast.makeText(getBaseContext(),"Select color",
+                            Toast.LENGTH_SHORT).show();
+                } else if(mIconId == UNASSIGNED) {
+                    mIconPicker.startAnimation(getBlinkAnimation());
+                    Toast.makeText(getBaseContext(),"Select icon",
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    /* Handle update and exit */
+                    onBackPressed();
+                }
             }
         });
     }
@@ -54,6 +73,16 @@ public class AddCategoryActivity extends ActionBarActivity {
     private void initToolbar() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
+    }
+
+    public Animation getBlinkAnimation(){
+        Animation animation = new AlphaAnimation(1, 0);
+        animation.setDuration(600);
+        animation.setInterpolator(new LinearInterpolator());
+        animation.setRepeatCount(1);
+        animation.setRepeatMode(Animation.REVERSE);
+
+        return animation;
     }
 
     @Override
@@ -121,6 +150,7 @@ public class AddCategoryActivity extends ActionBarActivity {
         cb.setLayoutParams(new LinearLayout.LayoutParams(size, size));
         cb.setColor(color);
         cb.setChecked(false);
+        cb.setButtonType(CircleButton.CIRCLE_BUTTON_TYPE_COLOR);
         cb.setImageResource(R.drawable.ic_check_white_24dp);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             int[] attrs = new int[]{android.R.attr.selectableItemBackgroundBorderless};
@@ -130,13 +160,19 @@ public class AddCategoryActivity extends ActionBarActivity {
             public void onClick(View button) {
                 int[] location = new int[2];
                 cb.getLocationOnScreen(location);
-                /*mColorId = color;
-                mEditorView.setBackgroundColor(mColorId);
-                mMaskView.setBackgroundColor(mColorId);
-                hidePopupView(mColorPicker, new Point(location[0] + 60, location[1] - 100));*/
+                mColorId = cb.isChecked() ? UNASSIGNED : color;
+                updateColorGroup();
             }
         });
         return cb;
+    }
+
+    private void updateColorGroup() {
+        for(int i=0; i<mColorButtons.length; i++) {
+            if(mColorButtons[i].getColor() != mColorId) {
+                mColorButtons[i].setChecked(false);
+            }
+        }
     }
 
     private void setupIconPicker() {
@@ -159,14 +195,14 @@ public class AddCategoryActivity extends ActionBarActivity {
 
         TypedArray ids = getResources().obtainTypedArray(R.array.icon_resource);
 
-        mIconButtons = new ImageButton[ids.length()];
+        mIconButtons = new CircleButton[ids.length()];
         for (int i = 0; i < (ids.length()/6); i++) {
             LinearLayout linearLayout1 = new LinearLayout(this);
             linearLayout1.setOrientation(LinearLayout.HORIZONTAL);
             linearLayout.addView(linearLayout1, params1);
             for (int j = 0; j < 6; j++) {
                 int index = ids.getResourceId(i * 6 + j, R.mipmap.ic_card_giftcard_black_24dp);
-                ImageButton ib = newLabelButton(index);
+                CircleButton ib = newLabelButton(index);
                 mIconButtons[i * 6 + j] = ib;
                 linearLayout1.addView(ib);
             }
@@ -174,9 +210,14 @@ public class AddCategoryActivity extends ActionBarActivity {
         ids.recycle();
     }
 
-    private ImageButton newLabelButton(final int label) {
-        final ImageButton ib = new ImageButton(this);
+    private CircleButton newLabelButton(final int label) {
+        final CircleButton ib = new CircleButton(this);
+        int size = getResources().getDimensionPixelSize(R.dimen.color_circle_diameter);
+        ib.setLayoutParams(new LinearLayout.LayoutParams(size, size));
         ib.setImageResource(label);
+        ib.setColor(getResources().getColor(R.color.primary_dark));
+        ib.setChecked(false);
+        ib.setButtonType(CircleButton.CIRCLE_BUTTON_TYPE_ICON);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             int[] attrs = new int[]{android.R.attr.selectableItemBackgroundBorderless};
@@ -186,16 +227,21 @@ public class AddCategoryActivity extends ActionBarActivity {
             ib.setBackground(obtainStyledAttributes(attrs).getDrawable(0));
         }
 
-        ib.setColorFilter(getResources().getColor(R.color.icons_dark));
+        ib.setColorFilter(getResources().getColor(R.color.icons_dark), getResources().getColor(R.color.icons));
         ib.setOnClickListener(new View.OnClickListener() {
             public void onClick(View button) {
-                /*int[] location = new int[2];
-                ib.getLocationOnScreen(location);
-                mLabelId = Event.getLabelId(label);
-                mFavorite.setImageResource(label);
-                hidePopupView(mLabelPicker, new Point(location[0] + 60, location[1] - 100));*/
+                mIconId = ib.isChecked() ? UNASSIGNED : label;
+                updateIconGroup();
             }
         });
         return ib;
+    }
+
+    private void updateIconGroup() {
+        for(int i=0; i<mIconButtons.length; i++) {
+            if(mIconButtons[i].getImageResource() != mIconId) {
+                mIconButtons[i].setChecked(false);
+            }
+        }
     }
 }

@@ -65,11 +65,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardCornerRadius="4dp"
+            android:layout_marginTop="8dp"
             app:cardUseCompatPadding="true">
             <RelativeLayout
                 android:id="@+id/colorPicker"
                 android:background="@android:color/white"
-                android:layout_marginTop="8dp"
                 android:padding="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
@@ -82,7 +82,6 @@
             <RelativeLayout
                 android:id="@+id/iconPicker"
                 android:background="@android:color/white"
-                android:layout_marginTop="8dp"
                 android:padding="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>

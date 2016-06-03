@@ -6,6 +6,7 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -15,6 +16,12 @@ import android.widget.ImageView;
 import com.sharad.epocket.R;
 
 public class CircleButton extends ImageView implements Checkable {
+
+	public static final int CIRCLE_BUTTON_TYPE_COLOR = 0;
+	public static final int CIRCLE_BUTTON_TYPE_ICON = 1;
+	private int mButtonType = CIRCLE_BUTTON_TYPE_COLOR;
+	private int colorFilterNormal;
+	private int colorFilterSelected;
 
 	private static final int PRESSED_COLOR_LIGHTUP = 255 / 25;
 	private static final int PRESSED_RING_ALPHA = 75;
@@ -91,9 +98,23 @@ public class CircleButton extends ImageView implements Checkable {
         setChecked(!mChecked);
     }
 
+	public void setButtonType(int type) {
+		mButtonType = type;
+	}
+
 	@Override
 	public void setImageResource(int id) {
 		srcResource = id;
+	}
+
+	public int getImageResource() {
+		return this.srcResource;
+	}
+
+	public final void setColorFilter(int color, int colorSelected) {
+		colorFilterNormal = color;
+		colorFilterSelected = colorSelected;
+		setColorFilter(color);
 	}
 
     @Override
@@ -114,10 +135,18 @@ public class CircleButton extends ImageView implements Checkable {
 
 	@Override
 	protected void onDraw(Canvas canvas) {
-		canvas.drawCircle(centerX, centerY, pressedRingRadius + animationProgress, focusPaint);
-		canvas.drawCircle(centerX, centerY, outerRadius - pressedRingWidth, circlePaint);
-		if(mChecked) {
+		if(mButtonType == CIRCLE_BUTTON_TYPE_COLOR) {
+			canvas.drawCircle(centerX, centerY, pressedRingRadius + animationProgress, focusPaint);
+		}
+		if(mChecked || (mButtonType == CIRCLE_BUTTON_TYPE_COLOR)) {
+			canvas.drawCircle(centerX, centerY, outerRadius - pressedRingWidth, circlePaint);
+		}
+		if(mChecked || (mButtonType == CIRCLE_BUTTON_TYPE_ICON)) {
 			Drawable d = getResources().getDrawable(srcResource);
+			if((mButtonType == CIRCLE_BUTTON_TYPE_ICON)) {
+				int filter = mChecked ? colorFilterSelected : colorFilterNormal;
+				d.setColorFilter(filter, PorterDuff.Mode.SRC_ATOP);
+			}
 			d.setBounds(centerX - 24, centerY - 24, centerX + 24, centerY + 24);
 			d.draw(canvas);
 		}
@@ -142,6 +171,9 @@ public class CircleButton extends ImageView implements Checkable {
 		this.invalidate();
 	}
 
+	public int getColor() {
+		return this.defaultColor;
+	}
 	public void setColor(int color) {
 		this.defaultColor = color;
 		this.pressedColor = getHighlightColor(color, PRESSED_COLOR_LIGHTUP);
