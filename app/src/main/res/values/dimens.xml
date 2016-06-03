@@ -73,4 +73,7 @@
 
     <!-- Max Height of the sliding KeyguardSecurityContainer (includes 2x keyguard_security_view_margin) -->
     <dimen name="keyguard_security_max_height">450dp</dimen>
+
+    <!-- Circle button dimension -->
+    <dimen name="color_circle_diameter">48dp</dimen>
 </resources>
