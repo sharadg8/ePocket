@@ -2,22 +2,28 @@ package com.sharad.epocket;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.os.Build;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
@@ -32,6 +38,7 @@ public class AddCategoryActivity extends ActionBarActivity {
     private Toolbar mToolbar;
     private RelativeLayout mColorPicker;
     private RelativeLayout mIconPicker;
+    private EditText mLabelText;
 
     private CircleButton mColorButtons[];
     private CircleButton mIconButtons[];
@@ -48,6 +55,8 @@ public class AddCategoryActivity extends ActionBarActivity {
         setupColorPicker();
         setupIconPicker();
 
+        mLabelText = (EditText) findViewById(R.id.label_text);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
@@ -56,12 +65,8 @@ public class AddCategoryActivity extends ActionBarActivity {
             public void onClick(View v) {
                 if(mColorId == UNASSIGNED) {
                     mColorPicker.startAnimation(getBlinkAnimation());
-                    Toast.makeText(getBaseContext(),"Select color",
-                            Toast.LENGTH_SHORT).show();
                 } else if(mIconId == UNASSIGNED) {
                     mIconPicker.startAnimation(getBlinkAnimation());
-                    Toast.makeText(getBaseContext(),"Select icon",
-                            Toast.LENGTH_SHORT).show();
                 } else {
                     /* Handle update and exit */
                     onBackPressed();
@@ -110,6 +115,25 @@ public class AddCategoryActivity extends ActionBarActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            if (mLabelText.isFocused()) {
+                Rect outRect = new Rect();
+                mLabelText.getGlobalVisibleRect(outRect);
+                if (!outRect.contains((int)event.getRawX(), (int)event.getRawY())) {
+                    mLabelText.clearFocus();
+                    //
+                    // Hide keyboard
+                    //
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(mLabelText.getWindowToken(), 0);
+                }
+            }
+        }
+        return super.dispatchTouchEvent(event);
     }
 
     private void setupColorPicker() {
@@ -161,15 +185,15 @@ public class AddCategoryActivity extends ActionBarActivity {
                 int[] location = new int[2];
                 cb.getLocationOnScreen(location);
                 mColorId = cb.isChecked() ? UNASSIGNED : color;
-                updateColorGroup();
+                updateColorGroup(cb);
             }
         });
         return cb;
     }
 
-    private void updateColorGroup() {
+    private void updateColorGroup(CircleButton cb) {
         for(int i=0; i<mColorButtons.length; i++) {
-            if(mColorButtons[i].getColor() != mColorId) {
+            if(mColorButtons[i] != cb) {
                 mColorButtons[i].setChecked(false);
             }
         }
@@ -231,15 +255,15 @@ public class AddCategoryActivity extends ActionBarActivity {
         ib.setOnClickListener(new View.OnClickListener() {
             public void onClick(View button) {
                 mIconId = ib.isChecked() ? UNASSIGNED : label;
-                updateIconGroup();
+                updateIconGroup(ib);
             }
         });
         return ib;
     }
 
-    private void updateIconGroup() {
+    private void updateIconGroup(CircleButton ib) {
         for(int i=0; i<mIconButtons.length; i++) {
-            if(mIconButtons[i].getImageResource() != mIconId) {
+            if(mIconButtons[i] != ib) {
                 mIconButtons[i].setChecked(false);
             }
         }
