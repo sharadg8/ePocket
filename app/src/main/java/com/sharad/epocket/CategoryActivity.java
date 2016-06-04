@@ -1,15 +1,10 @@
 package com.sharad.epocket;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.TypedArray;
-import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Build;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -18,22 +13,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewAnimationUtils;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.sharad.widgets.CircleButton;
 
 
-public class AddCategoryActivity extends ActionBarActivity {
+public class CategoryActivity extends ActionBarActivity {
     public static final int UNASSIGNED = -1;
     private Toolbar mToolbar;
     private RelativeLayout mColorPicker;
@@ -49,16 +40,13 @@ public class AddCategoryActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_category);
+        setContentView(R.layout.activity_category);
 
         initToolbar();
         setupColorPicker();
         setupIconPicker();
 
         mLabelText = (EditText) findViewById(R.id.label_text);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         FloatingActionButton myFab = (FloatingActionButton) this.findViewById(R.id.fabButton);
         myFab.setOnClickListener(new View.OnClickListener() {
@@ -78,6 +66,8 @@ public class AddCategoryActivity extends ActionBarActivity {
     private void initToolbar() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
     public Animation getBlinkAnimation(){
@@ -93,7 +83,7 @@ public class AddCategoryActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_add_category, menu);
+        getMenuInflater().inflate(R.menu.menu_category, menu);
         return true;
     }
 

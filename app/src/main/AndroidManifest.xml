@@ -22,8 +22,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AddCategoryActivity"
+            android:name=".CategoryActivity"
             android:label="@string/title_activity_add_category" >
+        </activity>
+        <activity
+            android:name=".BudgetActivity"
+            android:label="@string/title_activity_budget" >
         </activity>
     </application>
 

@@ -20,5 +20,6 @@
     <string name="title_activity_editor">EditorActivity</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_add_category">AddCategoryActivity</string>
+    <string name="title_activity_budget">BudgetActivity</string>
 
 </resources>

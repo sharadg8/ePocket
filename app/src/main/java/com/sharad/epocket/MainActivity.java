@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
         FloatingActionButton myFab = (FloatingActionButton) this.findViewById(R.id.fabButton);
         myFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent myIntent = new Intent(MainActivity.this, AddCategoryActivity.class);
+                Intent myIntent = new Intent(MainActivity.this, BudgetActivity.class);
                 //myIntent.putExtra("key", value); //Optional parameters
                 MainActivity.this.startActivity(myIntent);
             }
