@@ -1,5 +1,9 @@
 package com.sharad.epocket;
 
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -9,12 +13,15 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.sharad.budget.DetailsFragment;
 import com.sharad.widgets.ProgressGraph;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class BudgetActivity extends ActionBarActivity {
     Toolbar mToolbar;
-    RelativeLayout mGraphView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,26 +29,7 @@ public class BudgetActivity extends ActionBarActivity {
         setContentView(R.layout.activity_budget);
 
         initToolbar();
-        initGraphView();
-    }
-
-    private void initGraphView() {
-        mGraphView = (RelativeLayout) findViewById(R.id.graph_view);
-        ProgressGraph progress = new ProgressGraph(this);
-
-        progress.addProgressItem("Household", R.mipmap.ic_home_black_24dp, getResources().getColor(R.color.dark_palette00), 100, 40);
-        progress.addProgressItem("Savings", R.mipmap.ic_account_balance_wallet_black_24dp, getResources().getColor(R.color.dark_palette12), 100, 80);
-        progress.addProgressItem("Childcare", R.mipmap.ic_child_friendly_black_24dp, getResources().getColor(R.color.dark_palette07), 100, 20);
-        progress.addProgressItem("Household", R.mipmap.ic_beach_access_black_24dp, getResources().getColor(R.color.dark_palette01), 100, 10);
-        progress.addProgressItem("Savings", R.mipmap.ic_card_giftcard_black_24dp, getResources().getColor(R.color.dark_palette02), 100, 100);
-        progress.addProgressItem("Childcare", R.mipmap.ic_directions_bus_black_24dp, getResources().getColor(R.color.dark_palette06), 100, 50);
-        progress.addProgressItem("Household", R.mipmap.ic_hotel_black_24dp, getResources().getColor(R.color.dark_palette09), 100, 90);
-        progress.addProgressItem("Savings", R.mipmap.ic_lightbulb_outline_black_24dp, getResources().getColor(R.color.dark_palette16), 100, 80);
-        progress.addProgressItem("Childcare", R.mipmap.ic_local_dining_black_24dp, getResources().getColor(R.color.dark_palette05), 100, 20);
-
-        progress.setPadding(8,8,8,8);
-        progress.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, progress.getGraphHeight()));
-        mGraphView.addView(progress);
+        initFragment();
     }
 
     private void initToolbar() {
@@ -49,6 +37,13 @@ public class BudgetActivity extends ActionBarActivity {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+    }
+
+    private void initFragment() {
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
+        PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager());
+        pagerAdapter.addFragment(DetailsFragment.createInstance(1), "Details");
+        viewPager.setAdapter(pagerAdapter);
     }
 
     @Override
@@ -71,5 +66,34 @@ public class BudgetActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    static class PagerAdapter extends FragmentPagerAdapter {
+
+        private final List<Fragment> fragmentList = new ArrayList<>();
+        private final List<String> fragmentTitleList = new ArrayList<>();
+
+        public PagerAdapter(FragmentManager fragmentManager) {
+            super(fragmentManager);
+        }
+
+        public void addFragment(Fragment fragment, String title) {
+            fragmentList.add(fragment);
+            fragmentTitleList.add(title);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return fragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return fragmentList.size();
+        }
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return fragmentTitleList.get(position);
+        }
     }
 }

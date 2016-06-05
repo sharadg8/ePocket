@@ -27,7 +27,7 @@
         </activity>
         <activity
             android:name=".BudgetActivity"
-            android:label="@string/title_activity_budget" >
+            android:label="" >
         </activity>
     </application>
 

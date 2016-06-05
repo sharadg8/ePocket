@@ -32,6 +32,8 @@
     <color name="mask_background">#18000000</color>
     <color name="light_white">#5BFFFFFF</color>
     <color name="Error">#FF0000</color>
+    <color name="toolbarTransparent">#00000000</color>
+
 
     <color name="light_palette00">#f44336</color>
     <color name="dark_palette00">#b71c1c</color>
@@ -86,6 +88,18 @@
 
     <color name="light_palette17">#607D8B</color>
     <color name="dark_palette17">#263238</color>
+
+    <array name="wallpaper">
+        <item>@color/light_palette17</item>
+        <item>@color/light_palette01</item>
+        <item>@color/light_palette02</item>
+        <item>@color/light_palette00</item>
+        <item>@color/light_palette04</item>
+        <item>@color/light_palette05</item>
+        <item>@color/light_palette08</item>
+        <item>@color/light_palette12</item>
+        <item>@color/light_palette14</item>
+    </array>
 
     <array name="light_palette">
         <item>@color/light_palette00</item>
