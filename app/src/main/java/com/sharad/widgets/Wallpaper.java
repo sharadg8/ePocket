@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -43,7 +44,7 @@ public class Wallpaper extends View {
 
         mMaskWindowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mMaskWindowPaint.setStyle(Paint.Style.FILL);
-        mMaskWindowPaint.setColor(Color.argb(80, 0, 0, 0));
+        mMaskWindowPaint.setColor(getResources().getColor(R.color.primary));
 
         if(attrs != null) {
             final TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.Wallpaper);
@@ -61,18 +62,25 @@ public class Wallpaper extends View {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        for(int i=0; i<mList.size(); i++){
+        /*for(int i=0; i<mList.size(); i++){
             mList.get(i).onSizeChanged(w, h);
-        }
+        }*/
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        /*
         for(int i=0; i<mList.size(); i++){
             mList.get(i).onDraw(canvas);
         }
         canvas.drawRect(new RectF(0, 0, getRight(), getBottom()), mMaskWindowPaint);
+        */
+        Path mPathToday = new Path();
+        mPathToday.moveTo(getLeft(), getBottom());
+        mPathToday.lineTo(getLeft(), 3*getBottom()/4);
+        mPathToday.lineTo(getRight()/3, getBottom());
+        canvas.drawPath(mPathToday, mMaskWindowPaint);
     }
 
     public class CircleObject {

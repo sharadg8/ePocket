@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sharad.epocket.R;
+import com.sharad.widgets.ProgressView;
 
 import java.util.List;
 
@@ -37,6 +38,7 @@ public class DetailsRecycler extends RecyclerView.Adapter<RecyclerView.ViewHolde
         holder.setInfo(mItemList.get(position).get_info());
         holder.setImage(mItemList.get(position).get_imgId());
         holder.setColor(mItemList.get(position).get_clrId());
+        holder.setProgress(mItemList.get(position).get_progress());
     }
 
     @Override
@@ -48,20 +50,23 @@ public class DetailsRecycler extends RecyclerView.Adapter<RecyclerView.ViewHolde
         private TextView _text;
         private TextView _info;
         private ImageView _img;
-        private View _background;
+        private ProgressView _progress;
 
         public DetailViewHolder(final View parent) {
             super(parent);
-            _background =  parent.findViewById(R.id.dt_background);
+            _progress = (ProgressView) parent.findViewById(R.id.dt_progress);
             _text = (TextView) parent.findViewById(R.id.dt_text);
             _info = (TextView) parent.findViewById(R.id.dt_info);
             _img = (ImageView) parent.findViewById(R.id.dt_image);
-            //_img.setColorFilter(Color.WHITE);
         }
 
         public void setText(CharSequence text) {   _text.setText(text);   }
         public void setInfo(CharSequence text) {   _info.setText(text);   }
-        public void setColor(int color) { /*_background.setBackgroundColor(color);*/ }
+        public void setColor(int color) {
+            _progress.setColor(color);
+            _img.setColorFilter(color);
+        }
+        public void setProgress(int value) { _progress.setValue(value); }
         public void setImage(int id) {
             if(id > 0) {
                 _img.setImageResource(id);

@@ -1,5 +1,10 @@
 package com.sharad.budget;
 
+import android.animation.ArgbEvaluator;
+import android.graphics.Color;
+
+import java.util.Random;
+
 /**
  * Created by Sharad on 12-Sep-15.
  */
@@ -20,4 +25,8 @@ public class DetailItem {
     public String get_info() {        return _info;    }
     public String get_text() {        return _text;    }
     public int get_clrId() {        return _clrId;    }
+    public int get_progress() {
+        Random r = new Random();
+        return r.nextInt(100);
+    }
 }

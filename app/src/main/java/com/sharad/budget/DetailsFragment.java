@@ -29,6 +29,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import com.sharad.epocket.R;
 
@@ -68,6 +69,27 @@ public class DetailsFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         DetailsRecycler recyclerAdapter = new DetailsRecycler(createItemList());
         recyclerView.setAdapter(recyclerAdapter);
+
+        recyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        /*Intent intent = new Intent(getActivity(), DetailsActivity.class);
+                        intent.putExtra(DetailsActivity.ID_KEY, _adapter.getItemList().get(position).get_id());
+
+                        View movingView = getActivity().findViewById(R.id.appBarLayout);
+                        Pair<View, String> pair1 = Pair.create(movingView, movingView.getTransitionName());
+                        movingView = view.findViewById(R.id.dc_progress);
+                        Pair<View, String> pair2 = Pair.create(movingView, movingView.getTransitionName());
+
+                        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                                getActivity(), pair1, pair2
+                        );
+                        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());*/
+                        Toast.makeText(getActivity().getApplicationContext(), "Item clicked at "+position, Toast.LENGTH_SHORT);
+                    }
+                })
+        );
     }
 
     private List<DetailItem> createItemList() {

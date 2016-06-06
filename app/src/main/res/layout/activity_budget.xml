@@ -11,28 +11,31 @@
     <com.sharad.widgets.Wallpaper
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/primary_dark"
-        app:color_array="@array/wallpaper"
-        />
+        app:color_array="@array/wallpaper" />
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:elevation="0dp"
-        android:background="@android:color/transparent">
+        app:elevation="0dp">
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@android:color/transparent"
             app:elevation="0dp"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             android:fitsSystemWindows="true"/>
     </android.support.design.widget.AppBarLayout>
     <android.support.v4.view.ViewPager
+        android:id="@+id/headerPager"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:background="@color/primary"/>
+    <android.support.v4.view.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="120dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 </android.support.design.widget.CoordinatorLayout>
