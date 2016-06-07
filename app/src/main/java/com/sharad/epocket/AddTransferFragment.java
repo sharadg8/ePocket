@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 
 /**
@@ -46,7 +47,17 @@ public class AddTransferFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_add_transfer, container, false);
+        View view = inflater.inflate(R.layout.fragment_add_transfer, container, false);
+        ImageButton button = (ImageButton) view.findViewById(R.id.transaction_close);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mListener != null) {
+                    mListener.onFragmentInteraction(null);
+                }
+            }
+        });
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

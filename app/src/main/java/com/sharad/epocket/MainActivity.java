@@ -13,6 +13,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 
 import java.util.ArrayList;
@@ -37,6 +39,9 @@ public class MainActivity extends AppCompatActivity implements AddExpenseFragmen
                 //Intent myIntent = new Intent(MainActivity.this, BudgetActivity.class);
                 //MainActivity.this.startActivity(myIntent);
                 mAddTransactionView.setVisibility(View.VISIBLE);
+                Animation slide_up = AnimationUtils.loadAnimation(getApplicationContext(),
+                        R.anim.slide_up);
+                mAddTransactionView.startAnimation(slide_up);
             }
         });
     }
@@ -79,7 +84,10 @@ public class MainActivity extends AppCompatActivity implements AddExpenseFragmen
     }
 
     public void onFragmentInteraction(Uri uri) {
-
+        mAddTransactionView.setVisibility(View.GONE);
+        Animation slide_down = AnimationUtils.loadAnimation(getApplicationContext(),
+                R.anim.slide_down);
+        mAddTransactionView.startAnimation(slide_down);
     }
 
     static class PagerAdapter extends FragmentPagerAdapter {

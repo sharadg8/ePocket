@@ -11,7 +11,9 @@
         <View
             android:layout_width="5dp"
             android:layout_height="match_parent"
-            android:background="@android:color/holo_blue_dark"/>
+            android:background="@android:color/holo_blue_dark"
+            android:focusableInTouchMode="true"
+            android:focusable="true"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -21,6 +23,7 @@
             android:textSize="24dp"
             android:textColor="@android:color/holo_blue_dark"/>
         <ImageButton
+            android:id="@+id/transaction_close"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginRight="24dp"
