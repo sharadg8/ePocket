@@ -1,15 +1,27 @@
 package com.sharad.epocket;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-public class MainActivity extends AppCompatActivity {
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity implements AddExpenseFragment.OnFragmentInteractionListener,
+        AddIncomeFragment.OnFragmentInteractionListener, AddTransferFragment.OnFragmentInteractionListener{
+
+    View mAddTransactionView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,20 +29,31 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         initToolbar();
+        initFragment();
 
         FloatingActionButton myFab = (FloatingActionButton) this.findViewById(R.id.fabButton);
         myFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent myIntent = new Intent(MainActivity.this, BudgetActivity.class);
-                //myIntent.putExtra("key", value); //Optional parameters
-                MainActivity.this.startActivity(myIntent);
+                //Intent myIntent = new Intent(MainActivity.this, BudgetActivity.class);
+                //MainActivity.this.startActivity(myIntent);
+                mAddTransactionView.setVisibility(View.VISIBLE);
             }
         });
     }
 
-     private void initToolbar() {
+    private void initToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+    }
+
+    private void initFragment() {
+        mAddTransactionView = findViewById(R.id.addTransactionView);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.addViewPager);
+        PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager());
+        pagerAdapter.addFragment(AddExpenseFragment.newInstance(), "AddExpense");
+        pagerAdapter.addFragment(AddIncomeFragment.newInstance(), "AddIncome");
+        pagerAdapter.addFragment(AddTransferFragment.newInstance(), "AddTransfer");
+        viewPager.setAdapter(pagerAdapter);
     }
 
     @Override
@@ -53,5 +76,38 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    static class PagerAdapter extends FragmentPagerAdapter {
+
+        private final List<Fragment> fragmentList = new ArrayList<>();
+        private final List<String> fragmentTitleList = new ArrayList<>();
+
+        public PagerAdapter(FragmentManager fragmentManager) {
+            super(fragmentManager);
+        }
+
+        public void addFragment(Fragment fragment, String title) {
+            fragmentList.add(fragment);
+            fragmentTitleList.add(title);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return fragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return fragmentList.size();
+        }
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return fragmentTitleList.get(position);
+        }
     }
 }
