@@ -1,4 +1,4 @@
-package com.sharad.budget;
+package com.sharad.common;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

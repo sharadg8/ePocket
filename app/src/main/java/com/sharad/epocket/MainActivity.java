@@ -17,6 +17,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
 
+import com.sharad.home.AccountsFragment;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,13 +54,18 @@ public class MainActivity extends AppCompatActivity implements AddExpenseFragmen
     }
 
     private void initFragment() {
-        mAddTransactionView = findViewById(R.id.addTransactionView);
-        ViewPager viewPager = (ViewPager) findViewById(R.id.addViewPager);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
         PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager());
-        pagerAdapter.addFragment(AddExpenseFragment.newInstance(), "AddExpense");
-        pagerAdapter.addFragment(AddIncomeFragment.newInstance(), "AddIncome");
-        pagerAdapter.addFragment(AddTransferFragment.newInstance(), "AddTransfer");
+        pagerAdapter.addFragment(AccountsFragment.createInstance(1), "Accounts");
         viewPager.setAdapter(pagerAdapter);
+
+        mAddTransactionView = findViewById(R.id.addTransactionView);
+        ViewPager addViewPager = (ViewPager) findViewById(R.id.addViewPager);
+        PagerAdapter addPagerAdapter = new PagerAdapter(getSupportFragmentManager());
+        addPagerAdapter.addFragment(AddExpenseFragment.newInstance(), "AddExpense");
+        addPagerAdapter.addFragment(AddIncomeFragment.newInstance(), "AddIncome");
+        addPagerAdapter.addFragment(AddTransferFragment.newInstance(), "AddTransfer");
+        addViewPager.setAdapter(addPagerAdapter);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.sharad.epocket;
+package com.sharad.budget;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.sharad.budget.DetailsFragment;
+import com.sharad.epocket.R;
 
 import java.util.ArrayList;
 import java.util.List;
