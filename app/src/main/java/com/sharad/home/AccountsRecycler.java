@@ -28,7 +28,7 @@ public class AccountsRecycler extends RecyclerView.Adapter<RecyclerView.ViewHold
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         View view = LayoutInflater.from(context).inflate(R.layout.budget_list_card, parent, false);
-        view.setMinimumWidth((int)(parent.getMeasuredWidth() * 0.8));
+        view.setMinimumWidth((int)(parent.getMeasuredWidth() * 0.9));
         return new DetailViewHolder(view);
     }
 

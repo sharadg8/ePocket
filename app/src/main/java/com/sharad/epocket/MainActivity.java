@@ -1,7 +1,9 @@
 package com.sharad.epocket;
 
-import android.content.Intent;
+import android.animation.Animator;
+import android.graphics.Point;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -13,19 +15,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
 
-import com.sharad.home.AccountsFragment;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements AddExpenseFragment.OnFragmentInteractionListener,
-        AddIncomeFragment.OnFragmentInteractionListener, AddTransferFragment.OnFragmentInteractionListener{
-
+public class MainActivity extends AppCompatActivity implements AddTransactionFragment.OnFragmentInteractionListener {
     View mAddTransactionView;
+    View mAddTransactionViewBg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,15 +35,40 @@ public class MainActivity extends AppCompatActivity implements AddExpenseFragmen
         initToolbar();
         initFragment();
 
-        FloatingActionButton myFab = (FloatingActionButton) this.findViewById(R.id.fabButton);
+        final FloatingActionButton myFab = (FloatingActionButton) this.findViewById(R.id.fabButton);
         myFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //Intent myIntent = new Intent(MainActivity.this, BudgetActivity.class);
                 //MainActivity.this.startActivity(myIntent);
-                mAddTransactionView.setVisibility(View.VISIBLE);
-                Animation slide_up = AnimationUtils.loadAnimation(getApplicationContext(),
-                        R.anim.slide_up);
-                mAddTransactionView.startAnimation(slide_up);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    int[] location = new int[2];
+                    myFab.getLocationOnScreen(location);
+                    Point center = new Point(location[0], location[1]);
+                    int finalRadius = Math.max(mAddTransactionViewBg.getWidth(), mAddTransactionViewBg.getHeight());
+                    Animator anim = ViewAnimationUtils.createCircularReveal(mAddTransactionViewBg, center.x, center.y, 0, finalRadius);
+                    anim.setDuration(300);
+                    mAddTransactionViewBg.setVisibility(View.VISIBLE);
+                    anim.start();
+                    anim.addListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {}
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            mAddTransactionView.setVisibility(View.VISIBLE);
+                            Animation slide_up = AnimationUtils.loadAnimation(getApplicationContext(),
+                                    R.anim.slide_up);
+                            mAddTransactionView.startAnimation(slide_up);
+                        }
+                        @Override
+                        public void onAnimationCancel(Animator animation) {}
+                        @Override
+                        public void onAnimationRepeat(Animator animation) {}
+                    });
+                } else {
+                    mAddTransactionViewBg.setVisibility(View.VISIBLE);
+                    mAddTransactionViewBg.setVisibility(View.VISIBLE);
+                }
+                myFab.setVisibility(View.GONE);
             }
         });
     }
@@ -51,20 +76,32 @@ public class MainActivity extends AppCompatActivity implements AddExpenseFragmen
     private void initToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        mAddTransactionViewBg = findViewById(R.id.addTransactionViewBg);
+        mAddTransactionView = findViewById(R.id.addTransactionView);
+        mAddTransactionViewBg.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //Do nothing
+            }
+        });
     }
 
     private void initFragment() {
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
         PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager());
-        pagerAdapter.addFragment(AccountsFragment.createInstance(1), "Accounts");
+        //pagerAdapter.addFragment(AccountsFragment.createInstance(1), "Accounts");
         viewPager.setAdapter(pagerAdapter);
 
-        mAddTransactionView = findViewById(R.id.addTransactionView);
         ViewPager addViewPager = (ViewPager) findViewById(R.id.addViewPager);
         PagerAdapter addPagerAdapter = new PagerAdapter(getSupportFragmentManager());
-        addPagerAdapter.addFragment(AddExpenseFragment.newInstance(), "AddExpense");
-        addPagerAdapter.addFragment(AddIncomeFragment.newInstance(), "AddIncome");
-        addPagerAdapter.addFragment(AddTransferFragment.newInstance(), "AddTransfer");
+        addPagerAdapter.addFragment(
+                AddTransactionFragment.newInstance(AddTransactionFragment.TRANSACTION_TYPE_EXPENSE),
+                "AddExpense");
+        addPagerAdapter.addFragment(
+                AddTransactionFragment.newInstance(AddTransactionFragment.TRANSACTION_TYPE_INCOME),
+                "AddIncome");
+        addPagerAdapter.addFragment(
+                AddTransactionFragment.newInstance(AddTransactionFragment.TRANSACTION_TYPE_TRANSFER),
+                "AddTransfer");
         addViewPager.setAdapter(addPagerAdapter);
     }
 
@@ -91,10 +128,16 @@ public class MainActivity extends AppCompatActivity implements AddExpenseFragmen
     }
 
     public void onFragmentInteraction(Uri uri) {
+        FloatingActionButton myFab = (FloatingActionButton) this.findViewById(R.id.fabButton);
+        myFab.setVisibility(View.VISIBLE);
         mAddTransactionView.setVisibility(View.GONE);
         Animation slide_down = AnimationUtils.loadAnimation(getApplicationContext(),
                 R.anim.slide_down);
         mAddTransactionView.startAnimation(slide_down);
+        mAddTransactionViewBg.setVisibility(View.GONE);
+        Animation fade = AnimationUtils.loadAnimation(getApplicationContext(),
+                R.anim.slide_down);
+        mAddTransactionViewBg.startAnimation(fade);
     }
 
     static class PagerAdapter extends FragmentPagerAdapter {
