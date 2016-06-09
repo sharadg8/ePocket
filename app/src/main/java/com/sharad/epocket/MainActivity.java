@@ -20,6 +20,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
 
+import com.sharad.home.AccountsFragment;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements AddTransactionFra
     private void initFragment() {
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
         PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager());
-        //pagerAdapter.addFragment(AccountsFragment.createInstance(1), "Accounts");
+        pagerAdapter.addFragment(AccountsFragment.createInstance(1), "Accounts");
         viewPager.setAdapter(pagerAdapter);
 
         ViewPager addViewPager = (ViewPager) findViewById(R.id.addViewPager);

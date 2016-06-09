@@ -21,7 +21,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.sharad.widgets.CircleButton;
+import com.sharad.utils.CircleButton;
 
 
 public class CategoryActivity extends ActionBarActivity {

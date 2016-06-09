@@ -30,6 +30,7 @@ import android.widget.Toast;
 import com.sharad.budget.DetailItem;
 import com.sharad.budget.DetailsRecycler;
 import com.sharad.common.RecyclerItemClickListener;
+import com.sharad.common.SnappyRecyclerView;
 import com.sharad.epocket.R;
 
 import java.text.DecimalFormat;
@@ -57,15 +58,16 @@ public class AccountsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        RecyclerView recyclerView = (RecyclerView) inflater.inflate(
+        SnappyRecyclerView recyclerView = (SnappyRecyclerView) inflater.inflate(
                 R.layout.feed_list, container, false);
 
         setupRecyclerView(recyclerView);
         return recyclerView;
     }
 
-    private void setupRecyclerView(RecyclerView recyclerView) {
+    private void setupRecyclerView(SnappyRecyclerView recyclerView) {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setSnapEnabled(true, true);
         AccountsRecycler recyclerAdapter = new AccountsRecycler(createItemList());
         recyclerView.setAdapter(recyclerAdapter);
 

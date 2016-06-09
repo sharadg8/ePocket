@@ -1,4 +1,4 @@
-package com.sharad.widgets;
+package com.sharad.utils;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;

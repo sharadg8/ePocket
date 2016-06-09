@@ -1,7 +1,6 @@
 package com.sharad.budget;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sharad.epocket.R;
-import com.sharad.widgets.ProgressView;
+import com.sharad.utils.ProgressView;
 
 import java.util.List;
 

@@ -8,9 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.sharad.budget.DetailItem;
 import com.sharad.epocket.R;
-import com.sharad.widgets.ProgressView;
+import com.sharad.utils.ProgressView;
 
 import java.util.List;
 
@@ -27,19 +26,15 @@ public class AccountsRecycler extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
-        View view = LayoutInflater.from(context).inflate(R.layout.budget_list_card, parent, false);
-        view.setMinimumWidth((int)(parent.getMeasuredWidth() * 0.9));
+        View view = LayoutInflater.from(context).inflate(R.layout.home_list_card, parent, false);
+        view.setMinimumWidth((int)(parent.getMeasuredWidth() * 0.8));
         return new DetailViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         DetailViewHolder holder = (DetailViewHolder) viewHolder;
-        holder.setText(mItemList.get(position).get_text());
-        holder.setInfo(mItemList.get(position).get_info());
-        holder.setImage(mItemList.get(position).get_imgId());
-        holder.setColor(mItemList.get(position).get_clrId());
-        holder.setProgress(mItemList.get(position).get_progress());
+        //holder.setText(mItemList.get(position).get_text());
     }
 
     @Override
@@ -48,33 +43,14 @@ public class AccountsRecycler extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     class DetailViewHolder extends RecyclerView.ViewHolder {
-        private TextView _text;
-        private TextView _info;
-        private ImageView _img;
-        private ProgressView _progress;
+        //private TextView _text;
+
 
         public DetailViewHolder(final View parent) {
             super(parent);
-            _progress = (ProgressView) parent.findViewById(R.id.dt_progress);
-            _text = (TextView) parent.findViewById(R.id.dt_text);
-            _info = (TextView) parent.findViewById(R.id.dt_info);
-            _img = (ImageView) parent.findViewById(R.id.dt_image);
+            //_text = (TextView) parent.findViewById(R.id.dt_text);
         }
 
-        public void setText(CharSequence text) {   _text.setText(text);   }
-        public void setInfo(CharSequence text) {   _info.setText(text);   }
-        public void setColor(int color) {
-            _progress.setColor(color);
-            _img.setColorFilter(color);
-        }
-        public void setProgress(int value) { _progress.setValue(value); }
-        public void setImage(int id) {
-            if(id > 0) {
-                _img.setImageResource(id);
-                _img.setVisibility(View.VISIBLE);
-            } else {
-                _img.setVisibility(View.INVISIBLE);
-            }
-        }
+        //public void setText(CharSequence text) {   _text.setText(text);   }
     }
 }

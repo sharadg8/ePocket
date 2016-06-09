@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:fitsSystemWindows="true"
     tools:context="com.sharad.budget.BudgetActivity">
-    <com.sharad.widgets.Wallpaper
+    <com.sharad.utils.Wallpaper
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:color_array="@array/wallpaper" />
