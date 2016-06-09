@@ -21,14 +21,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.sharad.budget.DetailItem;
-import com.sharad.budget.DetailsRecycler;
 import com.sharad.common.RecyclerItemClickListener;
 import com.sharad.common.SnappyRecyclerView;
 import com.sharad.epocket.R;
@@ -58,11 +55,11 @@ public class AccountsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        SnappyRecyclerView recyclerView = (SnappyRecyclerView) inflater.inflate(
-                R.layout.feed_list, container, false);
+        View rootView = inflater.inflate(R.layout.feed_list, container, false);
 
+        SnappyRecyclerView recyclerView = (SnappyRecyclerView) rootView.findViewById(R.id.recyclerView);
         setupRecyclerView(recyclerView);
-        return recyclerView;
+        return rootView;
     }
 
     private void setupRecyclerView(SnappyRecyclerView recyclerView) {

@@ -3,7 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/recyclerViewBg"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_marginTop="24dp"
+    android:layout_marginBottom="24dp">
     <com.sharad.common.SnappyRecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
