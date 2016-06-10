@@ -32,7 +32,7 @@ import java.lang.ref.WeakReference;
 /***
  * Manages a number of views inside of the given layout. See below for a list of widgets.
  */
-class KeyguardMessageArea extends TextView implements SecurityMessageDisplay {
+public class KeyguardMessageArea extends TextView implements SecurityMessageDisplay {
     /** Handler token posted with accessibility announcement runnables. */
     private static final Object ANNOUNCE_TOKEN = new Object();
 
