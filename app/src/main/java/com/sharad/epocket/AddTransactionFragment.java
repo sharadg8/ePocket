@@ -1,15 +1,24 @@
 package com.sharad.epocket;
 
 import android.app.Activity;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import com.sharad.utils.RecyclerItemClickListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -64,7 +73,7 @@ public class AddTransactionFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.fragment_add_transaction, container, false);
-
+        final TextView categoryText = (TextView) rootView.findViewById(R.id.at_category_text);
         View view4 = rootView.findViewById(R.id.at_accent_box);
         TextView view5 = (TextView) rootView.findViewById(R.id.at_title_text);
         ImageButton view6 = (ImageButton) rootView.findViewById(R.id.at_close);
@@ -85,10 +94,34 @@ public class AddTransactionFragment extends Fragment {
             view6.setColorFilter(getResources().getColor(R.color.transaction_transfer));
         }
 
+        final RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.at_category);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        final CategoryRecycler recyclerAdapter = new CategoryRecycler(createItemList());
+        recyclerView.setAdapter(recyclerAdapter);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        categoryText.setText("Category: "+ recyclerAdapter.getmItemList().get(position).get_text());
+                        for(int i=0; i < recyclerAdapter.getItemCount(); i++) {
+                            recyclerAdapter.getmItemList().get(i).set_checked((i == position));
+                        }
+                        recyclerAdapter.notifyDataSetChanged();
+                    }
+                })
+        );
+
         ImageButton bClose = (ImageButton) rootView.findViewById(R.id.at_close);
         bClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                View view = getActivity().getCurrentFocus();
+                if (view != null) {
+                    InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
                 if (mListener != null) {
                     mListener.onFragmentInteraction(null);
                 }
@@ -103,6 +136,22 @@ public class AddTransactionFragment extends Fragment {
             }
         });
         return rootView;
+    }
+
+    private List<CategoryItem> createItemList() {
+        List<CategoryItem> itemList = new ArrayList<>();
+        itemList.add(new CategoryItem("Title01", "Title", R.mipmap.ic_beach_access_black_24dp, getResources().getColor(R.color.dark_palette00)));
+        itemList.add(new CategoryItem("Title02", "Bank Name", R.mipmap.ic_child_friendly_black_24dp, getResources().getColor(R.color.dark_palette04)));
+        itemList.add(new CategoryItem("Title03", "Account Number", R.mipmap.ic_flight_black_24dp, getResources().getColor(R.color.dark_palette08)));
+        itemList.add(new CategoryItem("Title04", "Title", R.mipmap.ic_beach_access_black_24dp, getResources().getColor(R.color.dark_palette01)));
+        itemList.add(new CategoryItem("Title05", "Bank Name", R.mipmap.ic_child_friendly_black_24dp, getResources().getColor(R.color.dark_palette09)));
+        itemList.add(new CategoryItem("Title01", "Title", R.mipmap.ic_beach_access_black_24dp, getResources().getColor(R.color.dark_palette00)));
+        itemList.add(new CategoryItem("Title02", "Bank Name", R.mipmap.ic_child_friendly_black_24dp, getResources().getColor(R.color.dark_palette04)));
+        itemList.add(new CategoryItem("Title03", "Account Number", R.mipmap.ic_flight_black_24dp, getResources().getColor(R.color.dark_palette08)));
+        itemList.add(new CategoryItem("Title04", "Title", R.mipmap.ic_beach_access_black_24dp, getResources().getColor(R.color.dark_palette01)));
+        itemList.add(new CategoryItem("Title05", "Bank Name", R.mipmap.ic_child_friendly_black_24dp, getResources().getColor(R.color.dark_palette09)));
+
+        return itemList;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

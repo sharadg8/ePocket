@@ -26,7 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.sharad.common.RecyclerItemClickListener;
+import com.sharad.utils.RecyclerItemClickListener;
 import com.sharad.epocket.R;
 
 import java.text.DecimalFormat;

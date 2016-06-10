@@ -1,4 +1,4 @@
-package com.sharad.common;
+package com.sharad.utils;
 
 import android.content.Context;
 import android.os.Build;

@@ -71,9 +71,15 @@
                         android:inputType="number"
                         android:hint="Amount"/>
                 </android.support.design.widget.TextInputLayout>
-                <com.sharad.common.SnappyRecyclerView
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/at_category"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp" />
+                    android:layout_height="56dp"/>
+                <TextView
+                    android:id="@+id/at_category_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Category : "/>
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
