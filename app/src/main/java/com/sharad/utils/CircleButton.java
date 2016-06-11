@@ -129,7 +129,7 @@ public class CircleButton extends ImageView implements Checkable {
 			showPressedRing();
 		} else {
 			hidePressedRing();
-			toggle();
+			//toggle();
 		}
 	}
 
