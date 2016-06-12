@@ -29,7 +29,7 @@
     <color name="icons">#FFFFFF</color>
     <color name="icons_dark">#455A64</color>
     <color name="divider">#CFD8DC</color>
-    <color name="mask_background">#18000000</color>
+    <color name="mask_background">#88000000</color>
     <color name="light_white">#5BFFFFFF</color>
     <color name="Error">#FF0000</color>
     <color name="toolbarTransparent">#00000000</color>

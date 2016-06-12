@@ -1,6 +1,10 @@
 package com.sharad.utils;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Point;
 import android.os.Build;
 import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
@@ -19,9 +23,13 @@ public final class SnappyRecyclerView extends RecyclerView {
     private boolean mSnapEnabled = false;
     private boolean mUserScrolling = false;
     private boolean mScrolling = false;
+    private boolean mShowIndicator = false;
     private int mScrollState;
     private long lastScrollTime = 0;
     private Handler mHandler = new Handler();
+
+    private Paint mPaintActive;
+    private Paint mPaintInactive;
 
     private boolean mScaleUnfocusedViews = false;
 
@@ -29,10 +37,44 @@ public final class SnappyRecyclerView extends RecyclerView {
 
     public SnappyRecyclerView(Context context) {
         super(context);
+        init();
     }
 
     public SnappyRecyclerView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        init();
+    }
+
+    private void init() {
+        mPaintActive = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mPaintActive.setStyle(Paint.Style.FILL);
+        mPaintActive.setColor(Color.WHITE);
+
+        mPaintInactive = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mPaintInactive.setStyle(Paint.Style.FILL);
+        mPaintInactive.setColor(Color.WHITE);
+        mPaintInactive.setAlpha(60);
+    }
+
+    @Override
+    public void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+
+        if(getAdapter().getItemCount() > 0) {
+            for (int i = 0; i < getAdapter().getItemCount(); i++) {
+                Point p = getIndicatorCenter(i);
+                canvas.drawCircle(p.x, p.y, 6, (i == getChildAdapterPosition(getCenterView())) ? mPaintActive : mPaintInactive);
+            }
+        }
+    }
+
+    public Point getIndicatorCenter(int index) {
+        Point point = new Point();
+        int indicatorWidth = 24;
+        int width = (getAdapter().getItemCount()-1) * indicatorWidth;
+        int posX = (getWidth() - width) / 2;
+        point.set(posX + index*indicatorWidth, (int)(getBottom()*0.9));
+        return point;
     }
 
     /**
@@ -105,6 +147,15 @@ public final class SnappyRecyclerView extends RecyclerView {
         setSnapEnabled(enabled);
     }
 
+    /**
+     * Display page indicator at bottom of recyclerView
+     * @param show show hide page indicator
+     */
+    public void showIndicator(boolean show) {
+        mShowIndicator = show;
+        updateViews();
+    }
+
     private void updateViews() {
         for (int i = 0; i < getChildCount(); i++) {
             View child = getChildAt(i);
@@ -112,7 +163,7 @@ public final class SnappyRecyclerView extends RecyclerView {
 
             if (mScaleUnfocusedViews) {
                 float percentage = getPercentageFromCenter(child);
-                float scale = 1f - (0.7f * percentage);
+                float scale = 1f - (0.2f * percentage);
 
                 child.setScaleX(scale);
                 child.setScaleY(scale);
@@ -128,8 +179,10 @@ public final class SnappyRecyclerView extends RecyclerView {
         int lastItemIndex = getLayoutManager().getItemCount() - 1;
         int childIndex = getChildPosition(child);
 
-        int startMargin = childIndex == 0 ? getMeasuredWidth() / 2 : 0;
-        int endMargin = childIndex == lastItemIndex ? getMeasuredWidth() / 2 : 0;
+        int startMargin = childIndex == 0 ? getMeasuredWidth() / 10 : 0;
+        int endMargin = childIndex == lastItemIndex ? getMeasuredWidth() / 10 : 0;
+        int topMargin = mShowIndicator ? (int)(getMeasuredHeight() * 0.1) : 0;
+        int bottomMargin = mShowIndicator ? (int)(getMeasuredHeight() * 0.2) : 0;
 
         /** if sdk minimum level is 17, set RTL margins **/
         if (Build.VERSION.SDK_INT >= 17) {
@@ -137,7 +190,7 @@ public final class SnappyRecyclerView extends RecyclerView {
             ((ViewGroup.MarginLayoutParams) child.getLayoutParams()).setMarginEnd(endMargin);
         }
 
-        ((ViewGroup.MarginLayoutParams) child.getLayoutParams()).setMargins(startMargin, 0, endMargin, 0);
+        ((ViewGroup.MarginLayoutParams) child.getLayoutParams()).setMargins(startMargin, topMargin, endMargin, bottomMargin);
         child.requestLayout();
     }
 

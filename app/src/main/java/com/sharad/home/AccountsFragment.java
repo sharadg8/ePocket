@@ -26,9 +26,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.sharad.epocket.R;
 import com.sharad.utils.RecyclerItemClickListener;
 import com.sharad.utils.SnappyRecyclerView;
-import com.sharad.epocket.R;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -56,18 +56,17 @@ public class AccountsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.feed_list, container, false);
-
-        SnappyRecyclerView recyclerView = (SnappyRecyclerView) rootView.findViewById(R.id.recyclerView);
-        setupRecyclerView(recyclerView);
+        setupRecyclerView(rootView);
         return rootView;
     }
 
-    private void setupRecyclerView(SnappyRecyclerView recyclerView) {
+    private void setupRecyclerView(View rootView) {
+        SnappyRecyclerView recyclerView = (SnappyRecyclerView) rootView.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setSnapEnabled(true, true);
+        recyclerView.showIndicator(true);
         AccountsRecycler recyclerAdapter = new AccountsRecycler(createItemList());
         recyclerView.setAdapter(recyclerAdapter);
-
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
 
