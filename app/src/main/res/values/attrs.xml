@@ -54,4 +54,9 @@
         <attr name="indicatorActiveColor" format="color" />
         <attr name="android:gravity" />
     </declare-styleable>
+
+    <declare-styleable name="HollyViewPager">
+        <attr name="hvp_headerHeight" format="dimension"/>
+        <attr name="hvp_headerBackgroundView" format="reference"/>
+    </declare-styleable>
 </resources>
