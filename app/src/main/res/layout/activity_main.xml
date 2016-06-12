@@ -42,4 +42,9 @@
         android:layout_margin="16dp"
         android:src="@mipmap/ic_add_white_24dp"
         app:borderWidth="0dp"/>
+    <com.sharad.utils.toolbar.NavigationView
+        android:id="@+id/bottomNavigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom" />
 </android.support.design.widget.CoordinatorLayout>

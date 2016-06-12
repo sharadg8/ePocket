@@ -137,7 +137,7 @@ public class NavigationView extends RelativeLayout {
             throw new NullPointerException("You need at least one item");
         }
         LayoutParams containerParams, params, lineParams;
-        int white = ContextCompat.getColor(context, Color.WHITE);
+        int white = Color.WHITE;
         backgroundColorTemp = new View(context);
         viewList.clear();
         if (isTablet) {
