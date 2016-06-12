@@ -38,6 +38,8 @@
     <color name="transaction_income">#43A047</color>
     <color name="transaction_transfer">#2196F3</color>
 
+    <color name="fpi_default_indicator_inactive_color">#80FFFFFF</color>
+    <color name="fpi_default_indicator_active_color">#FFFFFF</color>
 
     <color name="light_palette00">#f44336</color>
     <color name="dark_palette00">#b71c1c</color>

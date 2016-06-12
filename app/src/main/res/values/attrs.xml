@@ -46,4 +46,12 @@
     <declare-styleable name="Wallpaper">
         <attr name="color_array" format="reference" />
     </declare-styleable>
+
+    <declare-styleable name="PageIndicator">
+        <attr name="indicatorRadius" format="dimension" />
+        <attr name="indicatorPadding" format="dimension" />
+        <attr name="indicatorInactiveColor" format="color" />
+        <attr name="indicatorActiveColor" format="color" />
+        <attr name="android:gravity" />
+    </declare-styleable>
 </resources>
