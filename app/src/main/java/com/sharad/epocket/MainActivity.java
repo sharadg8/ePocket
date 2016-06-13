@@ -49,14 +49,13 @@ public class MainActivity extends AppCompatActivity implements AddTransactionFra
         mNavigationView.isWithText(false);
         mNavigationView.isColoredBackground(true);
         mNavigationView.setItemActiveColorWithoutColoredBackground(ContextCompat.getColor(this, R.color.dark_palette00));
-        //mNavigationView.setFont(Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/Noh_normal.ttf"));
 
-        mNavigationView.addTab(new NavigationItem("Home", ContextCompat.getColor(this, R.color.light_palette01), R.mipmap.ic_home_black_24dp));
-        mNavigationView.addTab(new NavigationItem("Accounts", ContextCompat.getColor(this, R.color.light_palette04), R.mipmap.ic_account_box_black_24dp));
-        mNavigationView.addTab(new NavigationItem("Cards", ContextCompat.getColor(this, R.color.light_palette07), R.mipmap.ic_credit_card_black_24dp));
-        mNavigationView.addTab(new NavigationItem("Goals", ContextCompat.getColor(this, R.color.light_palette09), R.mipmap.ic_goal_black_24px));
-        mNavigationView.addTab(new NavigationItem("Budget", ContextCompat.getColor(this, R.color.light_palette13), R.mipmap.ic_budget_black_24px));
-        mNavigationView.addTab(new NavigationItem("Bills", ContextCompat.getColor(this, R.color.light_palette17), R.mipmap.ic_receipt_black_24dp));
+        mNavigationView.addTab(new NavigationItem("Home", ContextCompat.getColor(this, R.color.light_palette01), R.drawable.ic_home_black_24dp));
+        mNavigationView.addTab(new NavigationItem("Accounts", ContextCompat.getColor(this, R.color.light_palette04), R.drawable.ic_account_box_black_24dp));
+        mNavigationView.addTab(new NavigationItem("Cards", ContextCompat.getColor(this, R.color.light_palette07), R.drawable.ic_credit_card_black_24dp));
+        mNavigationView.addTab(new NavigationItem("Goals", ContextCompat.getColor(this, R.color.light_palette09), R.drawable.ic_goal_black_24px));
+        mNavigationView.addTab(new NavigationItem("Budget", ContextCompat.getColor(this, R.color.light_palette13), R.drawable.ic_budget_black_24px));
+        mNavigationView.addTab(new NavigationItem("Bills", ContextCompat.getColor(this, R.color.light_palette17), R.drawable.ic_receipt_black_24dp));
     }
 
     private void initToolbar() {
