@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.sharad.epocket" >
+    package="com.sharad.epocket">
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:label="Dashboard" >
-        </activity>
+            android:label="Dashboard" />
         <activity
             android:name=".LoginActivity"
             android:label="ePocket"
-            android:noHistory="true" >
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,12 +22,13 @@
         </activity>
         <activity
             android:name=".CategoryActivity"
-            android:label="@string/title_activity_add_category" >
-        </activity>
+            android:label="@string/title_activity_add_category" />
         <activity
             android:name="com.sharad.budget.BudgetActivity"
-            android:label="" >
-        </activity>
+            android:label="" />
+        <activity android:name="com.sharad.cards.CardsActivity" />
+        <activity android:name="com.sharad.accounts.AccountTransactionsActivity"
+            android:parentActivityName="com.sharad.epocket.MainActivity"/>
     </application>
 
 </manifest>

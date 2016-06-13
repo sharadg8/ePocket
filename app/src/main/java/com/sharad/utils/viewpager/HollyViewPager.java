@@ -96,8 +96,4 @@ public class HollyViewPager extends FrameLayout {
     public void registerRecyclerView(RecyclerView recyclerView) {
         animator.registerRecyclerView(recyclerView);
     }
-
-    public void registerScrollView(ObservableScrollView scrollView) {
-        animator.registerScrollView(scrollView);
-    }
 }

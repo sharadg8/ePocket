@@ -21,12 +21,6 @@ public class HollyViewPagerBus {
         map.remove(context);
     }
 
-    public static void registerScrollView(Context context, ObservableScrollView scrollView) {
-        HollyViewPager hollyViewPager = map.get(context);
-        if(hollyViewPager != null)
-            hollyViewPager.registerScrollView(scrollView);
-    }
-
     public static void registerRecyclerView(Context context, RecyclerView recyclerView) {
         HollyViewPager hollyViewPager = map.get(context);
         if(hollyViewPager != null)

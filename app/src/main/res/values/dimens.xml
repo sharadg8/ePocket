@@ -3,7 +3,7 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-    
+
     <!-- Used to calculate the translation animation duration, the expected amount of movement
          in dps over one second of time. -->
     <dimen name="animation_movement_in_dps_per_second">800dp</dimen>
@@ -100,4 +100,5 @@
     <dimen name="navigation_padding_right">12dp</dimen>
     <dimen name="navigation_text_size_active">14sp</dimen>
     <dimen name="navigation_text_size_inactive">12sp</dimen>
+    <dimen name="viewpager_margin">-64dp</dimen>
 </resources>

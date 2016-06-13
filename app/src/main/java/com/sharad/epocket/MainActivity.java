@@ -16,7 +16,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
-import com.sharad.home.AccountsFragment;
+import com.sharad.accounts.AccountsFragment;
 import com.sharad.utils.toolbar.NavigationItem;
 import com.sharad.utils.toolbar.NavigationView;
 

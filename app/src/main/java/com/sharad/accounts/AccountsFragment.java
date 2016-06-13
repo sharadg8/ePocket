@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package com.sharad.home;
+package com.sharad.accounts;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -24,7 +25,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.sharad.epocket.R;
 import com.sharad.utils.RecyclerItemClickListener;
@@ -74,7 +74,10 @@ public class AccountsFragment extends Fragment {
                 new RecyclerItemClickListener(getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        Toast.makeText(getActivity().getApplicationContext(), "Item clicked at " + position, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getActivity().getApplicationContext(), "Item clicked at " + position, Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getActivity(), AccountTransactionsActivity.class);
+                        intent.putExtra("key", 1); //Optional parameters
+                        getActivity().startActivity(intent);
                     }
                 })
         );

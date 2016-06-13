@@ -6,7 +6,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ScrollView;
 
 import com.sharad.epocket.R;
@@ -135,30 +134,6 @@ public class HollyViewPagerAnimator implements ViewPager.OnPageChangeListener {
             }
         });
 
-    }
-
-    public void registerScrollView(final ObservableScrollView scrollView) {
-        scrolls.add(scrollView);
-
-        if (scrollView.getParent() != null && scrollView.getParent().getParent() != null && scrollView.getParent().getParent() instanceof ViewGroup)
-            scrollView.setTouchInterceptionViewGroup((ViewGroup) scrollView.getParent().getParent());
-
-        scrollView.setScrollViewCallbacks(new ObservableScrollViewCallbacks() {
-            @Override
-            public void onScrollChanged(int i, boolean b, boolean b1) {
-                onScroll(scrollView, i);
-            }
-
-            @Override
-            public void onDownMotionEvent() {
-
-            }
-
-            @Override
-            public void onUpOrCancelMotionEvent(ScrollState scrollState) {
-
-            }
-        });
     }
 
     public void dispatchScroll(Object source, int yOffset) {
