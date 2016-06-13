@@ -215,7 +215,7 @@ public class CategoryActivity extends ActionBarActivity {
             linearLayout1.setOrientation(LinearLayout.HORIZONTAL);
             linearLayout.addView(linearLayout1, params1);
             for (int j = 0; j < 6; j++) {
-                int index = ids.getResourceId(i * 6 + j, R.mipmap.ic_card_giftcard_black_24dp);
+                int index = ids.getResourceId(i * 6 + j, R.drawable.ic_account_box_black_24dp);
                 CircleButton ib = newLabelButton(index);
                 mIconButtons[i * 6 + j] = ib;
                 linearLayout1.addView(ib);
