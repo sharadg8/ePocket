@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowActionModeOverlay">true</item>
@@ -24,86 +25,103 @@
         <item name="colorPrimaryDark">@color/dark_palette00</item>
         <item name="colorAccent">@color/accent</item>
     </style>
+
     <style name="AppTheme.Palette01" parent="AppTheme">
         <item name="colorPrimary">@color/light_palette01</item>
         <item name="colorPrimaryDark">@color/dark_palette01</item>
         <item name="colorAccent">@color/accent</item>
     </style>
+
     <style name="AppTheme.Palette02" parent="AppTheme">
         <item name="colorPrimary">@color/light_palette02</item>
         <item name="colorPrimaryDark">@color/dark_palette02</item>
         <item name="colorAccent">@color/accent</item>
     </style>
+
     <style name="AppTheme.Palette03" parent="AppTheme">
         <item name="colorPrimary">@color/light_palette03</item>
         <item name="colorPrimaryDark">@color/dark_palette03</item>
         <item name="colorAccent">@color/accent</item>
     </style>
+
     <style name="AppTheme.Palette04" parent="AppTheme">
         <item name="colorPrimary">@color/light_palette04</item>
         <item name="colorPrimaryDark">@color/dark_palette04</item>
         <item name="colorAccent">@color/accent</item>
     </style>
+
     <style name="AppTheme.Palette05" parent="AppTheme">
         <item name="colorPrimary">@color/light_palette05</item>
         <item name="colorPrimaryDark">@color/dark_palette05</item>
         <item name="colorAccent">@color/accent</item>
     </style>
+
     <style name="AppTheme.Palette06" parent="AppTheme">
         <item name="colorPrimary">@color/light_palette06</item>
         <item name="colorPrimaryDark">@color/dark_palette06</item>
         <item name="colorAccent">@color/accent</item>
     </style>
+
     <style name="AppTheme.Palette07" parent="AppTheme">
         <item name="colorPrimary">@color/light_palette07</item>
         <item name="colorPrimaryDark">@color/dark_palette07</item>
         <item name="colorAccent">@color/accent</item>
     </style>
+
     <style name="AppTheme.Palette08" parent="AppTheme">
         <item name="colorPrimary">@color/light_palette08</item>
         <item name="colorPrimaryDark">@color/dark_palette08</item>
         <item name="colorAccent">@color/accent</item>
     </style>
+
     <style name="AppTheme.Palette09" parent="AppTheme">
         <item name="colorPrimary">@color/light_palette09</item>
         <item name="colorPrimaryDark">@color/dark_palette09</item>
         <item name="colorAccent">@color/accent</item>
     </style>
+
     <style name="AppTheme.Palette10" parent="AppTheme">
         <item name="colorPrimary">@color/light_palette10</item>
         <item name="colorPrimaryDark">@color/dark_palette10</item>
         <item name="colorAccent">@color/accent</item>
     </style>
+
     <style name="AppTheme.Palette11" parent="AppTheme">
         <item name="colorPrimary">@color/light_palette11</item>
         <item name="colorPrimaryDark">@color/dark_palette11</item>
         <item name="colorAccent">@color/accent</item>
     </style>
+
     <style name="AppTheme.Palette12" parent="AppTheme">
         <item name="colorPrimary">@color/light_palette12</item>
         <item name="colorPrimaryDark">@color/dark_palette12</item>
         <item name="colorAccent">@color/accent</item>
     </style>
+
     <style name="AppTheme.Palette13" parent="AppTheme">
         <item name="colorPrimary">@color/light_palette13</item>
         <item name="colorPrimaryDark">@color/dark_palette13</item>
         <item name="colorAccent">@color/accent</item>
     </style>
+
     <style name="AppTheme.Palette14" parent="AppTheme">
         <item name="colorPrimary">@color/light_palette14</item>
         <item name="colorPrimaryDark">@color/dark_palette14</item>
         <item name="colorAccent">@color/accent</item>
     </style>
+
     <style name="AppTheme.Palette15" parent="AppTheme">
         <item name="colorPrimary">@color/light_palette15</item>
         <item name="colorPrimaryDark">@color/dark_palette15</item>
         <item name="colorAccent">@color/accent</item>
     </style>
+
     <style name="AppTheme.Palette16" parent="AppTheme">
         <item name="colorPrimary">@color/light_palette16</item>
         <item name="colorPrimaryDark">@color/dark_palette16</item>
         <item name="colorAccent">@color/accent</item>
     </style>
+
     <style name="AppTheme.Palette17" parent="AppTheme">
         <item name="colorPrimary">@color/light_palette17</item>
         <item name="colorPrimaryDark">@color/dark_palette17</item>
@@ -120,6 +138,7 @@
         <item name="android:textColor">#ffffffff</item>
         <item name="android:paddingBottom">-16dp</item>
     </style>
+
     <style name="Widget.TextView.NumPadKey.Klondike" parent="Widget.TextView.NumPadKey">
         <item name="android:textSize">12sp</item>
         <item name="android:fontFamily">sans-serif</item>

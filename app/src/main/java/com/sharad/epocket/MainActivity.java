@@ -6,7 +6,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -15,25 +14,41 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 
 import com.sharad.accounts.AccountsFragment;
-import com.sharad.utils.toolbar.NavigationItem;
-import com.sharad.utils.toolbar.NavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements AddTransactionFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity
+        implements AddTransactionFragment.OnFragmentInteractionListener,
+        NavigationView.OnNavigationItemSelectedListener {
+
     ViewPager mAddTransactionView;
-    NavigationView mNavigationView;
+    //NavigationView mNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initToolbar();
         initFragment();
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
         final FloatingActionButton myFab = (FloatingActionButton) this.findViewById(R.id.fabButton);
         myFab.setOnClickListener(new View.OnClickListener() {
@@ -44,23 +59,6 @@ public class MainActivity extends AppCompatActivity implements AddTransactionFra
                 myFab.setVisibility(View.GONE);
             }
         });
-
-        mNavigationView = (NavigationView) findViewById(R.id.bottomNavigation);
-        mNavigationView.isWithText(false);
-        mNavigationView.isColoredBackground(true);
-        mNavigationView.setItemActiveColorWithoutColoredBackground(ContextCompat.getColor(this, R.color.dark_palette00));
-
-        mNavigationView.addTab(new NavigationItem("Home", ContextCompat.getColor(this, R.color.light_palette01), R.drawable.ic_home_black_24dp));
-        mNavigationView.addTab(new NavigationItem("Accounts", ContextCompat.getColor(this, R.color.light_palette04), R.drawable.ic_account_box_black_24dp));
-        mNavigationView.addTab(new NavigationItem("Cards", ContextCompat.getColor(this, R.color.light_palette07), R.drawable.ic_credit_card_black_24dp));
-        mNavigationView.addTab(new NavigationItem("Goals", ContextCompat.getColor(this, R.color.light_palette09), R.drawable.ic_goal_black_24px));
-        mNavigationView.addTab(new NavigationItem("Budget", ContextCompat.getColor(this, R.color.light_palette13), R.drawable.ic_budget_black_24px));
-        mNavigationView.addTab(new NavigationItem("Bills", ContextCompat.getColor(this, R.color.light_palette17), R.drawable.ic_receipt_black_24dp));
-    }
-
-    private void initToolbar() {
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
     }
 
     private void initFragment() {
@@ -73,6 +71,16 @@ public class MainActivity extends AppCompatActivity implements AddTransactionFra
         PagerAdapter addPagerAdapter = new PagerAdapter(getSupportFragmentManager());
         addPagerAdapter.addFragment(AddTransactionFragment.newInstance(), "AddTransaction");
         mAddTransactionView.setAdapter(addPagerAdapter);
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
@@ -95,6 +103,31 @@ public class MainActivity extends AppCompatActivity implements AddTransactionFra
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_camera) {
+            // Handle the camera action
+        } else if (id == R.id.nav_gallery) {
+
+        } else if (id == R.id.nav_slideshow) {
+
+        } else if (id == R.id.nav_manage) {
+
+        } else if (id == R.id.nav_share) {
+
+        } else if (id == R.id.nav_send) {
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 
     public void onFragmentInteraction(Uri uri) {
