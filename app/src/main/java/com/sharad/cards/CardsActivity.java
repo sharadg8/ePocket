@@ -38,6 +38,7 @@ public class CardsActivity extends AppCompatActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if(hasFocus){
+                    int scrollTo = 0;//((getWindowManager().getDefaultDisplay().getWidth() - view.getWidth())  / 2);
                     final int count = ((LinearLayout) scrollView.getChildAt(0))
                             .getChildCount();
                     for (int i = 0; i < count; i++) {
