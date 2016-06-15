@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.percent.PercentRelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<com.sharad.common.SnappyRecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/recyclerView"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <com.sharad.utils.SnappyRecyclerView
-        android:id="@+id/recyclerView"
-        app:layout_widthPercent="100%"
-        app:layout_aspectRatio="148%"
-        android:background="@color/accent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
-</android.support.percent.PercentRelativeLayout>
+    android:layout_height="match_parent"/>

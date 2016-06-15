@@ -22,9 +22,11 @@
         </activity>
         <activity
             android:name=".CategoryActivity"
+            android:parentActivityName=".MainActivity"
             android:label="@string/title_activity_add_category" />
         <activity
             android:name="com.sharad.budget.BudgetActivity"
+            android:parentActivityName=".MainActivity"
             android:label="" />
         <activity android:name="com.sharad.cards.CardsActivity" />
         <activity
