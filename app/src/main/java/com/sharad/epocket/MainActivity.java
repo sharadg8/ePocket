@@ -1,6 +1,5 @@
 package com.sharad.epocket;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -13,6 +12,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,8 +22,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
 import com.sharad.accounts.AccountsFragment;
-import com.sharad.budget.BudgetActivity;
-import com.sharad.cards.CardsActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,19 +38,11 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initFragment();
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        initFragment();
+        initNavigationDrawer(toolbar);
 
         final FloatingActionButton myFab = (FloatingActionButton) this.findViewById(R.id.fabButton);
         myFab.setOnClickListener(new View.OnClickListener() {
@@ -62,6 +53,34 @@ public class MainActivity extends AppCompatActivity
                 myFab.setVisibility(View.GONE);
             }
         });
+    }
+
+    private void initNavigationDrawer(Toolbar toolbar) {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        List<NavigationDrawerItem> rowListItem = new ArrayList<NavigationDrawerItem>();
+        rowListItem.add(new NavigationDrawerItem("Home", R.drawable.ic_home_black_24dp));
+        rowListItem.add(new NavigationDrawerItem("Accounts", R.drawable.ic_account_box_black_24dp));
+        rowListItem.add(new NavigationDrawerItem("Budget", R.drawable.ic_budget_black_24px));
+        rowListItem.add(new NavigationDrawerItem("Goals", R.drawable.ic_goal_black_24px));
+        rowListItem.add(new NavigationDrawerItem("Cards", R.drawable.ic_credit_card_black_24dp));
+        rowListItem.add(new NavigationDrawerItem("Bills", R.drawable.ic_receipt_black_24dp));
+
+        GridLayoutManager gridLayout = new GridLayoutManager(MainActivity.this, 2);
+
+        RecyclerView rView = (RecyclerView)findViewById(R.id.lst_drawer_items);
+        rView.setHasFixedSize(true);
+        rView.setLayoutManager(gridLayout);
+
+        DrawerGridRecycler rcAdapter = new DrawerGridRecycler(MainActivity.this, rowListItem);
+        rView.setAdapter(rcAdapter);
     }
 
     private void initFragment() {
@@ -108,12 +127,14 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
+        /*
         if (id == R.id.nav_home) {
 
         } else if (id == R.id.nav_accounts) {
@@ -130,8 +151,9 @@ public class MainActivity extends AppCompatActivity
             Intent myIntent = new Intent(MainActivity.this, CategoryActivity.class);
             MainActivity.this.startActivity(myIntent);
         }
+        */
 
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

@@ -19,7 +19,22 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        app:headerLayout="@layout/nav_header_main"
-        app:menu="@menu/activity_main_drawer" />
+        app:headerLayout="@layout/nav_header_main">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <include layout="@layout/nav_header_main" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/lst_drawer_items"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:padding="16dp"
+                android:scrollbars="vertical"/>
+        </LinearLayout>
+    </android.support.design.widget.NavigationView>
 </android.support.v4.widget.DrawerLayout>
