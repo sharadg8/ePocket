@@ -5,8 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
-import android.graphics.Rect;
-import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
@@ -53,14 +51,14 @@ public class DrawerButton extends View implements Checkable {
 
         mForeground = new Paint(Paint.ANTI_ALIAS_FLAG);
         mForeground.setStyle(Paint.Style.FILL);
-        mForeground.setColor(Color.WHITE);
+        mForeground.setColor(Color.DKGRAY);
         mForeground.setTextSize(32f);
 
         mLine = new Paint(Paint.ANTI_ALIAS_FLAG);
         mLine.setStyle(Paint.Style.FILL);
         mLine.setColor(Color.WHITE);
         mLine.setAlpha(80);
-        mLine.setStrokeWidth(8f);
+        mLine.setStrokeWidth(5f);
         mLine.setStrokeCap(Paint.Cap.ROUND);
     }
 
@@ -118,28 +116,24 @@ public class DrawerButton extends View implements Checkable {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         mCenterX = w / 2;
-        mCenterY = h / 2;
-        mRadius = (int)((Math.min(w, h) / 2) * 0.75);
+        mCenterY = h / 3;
+        mRadius = (int)((Math.min(w, h) / 2) * 0.54);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         canvas.drawCircle(mCenterX, mCenterY, mRadius, mBackground);
 
-        Rect areaRect = canvas.getClipBounds();
-        RectF bounds = new RectF(areaRect);
-        bounds.right = mForeground.measureText(mTitle, 0, mTitle.length());
-        bounds.bottom = mForeground.descent() - mForeground.ascent();
-        bounds.left += (areaRect.width() - bounds.right) / 2.0f;
-        bounds.top += (areaRect.height() - bounds.bottom) / 2.0f;
-        canvas.drawText(mTitle, bounds.left, bounds.top - mForeground.ascent()+4, mForeground);
+        int left = (int)((canvas.getWidth() - mForeground.measureText(mTitle, 0, mTitle.length())) / 2.0f);
+        canvas.drawText(mTitle, left, mCenterY*2-mForeground.ascent(), mForeground);
 
         Drawable icon = getResources().getDrawable(mImageResource);
         icon.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
-        icon.setBounds(mCenterX-icon.getIntrinsicWidth()/2,(int)bounds.top-icon.getIntrinsicHeight(),mCenterX+icon.getIntrinsicWidth()/2,(int)bounds.top);
+        icon.setBounds(mCenterX-icon.getIntrinsicWidth()/2, mCenterY-(int)(icon.getIntrinsicHeight()*0.67),
+                mCenterX+icon.getIntrinsicWidth()/2, mCenterY+(int)(icon.getIntrinsicHeight()*0.33));
         icon.draw(canvas);
 
-        canvas.drawLine(mCenterX-mRadius/3, mCenterY+mRadius/2, mCenterX+mRadius/3, mCenterY+mRadius/2, mLine);
+        canvas.drawLine(mCenterX-(int)(mRadius/2.8), mCenterY+mRadius/2, mCenterX+(int)(mRadius/2.8), mCenterY+mRadius/2, mLine);
         super.onDraw(canvas);
     }
 }
