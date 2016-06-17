@@ -1,33 +1,27 @@
 package com.sharad.utils;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Checkable;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.sharad.epocket.R;
 
 /**
  * Created by Sharad on 16-Jun-16.
  */
 
-public class DrawerButton extends View implements Checkable {
-    private Paint mBackground;
-    private Paint mForeground;
-    private Paint mLine;
-    private boolean mChecked = false;
-    private String mTitle;
-    private int mImageResource;
-    private int mCenterX;
-    private int mCenterY;
-    private int mRadius;
-
-    private static final int[] CHECKED_STATE_SET = {
-            android.R.attr.state_checked
-    };
+public class DrawerButton extends ViewGroup {
+    private View mIconHolderView;
+    private View mLineView;
+    private TextView mTitleText;
+    private ImageView mIconView;
 
     public DrawerButton(Context context){
         super(context);
@@ -45,62 +39,32 @@ public class DrawerButton extends View implements Checkable {
     }
 
     private void init(Context context, AttributeSet attrs) {
-        mBackground = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mBackground.setStyle(Paint.Style.FILL);
-        mBackground.setColor(Color.parseColor("#0D47A1"));
+        setFocusable(true);
 
-        mForeground = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mForeground.setStyle(Paint.Style.FILL);
-        mForeground.setColor(Color.DKGRAY);
-        mForeground.setTextSize(32f);
+        LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(
+                Context.LAYOUT_INFLATER_SERVICE);
+        inflater.inflate(R.layout.navigation_button, this, true);
 
-        mLine = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mLine.setStyle(Paint.Style.FILL);
-        mLine.setColor(Color.WHITE);
-        mLine.setAlpha(80);
-        mLine.setStrokeWidth(5f);
-        mLine.setStrokeCap(Paint.Cap.ROUND);
-    }
+        mIconHolderView = findViewById(R.id.nav_background);
+        mLineView = findViewById(R.id.nav_line);
+        mIconView = (ImageView) findViewById(R.id.nav_icon);
+        mTitleText = (TextView) findViewById(R.id.nav_title);
 
-    @Override
-    public int[] onCreateDrawableState(int extraSpace) {
-        final int[] drawableState = super.onCreateDrawableState(extraSpace + 1);
-        if (isChecked()) {
-            mergeDrawableStates(drawableState, CHECKED_STATE_SET);
-        }
-        return drawableState;
-    }
-
-    @Override
-    protected void drawableStateChanged() {
-        super.drawableStateChanged();
-        invalidate();
-    }
-
-    @Override
-    public boolean isChecked() {
-        return mChecked;
-    }
-
-    @Override
-    public void setChecked(boolean checked) {
-        if(mChecked != checked) {
-            mChecked = checked;
-            refreshDrawableState();
-        }
-    }
-
-    @Override
-    public void toggle() {
-        setChecked(!mChecked);
+        setBackground(getContext().getDrawable(R.drawable.ripple_drawable));
+        setContentDescription(mTitleText.getText().toString());
     }
 
     public void setText(String title) {
-        mTitle = title;
+        mTitleText.setText(title);
     }
 
     public void setImageResource(int icon) {
-        mImageResource = icon;
+        mIconView.setImageResource(icon);
+    }
+
+    public void setColor(int color) {
+        Drawable d = mIconHolderView.getBackground();
+        ((ShapeDrawable)d.mutate()).getPaint().setColor(ContextCompat.getColor(getContext(), color));
     }
 
     @Override
@@ -110,30 +74,32 @@ public class DrawerButton extends View implements Checkable {
         int height = getMeasuredHeight();
         int size = Math.max(width, height);
         setMeasuredDimension(size, size);
+        measureChildren(widthMeasureSpec, heightMeasureSpec);
     }
 
     @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-        mCenterX = w / 2;
-        mCenterY = h / 3;
-        mRadius = (int)((Math.min(w, h) / 2) * 0.54);
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        int unit = getHeight() / 10;
+        int centerX = unit * 5;
+        int circleRadius = unit * 3;
+        mIconHolderView.layout(centerX-circleRadius, unit, centerX+circleRadius, unit+circleRadius*2);
+
+        int iconSize = mIconView.getDrawable().getIntrinsicWidth();
+        int iconTop = ((int)(unit * 3.4) - iconSize/2);
+        mIconView.layout(centerX-iconSize/2, iconTop, centerX+iconSize/2, iconTop+iconSize);
+
+        int lineSize = (int)(mIconView.getDrawable().getIntrinsicWidth() * 1.4);
+        int lineTop = (int)(unit * 5.4);
+        mLineView.layout(centerX-lineSize/2, lineTop, centerX+lineSize/2, lineTop+6);
+        mLineView.setAlpha(0.4f);
+
+        int left = (getWidth() - mTitleText.getMeasuredWidth())/2;
+        int top = ((int)(unit * 8.2) - mTitleText.getMeasuredHeight()/2);
+        mTitleText.layout(left, top, left + mTitleText.getMeasuredWidth(), top+mTitleText.getMeasuredHeight());
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
-        canvas.drawCircle(mCenterX, mCenterY, mRadius, mBackground);
-
-        int left = (int)((canvas.getWidth() - mForeground.measureText(mTitle, 0, mTitle.length())) / 2.0f);
-        canvas.drawText(mTitle, left, mCenterY*2-mForeground.ascent(), mForeground);
-
-        Drawable icon = getResources().getDrawable(mImageResource);
-        icon.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
-        icon.setBounds(mCenterX-icon.getIntrinsicWidth()/2, mCenterY-(int)(icon.getIntrinsicHeight()*0.67),
-                mCenterX+icon.getIntrinsicWidth()/2, mCenterY+(int)(icon.getIntrinsicHeight()*0.33));
-        icon.draw(canvas);
-
-        canvas.drawLine(mCenterX-(int)(mRadius/2.8), mCenterY+mRadius/2, mCenterX+(int)(mRadius/2.8), mCenterY+mRadius/2, mLine);
-        super.onDraw(canvas);
+    public boolean hasOverlappingRendering() {
+        return false;
     }
 }
