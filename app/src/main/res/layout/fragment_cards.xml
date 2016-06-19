@@ -1,0 +1,29 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.sharad.cards.CardsFragment">
+
+    <android.support.percent.PercentRelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.sharad.utils.SnappyRecyclerView
+            android:id="@+id/recyclerView"
+            app:layout_widthPercent="100%"
+            app:layout_aspectRatio="148%"
+            android:background="@color/primary"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true" />
+    </android.support.percent.PercentRelativeLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="@dimen/fab_margin"
+        android:tint="@android:color/white"
+        android:src="@drawable/ic_more_horiz_black_24dp"/>
+
+</FrameLayout>

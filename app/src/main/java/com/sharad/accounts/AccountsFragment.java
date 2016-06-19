@@ -88,11 +88,11 @@ public class AccountsFragment extends Fragment {
         DecimalFormat nf = new DecimalFormat("##,##,###");
         SimpleDateFormat df = new SimpleDateFormat("EEE, dd MMM yyyy");
 
-        itemList.add(new AccountItem("Title01", "Title", R.mipmap.ic_beach_access_black_24dp, getResources().getColor(R.color.dark_palette00)));
-        itemList.add(new AccountItem("Title02", "Bank Name", R.mipmap.ic_child_friendly_black_24dp, getResources().getColor(R.color.dark_palette04)));
-        itemList.add(new AccountItem("Title03", "Account Number", R.mipmap.ic_flight_black_24dp, getResources().getColor(R.color.dark_palette08)));
-        itemList.add(new AccountItem("Title04", "Title", R.mipmap.ic_beach_access_black_24dp, getResources().getColor(R.color.dark_palette01)));
-        itemList.add(new AccountItem("Title05", "Bank Name", R.mipmap.ic_child_friendly_black_24dp, getResources().getColor(R.color.dark_palette09)));
+        itemList.add(new AccountItem("Title01", "Title", R.drawable.ic_home_black_24dp, getResources().getColor(R.color.dark_palette00)));
+        itemList.add(new AccountItem("Title02", "Bank Name", R.drawable.ic_home_black_24dp, getResources().getColor(R.color.dark_palette04)));
+        itemList.add(new AccountItem("Title03", "Account Number", R.drawable.ic_home_black_24dp, getResources().getColor(R.color.dark_palette08)));
+        itemList.add(new AccountItem("Title04", "Title", R.drawable.ic_home_black_24dp, getResources().getColor(R.color.dark_palette01)));
+        itemList.add(new AccountItem("Title05", "Bank Name", R.drawable.ic_home_black_24dp, getResources().getColor(R.color.dark_palette09)));
 
         return itemList;
     }

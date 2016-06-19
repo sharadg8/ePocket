@@ -2,13 +2,9 @@ package com.sharad.epocket;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -18,20 +14,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 
-import com.sharad.accounts.AccountsFragment;
+import com.sharad.cards.CardsFragment;
+import com.sharad.utils.RecyclerItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
-        implements AddTransactionFragment.OnFragmentInteractionListener,
-        NavigationView.OnNavigationItemSelectedListener {
-
-    ViewPager mAddTransactionView;
-    //NavigationView mNavigationView;
+        implements CardsFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,58 +32,51 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        initFragment();
         initNavigationDrawer(toolbar);
-
-        final FloatingActionButton myFab = (FloatingActionButton) this.findViewById(R.id.fabButton);
-        myFab.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                //Intent myIntent = new Intent(MainActivity.this, BudgetActivity.class);
-                //MainActivity.this.startActivity(myIntent);
-                mAddTransactionView.setVisibility(View.VISIBLE);
-                myFab.setVisibility(View.GONE);
-            }
-        });
     }
 
     private void initNavigationDrawer(Toolbar toolbar) {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        List<NavigationDrawerItem> rowListItem = new ArrayList<NavigationDrawerItem>();
-        rowListItem.add(new NavigationDrawerItem("Home", R.drawable.ic_home_black_24dp));
-        rowListItem.add(new NavigationDrawerItem("Accounts", R.drawable.ic_account_box_black_24dp));
-        rowListItem.add(new NavigationDrawerItem("Budget", R.drawable.ic_budget_black_24px));
-        rowListItem.add(new NavigationDrawerItem("Goals", R.drawable.ic_goal_black_24px));
-        rowListItem.add(new NavigationDrawerItem("Cards", R.drawable.ic_credit_card_black_24dp));
-        rowListItem.add(new NavigationDrawerItem("Bills", R.drawable.ic_receipt_black_24dp));
+        final List<NavigationDrawerItem> rowListItem = new ArrayList<>();
+        rowListItem.add(new NavigationDrawerItem("Home", R.drawable.ic_home_black_24dp, null));
+        rowListItem.add(new NavigationDrawerItem("Accounts", R.drawable.ic_account_box_black_24dp, null));
+        rowListItem.add(new NavigationDrawerItem("Budget", R.drawable.ic_budget_black_24px, null));
+        rowListItem.add(new NavigationDrawerItem("Goals", R.drawable.ic_goal_black_24px, null));
+        rowListItem.add(new NavigationDrawerItem("Cards", R.drawable.ic_credit_card_black_24dp, CardsFragment.newInstance("","")));
+        rowListItem.add(new NavigationDrawerItem("Bills", R.drawable.ic_receipt_black_24dp, null));
 
         GridLayoutManager gridLayout = new GridLayoutManager(MainActivity.this, 2);
 
-        RecyclerView rView = (RecyclerView)findViewById(R.id.lst_drawer_items);
-        rView.setHasFixedSize(true);
-        rView.setLayoutManager(gridLayout);
+        RecyclerView recyclerView = (RecyclerView)findViewById(R.id.lst_drawer_items);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(gridLayout);
 
         DrawerGridRecycler rcAdapter = new DrawerGridRecycler(MainActivity.this, rowListItem);
-        rView.setAdapter(rcAdapter);
-    }
+        recyclerView.setAdapter(rcAdapter);
 
-    private void initFragment() {
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
-        PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager());
-        pagerAdapter.addFragment(AccountsFragment.createInstance(1), "Accounts");
-        viewPager.setAdapter(pagerAdapter);
-
-        mAddTransactionView = (ViewPager) findViewById(R.id.addTransactionView);
-        PagerAdapter addPagerAdapter = new PagerAdapter(getSupportFragmentManager());
-        addPagerAdapter.addFragment(AddTransactionFragment.newInstance(), "AddTransaction");
-        mAddTransactionView.setAdapter(addPagerAdapter);
+        recyclerView.addOnItemTouchListener(
+            new RecyclerItemClickListener(this, new RecyclerItemClickListener.OnItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
+                    Fragment nextFragment = rowListItem.get(position).getFragment();
+                    if(nextFragment != null) {
+                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                        // Replace whatever is in the fragment_container view with this fragment,
+                        // and add the transaction to the back stack so the user can navigate back
+                        transaction.replace(R.id.content_main, nextFragment);
+                        //transaction.addToBackStack(null);
+                        // Commit the transaction
+                        transaction.commit();
+                        drawer.closeDrawer(GravityCompat.START);
+                    }
+                }
+            })
+        );
     }
 
     @Override
@@ -127,72 +111,7 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        /*
-        if (id == R.id.nav_home) {
-
-        } else if (id == R.id.nav_accounts) {
-
-        } else if (id == R.id.nav_budget) {
-            Intent myIntent = new Intent(MainActivity.this, BudgetActivity.class);
-            MainActivity.this.startActivity(myIntent);
-        } else if (id == R.id.nav_goals) {
-
-        } else if (id == R.id.nav_cards) {
-            Intent myIntent = new Intent(MainActivity.this, CardsActivity.class);
-            MainActivity.this.startActivity(myIntent);
-        } else if (id == R.id.nav_bills) {
-            Intent myIntent = new Intent(MainActivity.this, CategoryActivity.class);
-            MainActivity.this.startActivity(myIntent);
-        }
-        */
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
     public void onFragmentInteraction(Uri uri) {
-        FloatingActionButton myFab = (FloatingActionButton) this.findViewById(R.id.fabButton);
-        myFab.setVisibility(View.VISIBLE);
-        mAddTransactionView.setVisibility(View.GONE);
-        Animation slide_down = AnimationUtils.loadAnimation(getApplicationContext(),
-                R.anim.slide_down);
-        mAddTransactionView.startAnimation(slide_down);
-    }
 
-    static class PagerAdapter extends FragmentPagerAdapter {
-
-        private final List<Fragment> fragmentList = new ArrayList<>();
-        private final List<String> fragmentTitleList = new ArrayList<>();
-
-        public PagerAdapter(FragmentManager fragmentManager) {
-            super(fragmentManager);
-        }
-
-        public void addFragment(Fragment fragment, String title) {
-            fragmentList.add(fragment);
-            fragmentTitleList.add(title);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return fragmentList.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return fragmentList.size();
-        }
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return fragmentTitleList.get(position);
-        }
     }
 }

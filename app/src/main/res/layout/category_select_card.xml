@@ -5,5 +5,5 @@
     android:layout_width="48dp"
     android:layout_height="48dp"
     android:layout_margin="4dp"
-    android:src="@mipmap/ic_movie_black_24dp"
+    android:src="@drawable/ic_home_black_24dp"
     android:tint="@android:color/white"/>

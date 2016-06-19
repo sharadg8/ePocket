@@ -95,6 +95,6 @@
         app:layout_anchor="@id/appBarLayout"
         app:layout_anchorGravity="bottom|right|end"
         android:layout_margin="16dp"
-        android:src="@mipmap/ic_done_white_24dp"
+        android:src="@drawable/ic_done_wht"
         app:borderWidth="0dp"/>
 </android.support.design.widget.CoordinatorLayout>

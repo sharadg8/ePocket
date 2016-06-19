@@ -140,16 +140,16 @@ public class AddTransactionFragment extends Fragment {
 
     private List<CategoryItem> createItemList() {
         List<CategoryItem> itemList = new ArrayList<>();
-        itemList.add(new CategoryItem("Title01", "Title", R.mipmap.ic_beach_access_black_24dp, getResources().getColor(R.color.dark_palette00)));
-        itemList.add(new CategoryItem("Title02", "Bank Name", R.mipmap.ic_child_friendly_black_24dp, getResources().getColor(R.color.dark_palette04)));
-        itemList.add(new CategoryItem("Title03", "Account Number", R.mipmap.ic_flight_black_24dp, getResources().getColor(R.color.dark_palette08)));
-        itemList.add(new CategoryItem("Title04", "Title", R.mipmap.ic_beach_access_black_24dp, getResources().getColor(R.color.dark_palette01)));
-        itemList.add(new CategoryItem("Title05", "Bank Name", R.mipmap.ic_child_friendly_black_24dp, getResources().getColor(R.color.dark_palette09)));
-        itemList.add(new CategoryItem("Title01", "Title", R.mipmap.ic_beach_access_black_24dp, getResources().getColor(R.color.dark_palette00)));
-        itemList.add(new CategoryItem("Title02", "Bank Name", R.mipmap.ic_child_friendly_black_24dp, getResources().getColor(R.color.dark_palette04)));
-        itemList.add(new CategoryItem("Title03", "Account Number", R.mipmap.ic_flight_black_24dp, getResources().getColor(R.color.dark_palette08)));
-        itemList.add(new CategoryItem("Title04", "Title", R.mipmap.ic_beach_access_black_24dp, getResources().getColor(R.color.dark_palette01)));
-        itemList.add(new CategoryItem("Title05", "Bank Name", R.mipmap.ic_child_friendly_black_24dp, getResources().getColor(R.color.dark_palette09)));
+        itemList.add(new CategoryItem("Title01", "Title", R.drawable.ic_home_black_24dp, getResources().getColor(R.color.dark_palette00)));
+        itemList.add(new CategoryItem("Title02", "Bank Name", R.drawable.ic_home_black_24dp, getResources().getColor(R.color.dark_palette04)));
+        itemList.add(new CategoryItem("Title03", "Account Number", R.drawable.ic_home_black_24dp, getResources().getColor(R.color.dark_palette08)));
+        itemList.add(new CategoryItem("Title04", "Title", R.drawable.ic_home_black_24dp, getResources().getColor(R.color.dark_palette01)));
+        itemList.add(new CategoryItem("Title05", "Bank Name", R.drawable.ic_home_black_24dp, getResources().getColor(R.color.dark_palette09)));
+        itemList.add(new CategoryItem("Title01", "Title", R.drawable.ic_home_black_24dp, getResources().getColor(R.color.dark_palette00)));
+        itemList.add(new CategoryItem("Title02", "Bank Name", R.drawable.ic_home_black_24dp, getResources().getColor(R.color.dark_palette04)));
+        itemList.add(new CategoryItem("Title03", "Account Number", R.drawable.ic_home_black_24dp, getResources().getColor(R.color.dark_palette08)));
+        itemList.add(new CategoryItem("Title04", "Title", R.drawable.ic_home_black_24dp, getResources().getColor(R.color.dark_palette01)));
+        itemList.add(new CategoryItem("Title05", "Bank Name", R.drawable.ic_home_black_24dp, getResources().getColor(R.color.dark_palette09)));
 
         return itemList;
     }

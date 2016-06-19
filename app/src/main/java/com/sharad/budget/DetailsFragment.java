@@ -93,21 +93,21 @@ public class DetailsFragment extends Fragment {
         DecimalFormat nf = new DecimalFormat("##,##,###");
         SimpleDateFormat df = new SimpleDateFormat("EEE, dd MMM yyyy");
 
-        itemList.add(new DetailItem("Title01", "Title", R.mipmap.ic_beach_access_black_24dp, getResources().getColor(R.color.dark_palette00)));
-        itemList.add(new DetailItem("Title02", "Bank Name", R.mipmap.ic_child_friendly_black_24dp, getResources().getColor(R.color.dark_palette04)));
-        itemList.add(new DetailItem("Title03", "Account Number", R.mipmap.ic_flight_black_24dp, getResources().getColor(R.color.dark_palette08)));
-        itemList.add(new DetailItem("Title04", "Title", R.mipmap.ic_beach_access_black_24dp, getResources().getColor(R.color.dark_palette01)));
-        itemList.add(new DetailItem("Title05", "Bank Name", R.mipmap.ic_child_friendly_black_24dp, getResources().getColor(R.color.dark_palette09)));
-        itemList.add(new DetailItem("Title06", "Account Number", R.mipmap.ic_flight_black_24dp, getResources().getColor(R.color.dark_palette03)));
-        itemList.add(new DetailItem("Title07", "Title", R.mipmap.ic_beach_access_black_24dp, getResources().getColor(R.color.dark_palette07)));
-        itemList.add(new DetailItem("Title08", "Bank Name", R.mipmap.ic_child_friendly_black_24dp, getResources().getColor(R.color.dark_palette12)));
-        itemList.add(new DetailItem("Title09", "Account Number", R.mipmap.ic_flight_black_24dp, getResources().getColor(R.color.dark_palette02)));
-        itemList.add(new DetailItem("Title10", "Title", R.mipmap.ic_beach_access_black_24dp, getResources().getColor(R.color.dark_palette05)));
-        itemList.add(new DetailItem("Title11", "Bank Name", R.mipmap.ic_child_friendly_black_24dp, getResources().getColor(R.color.dark_palette10)));
-        itemList.add(new DetailItem("Title12", "Account Number", R.mipmap.ic_flight_black_24dp, getResources().getColor(R.color.dark_palette16)));
-        itemList.add(new DetailItem("Title13", "Title", R.mipmap.ic_beach_access_black_24dp, getResources().getColor(R.color.dark_palette06)));
-        itemList.add(new DetailItem("Title14", "Bank Name", R.mipmap.ic_child_friendly_black_24dp, getResources().getColor(R.color.dark_palette17)));
-        itemList.add(new DetailItem("Title15", "Account Number", R.mipmap.ic_flight_black_24dp, getResources().getColor(R.color.dark_palette14)));
+        itemList.add(new DetailItem("Title01", "Title", R.drawable.ic_home_black_24dp, getResources().getColor(R.color.dark_palette00)));
+        itemList.add(new DetailItem("Title02", "Bank Name", R.drawable.ic_home_black_24dp, getResources().getColor(R.color.dark_palette04)));
+        itemList.add(new DetailItem("Title03", "Account Number", R.drawable.ic_home_black_24dp, getResources().getColor(R.color.dark_palette08)));
+        itemList.add(new DetailItem("Title04", "Title", R.drawable.ic_home_black_24dp, getResources().getColor(R.color.dark_palette01)));
+        itemList.add(new DetailItem("Title05", "Bank Name", R.drawable.ic_home_black_24dp, getResources().getColor(R.color.dark_palette09)));
+        itemList.add(new DetailItem("Title06", "Account Number", R.drawable.ic_home_black_24dp, getResources().getColor(R.color.dark_palette03)));
+        itemList.add(new DetailItem("Title07", "Title", R.drawable.ic_home_black_24dp, getResources().getColor(R.color.dark_palette07)));
+        itemList.add(new DetailItem("Title08", "Bank Name", R.drawable.ic_home_black_24dp, getResources().getColor(R.color.dark_palette12)));
+        itemList.add(new DetailItem("Title09", "Account Number", R.drawable.ic_home_black_24dp, getResources().getColor(R.color.dark_palette02)));
+        itemList.add(new DetailItem("Title10", "Title", R.drawable.ic_home_black_24dp, getResources().getColor(R.color.dark_palette05)));
+        itemList.add(new DetailItem("Title11", "Bank Name", R.drawable.ic_home_black_24dp, getResources().getColor(R.color.dark_palette10)));
+        itemList.add(new DetailItem("Title12", "Account Number", R.drawable.ic_home_black_24dp, getResources().getColor(R.color.dark_palette16)));
+        itemList.add(new DetailItem("Title13", "Title", R.drawable.ic_home_black_24dp, getResources().getColor(R.color.dark_palette06)));
+        itemList.add(new DetailItem("Title14", "Bank Name", R.drawable.ic_home_black_24dp, getResources().getColor(R.color.dark_palette17)));
+        itemList.add(new DetailItem("Title15", "Account Number", R.drawable.ic_home_black_24dp, getResources().getColor(R.color.dark_palette14)));
 
         return itemList;
     }

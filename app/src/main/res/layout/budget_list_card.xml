@@ -25,7 +25,7 @@
                 android:layout_gravity="center_vertical"
                 android:id="@+id/dt_image"
                 android:visibility="invisible"
-                android:src="@mipmap/ic_account_balance_wallet_black_24dp"/>
+                android:src="@drawable/ic_home_black_24dp"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
