@@ -1,10 +1,8 @@
 package com.sharad.cards;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -78,13 +76,13 @@ public class CardsFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_cards, container, false);
         setupRecyclerView(rootView);
 
-        final FloatingActionButton myFab = (FloatingActionButton) rootView.findViewById(R.id.fabButton);
+        /*final FloatingActionButton myFab = (FloatingActionButton) rootView.findViewById(R.id.fabButton);
         myFab.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent myIntent = new Intent(getActivity(), AddCardActivity.class);
                 getActivity().startActivity(myIntent);
             }
-        });
+        });*/
 
         return rootView;
     }
@@ -100,12 +98,12 @@ public class CardsFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
 
         recyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
+            new RecyclerItemClickListener(getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
 
-                    }
-                })
+                }
+            })
         );
     }
 
