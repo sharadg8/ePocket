@@ -1,10 +1,13 @@
 package com.sharad.utils;
 
-import android.animation.ValueAnimator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Color;
-import android.support.annotation.NonNull;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +27,7 @@ public class FloatingActionMenu extends ViewGroup {
     private boolean isExpanded;
 
     private FloatingActionButton mMainButton;
+    private View mBackground;
 
     public FloatingActionMenu(Context context) {
         this(context, null, 0);
@@ -40,8 +44,14 @@ public class FloatingActionMenu extends ViewGroup {
         PADDING = (int) context.getResources().getDimension(R.dimen.fam_padding);
         isExpanded = false;
 
-        mMainButton = new FloatingActionButton(context, attrs, defStyleAttr);
+        mBackground = new View(context, attrs, defStyleAttr);
+        Drawable d = ContextCompat.getDrawable(context, R.drawable.circle);
+        ((GradientDrawable)d).setColor(ContextCompat.getColor(context, R.color.accent));
+        mBackground.setBackground(d);
+        addView(mBackground);
 
+        mMainButton = new FloatingActionButton(context, attrs, defStyleAttr);
+        addView(mMainButton);
         configureMainButton();
     }
 
@@ -58,8 +68,6 @@ public class FloatingActionMenu extends ViewGroup {
                 toggle();
             }
         });
-
-        addView(mMainButton);
     }
 
     @Override
@@ -67,33 +75,46 @@ public class FloatingActionMenu extends ViewGroup {
         final int collapsedMainFabY = b - t - mMainButton.getMeasuredHeight() - PADDING;
         int height = PADDING;
 
+        // Places the main button as last
+        int mainWidth = mMainButton.getMeasuredWidth();
+        int mainHeight = mMainButton.getMeasuredHeight();
+        int mainX = getMeasuredWidth() - mMainButton.getMeasuredWidth() - PADDING;
+        int mainY = getMeasuredHeight() - mMainButton.getMeasuredHeight() - PADDING;
+        mMainButton.layout(mainX, mainY, mainX + mainWidth, mainY + mainHeight);
+
+        int bgCenterX = mainX + mainWidth/2;
+        int bgCenterY = mainY + mainHeight/2;
+
+        if (isExpanded) {
+            int radius = mainWidth + MARGIN_BETWEEN_FABS + mainWidth / 2;
+            mBackground.layout(bgCenterX - radius, bgCenterY - radius, bgCenterX + radius, bgCenterY + radius);
+        }
+
         final int childCount = getChildCount();
-        for (int i = childCount - 1; i >= 0; i--) {
+        int angle = 180;
+        for (int i = childCount - 1; i >= 2; i--) {
             final View child = getChildAt(i);
 
             if (child.getVisibility() == GONE || child == mMainButton) {
                 continue;
             }
 
+            float newX = (float)(bgCenterX + (mainWidth + MARGIN_BETWEEN_FABS) * Math.cos(Math.toRadians(angle)));
+            float newY = (float)(bgCenterY + (mainWidth + MARGIN_BETWEEN_FABS) * Math.sin(Math.toRadians(angle)));
+
             final int childWidth = child.getMeasuredWidth();
             final int childHeight = child.getMeasuredHeight();
-            final int childX = getMeasuredWidth() - child.getMeasuredWidth() - PADDING;
-            final int deltaY = height + childHeight;
-            child.layout(childX, height, childX + childWidth, deltaY);
+            final int childX = (int)newX - child.getMeasuredWidth()/2;
+            final int childY = (int)newY - child.getMeasuredHeight()/2;
+            child.layout(childX, childY, childX + childWidth, childY + childHeight);
             child.setAlpha(isExpanded ? 1 : 0);
 
             if (!isExpanded) {
-                child.setTranslationY(collapsedMainFabY - height);
+                child.setTranslationX(mainX - childX);
+                child.setTranslationY(mainY - childY);
             }
-
-            height += childHeight + (i <= 1 ? MARGIN_BETWEEN_FABS : 0);
+            angle += 45;
         }
-
-        // Places the main button as last
-        final int mainWidth = mMainButton.getMeasuredWidth();
-        final int mainHeight = mMainButton.getMeasuredHeight();
-        final int mainX = getMeasuredWidth() - mMainButton.getMeasuredWidth() - PADDING;
-        mMainButton.layout(mainX, height, mainX + mainWidth, height + mainHeight);
     }
 
     @Override
@@ -101,28 +122,10 @@ public class FloatingActionMenu extends ViewGroup {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         measureChildren(widthMeasureSpec, heightMeasureSpec);
 
-        int width = 0;
-        int height = 0;
-
-        final int childCount = getChildCount();
-        for (int i = 0; i < childCount; i++) {
-            final View child = getChildAt(i);
-
-            if (child.getVisibility() == GONE) {
-                continue;
-            }
-
-            final int childWidth = child.getMeasuredWidth();
-            if (childWidth > width) {
-                width = childWidth;
-            }
-
-            height += child.getMeasuredHeight();
-        }
-
-        // Add padding
-        width += 2 * PADDING;
-        height += 2 * PADDING + MARGIN_BETWEEN_FABS;
+        int width = 2 * mMainButton.getMeasuredWidth();
+        int height = 2 * mMainButton.getMeasuredHeight();
+        width += PADDING + MARGIN_BETWEEN_FABS;
+        height += PADDING + MARGIN_BETWEEN_FABS;
 
         setMeasuredDimension(width, height);
     }
@@ -162,17 +165,22 @@ public class FloatingActionMenu extends ViewGroup {
                 continue;
             }
 
-            final ValueAnimator animator = ValueAnimator.ofFloat(mMainButton.getTop() - child.getTop(), 0);
-            animator.setDuration(ANIMATION_DURATION);
-            animator.setInterpolator(accDecInterpolator);
-            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(@NonNull final ValueAnimator animation) {
-                    child.setAlpha(animation.getAnimatedFraction());
-                    child.setTranslationY((Float) animation.getAnimatedValue());
-                }
-            });
-            animator.start();
+            final float deltaY = mMainButton.getTop() - child.getTop();
+            final float fromYDelta = isExpanded ? 0 : deltaY;
+            final float toYDelta = isExpanded ? -deltaY : 0;
+            final float deltaX = mMainButton.getLeft() - child.getLeft();
+            final float fromXDelta = isExpanded ? 0 : deltaX;
+            final float toXDelta = isExpanded ? -deltaX : 0;
+
+            AnimatorSet animSetXY = new AnimatorSet();
+            ObjectAnimator y = ObjectAnimator.ofFloat(child, "translationY", fromYDelta, toYDelta);
+            ObjectAnimator x = ObjectAnimator.ofFloat(child, "translationX", fromXDelta, toXDelta);
+            ObjectAnimator alpha = ObjectAnimator.ofFloat(child, "alpha", 0, 1);
+
+            animSetXY.playTogether(x, y, alpha);
+            animSetXY.setInterpolator(accDecInterpolator);
+            animSetXY.setDuration(ANIMATION_DURATION);
+            animSetXY.start();
         }
     }
 
@@ -192,18 +200,19 @@ public class FloatingActionMenu extends ViewGroup {
             final float deltaY = mMainButton.getTop() - child.getTop();
             final float fromYDelta = isExpanded ? 0 : -deltaY;
             final float toYDelta = isExpanded ? deltaY : 0;
+            final float deltaX = mMainButton.getLeft() - child.getLeft();
+            final float fromXDelta = isExpanded ? 0 : -deltaX;
+            final float toXDelta = isExpanded ? deltaX : 0;
 
-            final ValueAnimator animator = ValueAnimator.ofFloat(fromYDelta, toYDelta);
-            animator.setDuration(ANIMATION_DURATION);
-            animator.setInterpolator(accDecInterpolator);
-            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(@NonNull final ValueAnimator animation) {
-                    child.setAlpha(1 - animation.getAnimatedFraction());
-                    child.setTranslationY((Float) animation.getAnimatedValue());
-                }
-            });
-            animator.start();
+            AnimatorSet animSetXY = new AnimatorSet();
+            ObjectAnimator y = ObjectAnimator.ofFloat(child, "translationY", fromYDelta, toYDelta);
+            ObjectAnimator x = ObjectAnimator.ofFloat(child, "translationX", fromXDelta, toXDelta);
+            ObjectAnimator alpha = ObjectAnimator.ofFloat(child, "alpha", 1, 0);
+
+            animSetXY.playTogether(x, y, alpha);
+            animSetXY.setInterpolator(accDecInterpolator);
+            animSetXY.setDuration(ANIMATION_DURATION);
+            animSetXY.start();
         }
     }
 

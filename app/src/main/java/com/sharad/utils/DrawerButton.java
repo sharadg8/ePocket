@@ -1,9 +1,6 @@
 package com.sharad.utils;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,11 +57,6 @@ public class DrawerButton extends ViewGroup {
 
     public void setImageResource(int icon) {
         mIconView.setImageResource(icon);
-    }
-
-    public void setColor(int color) {
-        Drawable d = mIconHolderView.getBackground();
-        ((ShapeDrawable)d.mutate()).getPaint().setColor(ContextCompat.getColor(getContext(), color));
     }
 
     @Override
