@@ -107,7 +107,7 @@
     <dimen name="nav_header_height">160dp</dimen>
 
     <!-- Default FloatingActionMenu values. -->
-    <dimen name="fam_margin_between_fab">32dp</dimen>
+    <dimen name="fam_margin_between_fab">24dp</dimen>
     <dimen name="fam_padding">16dp</dimen>
     <dimen name="fam_elevation">6dp</dimen>
 </resources>

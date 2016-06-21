@@ -15,14 +15,22 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.sharad.cards.CardsFragment;
-import com.sharad.utils.RecyclerItemClickListener;
+import com.sharad.epocket.accounts.AccountsFragment;
+import com.sharad.epocket.bills.BillsFragment;
+import com.sharad.epocket.budget.BudgetFragment;
+import com.sharad.epocket.cards.CardsFragment;
+import com.sharad.epocket.goals.GoalsFragment;
+import com.sharad.epocket.utils.RecyclerItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity
-        implements CardsFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements
+        AccountsFragment.OnFragmentInteractionListener,
+        BillsFragment.OnFragmentInteractionListener,
+        BudgetFragment.OnFragmentInteractionListener,
+        CardsFragment.OnFragmentInteractionListener,
+        GoalsFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +52,11 @@ public class MainActivity extends AppCompatActivity
 
         final List<NavigationDrawerItem> rowListItem = new ArrayList<>();
         rowListItem.add(new NavigationDrawerItem("Home", R.drawable.ic_home_black_24dp, null));
-        rowListItem.add(new NavigationDrawerItem("Accounts", R.drawable.ic_account_box_black_24dp, null));
-        rowListItem.add(new NavigationDrawerItem("Budget", R.drawable.ic_budget_black_24px, null));
-        rowListItem.add(new NavigationDrawerItem("Goals", R.drawable.ic_goal_black_24px, null));
+        rowListItem.add(new NavigationDrawerItem("Accounts", R.drawable.ic_account_box_black_24dp, AccountsFragment.newInstance("","")));
+        rowListItem.add(new NavigationDrawerItem("Budget", R.drawable.ic_budget_black_24px, BudgetFragment.newInstance("","")));
+        rowListItem.add(new NavigationDrawerItem("Goals", R.drawable.ic_goal_black_24px, GoalsFragment.newInstance("","")));
         rowListItem.add(new NavigationDrawerItem("Cards", R.drawable.ic_credit_card_black_24dp, CardsFragment.newInstance("","")));
-        rowListItem.add(new NavigationDrawerItem("Bills", R.drawable.ic_receipt_black_24dp, null));
+        rowListItem.add(new NavigationDrawerItem("Bills", R.drawable.ic_receipt_black_24dp, BillsFragment.newInstance("","")));
 
         GridLayoutManager gridLayout = new GridLayoutManager(MainActivity.this, 2);
 

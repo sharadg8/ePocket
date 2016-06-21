@@ -21,16 +21,13 @@
             android:noHistory="true">
         </activity>
         <activity
-            android:name=".CategoryActivity"
+            android:name=".budget.CategoryActivity"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name="com.sharad.budget.BudgetActivity"
+            android:name=".cards.AddCardActivity"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name="com.sharad.cards.AddCardActivity"
-            android:parentActivityName=".MainActivity" />
-        <activity
-            android:name="com.sharad.accounts.AccountTransactionsActivity"
+            android:name=".accounts.AccountTransactionsActivity"
             android:parentActivityName=".MainActivity" />
     </application>
 

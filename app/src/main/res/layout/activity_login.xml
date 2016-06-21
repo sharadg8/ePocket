@@ -16,14 +16,14 @@
         android:text="Welcome back!"
         android:textColor="@android:color/white"
         android:gravity="center_horizontal"/>
-    <com.sharad.keyguard.KeyguardPINView
+    <com.sharad.epocket.keyguard.KeyguardPINView
         android:id="@+id/keyguard_pin_view"
         android:layout_width="@dimen/keyguard_security_width"
         android:layout_height="@dimen/keyguard_security_height"
         androidprv:layout_maxWidth="@dimen/keyguard_security_width"
         androidprv:layout_maxHeight="@dimen/keyguard_security_max_height"
         android:orientation="vertical">
-        <com.sharad.keyguard.KeyguardMessageArea
+        <com.sharad.epocket.keyguard.KeyguardMessageArea
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -43,14 +43,14 @@
             android:layout_weight="1"
             android:layoutDirection="ltr"
             >
-            <com.sharad.keyguard.AlphaOptimizedRelativeLayout
+            <com.sharad.epocket.keyguard.AlphaOptimizedRelativeLayout
                 android:id="@+id/row0"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:paddingBottom="16dp"
                 >
-                <com.sharad.keyguard.PasswordTextView
+                <com.sharad.epocket.keyguard.PasswordTextView
                     android:id="@+id/pinEntry"
                     android:layout_width="@dimen/keyguard_security_width"
                     android:layout_height="match_parent"
@@ -81,7 +81,7 @@
                     android:layout_alignParentBottom="true"
                     android:background="#28FFFFFF"
                     />
-            </com.sharad.keyguard.AlphaOptimizedRelativeLayout>
+            </com.sharad.epocket.keyguard.AlphaOptimizedRelativeLayout>
             <LinearLayout
                 android:id="@+id/row1"
                 android:layout_width="match_parent"
@@ -89,7 +89,7 @@
                 android:layout_weight="1"
                 android:orientation="horizontal"
                 >
-                <com.sharad.keyguard.NumPadKey
+                <com.sharad.epocket.keyguard.NumPadKey
                     android:id="@+id/key1"
                     android:layout_width="0px"
                     android:layout_height="match_parent"
@@ -97,7 +97,7 @@
                     androidprv:textView="@+id/pinEntry"
                     androidprv:digit="1"
                     />
-                <com.sharad.keyguard.NumPadKey
+                <com.sharad.epocket.keyguard.NumPadKey
                     android:id="@+id/key2"
                     android:layout_width="0px"
                     android:layout_height="match_parent"
@@ -105,7 +105,7 @@
                     androidprv:textView="@+id/pinEntry"
                     androidprv:digit="2"
                     />
-                <com.sharad.keyguard.NumPadKey
+                <com.sharad.epocket.keyguard.NumPadKey
                     android:id="@+id/key3"
                     android:layout_width="0px"
                     android:layout_height="match_parent"
@@ -121,7 +121,7 @@
                 android:layout_weight="1"
                 android:orientation="horizontal"
                 >
-                <com.sharad.keyguard.NumPadKey
+                <com.sharad.epocket.keyguard.NumPadKey
                     android:id="@+id/key4"
                     android:layout_width="0px"
                     android:layout_height="match_parent"
@@ -129,7 +129,7 @@
                     androidprv:textView="@+id/pinEntry"
                     androidprv:digit="4"
                     />
-                <com.sharad.keyguard.NumPadKey
+                <com.sharad.epocket.keyguard.NumPadKey
                     android:id="@+id/key5"
                     android:layout_width="0px"
                     android:layout_height="match_parent"
@@ -137,7 +137,7 @@
                     androidprv:textView="@+id/pinEntry"
                     androidprv:digit="5"
                     />
-                <com.sharad.keyguard.NumPadKey
+                <com.sharad.epocket.keyguard.NumPadKey
                     android:id="@+id/key6"
                     android:layout_width="0px"
                     android:layout_height="match_parent"
@@ -153,7 +153,7 @@
                 android:orientation="horizontal"
                 android:layout_weight="1"
                 >
-                <com.sharad.keyguard.NumPadKey
+                <com.sharad.epocket.keyguard.NumPadKey
                     android:id="@+id/key7"
                     android:layout_width="0px"
                     android:layout_height="match_parent"
@@ -161,7 +161,7 @@
                     androidprv:textView="@+id/pinEntry"
                     androidprv:digit="7"
                     />
-                <com.sharad.keyguard.NumPadKey
+                <com.sharad.epocket.keyguard.NumPadKey
                     android:id="@+id/key8"
                     android:layout_width="0px"
                     android:layout_height="match_parent"
@@ -169,7 +169,7 @@
                     androidprv:textView="@+id/pinEntry"
                     androidprv:digit="8"
                     />
-                <com.sharad.keyguard.NumPadKey
+                <com.sharad.epocket.keyguard.NumPadKey
                     android:id="@+id/key9"
                     android:layout_width="0px"
                     android:layout_height="match_parent"
@@ -190,7 +190,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     />
-                <com.sharad.keyguard.NumPadKey
+                <com.sharad.epocket.keyguard.NumPadKey
                     android:id="@+id/key0"
                     android:layout_width="0px"
                     android:layout_height="match_parent"
@@ -198,7 +198,7 @@
                     androidprv:textView="@+id/pinEntry"
                     androidprv:digit="0"
                     />
-                <com.sharad.keyguard.AlphaOptimizedImageButton
+                <com.sharad.epocket.keyguard.AlphaOptimizedImageButton
                     android:id="@+id/key_enter"
                     android:layout_width="0px"
                     android:layout_height="match_parent"
@@ -209,5 +209,5 @@
                     />
             </LinearLayout>
         </LinearLayout>
-    </com.sharad.keyguard.KeyguardPINView>
+    </com.sharad.epocket.keyguard.KeyguardPINView>
 </LinearLayout>
