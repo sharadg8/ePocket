@@ -10,13 +10,14 @@ import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 
 import com.sharad.epocket.R;
+import com.sharad.epocket.utils.FlipAnimation;
 
 public class AddCardActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_cards);
+        setContentView(R.layout.activity_add_card);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Add Card");
@@ -37,6 +38,14 @@ public class AddCardActivity extends AppCompatActivity {
         setScrollTo(cvv, scrollView);
         setScrollTo(pin, scrollView);
         setScrollTo(contact, scrollView);
+
+        View cardView = findViewById(R.id.cardView);
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                flipCard();
+            }
+        });
     }
 
     private void setScrollTo(final EditText view, final HorizontalScrollView scrollView) {
@@ -59,5 +68,19 @@ public class AddCardActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void flipCard() {
+        View rootLayout = findViewById(R.id.cardView);
+        View cardFace = findViewById(R.id.cardFrontView);
+        View cardBack = findViewById(R.id.cardBackView);
+
+        FlipAnimation flipAnimation = new FlipAnimation(cardFace, cardBack);
+
+        if (cardFace.getVisibility() == View.GONE)
+        {
+            flipAnimation.reverse();
+        }
+        rootLayout.startAnimation(flipAnimation);
     }
 }
