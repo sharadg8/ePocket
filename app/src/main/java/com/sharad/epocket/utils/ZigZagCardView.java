@@ -15,7 +15,7 @@ import android.widget.FrameLayout;
 public class ZigZagCardView extends FrameLayout {
     private Paint paint;
     private Path path;
-    private final int DESIRED_ZIGZAG_WIDTH = 10;
+    private final int DESIRED_DUTY_CYCLE = 10;
     private float zigzagWidth;
     private float zigzagHeight;
 
@@ -33,8 +33,8 @@ public class ZigZagCardView extends FrameLayout {
         setWillNotDraw(false);
 
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        //paint.setColor(ContextCompat.getColor(context, R.color.transaction_transfer));
         paint.setColor(Color.WHITE);
-        paint.setShadowLayer(6, 2, 2, 0xFF000000);
         path = new Path();
     }
 
@@ -42,7 +42,7 @@ public class ZigZagCardView extends FrameLayout {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
 
-        int count = w / DESIRED_ZIGZAG_WIDTH;
+        int count = w / DESIRED_DUTY_CYCLE;
         zigzagWidth = w / (count + 0.5f);
         count += 3;
         path.reset();
@@ -53,6 +53,7 @@ public class ZigZagCardView extends FrameLayout {
         zigzagHeight = zigzagWidth;
         for(int i=0; i<count; i++) {
             y = isZig ? 0 : zigzagHeight;
+            y += getPaddingTop();
             path.lineTo(x, y);
             x += zigzagWidth;
             isZig = !isZig;
@@ -60,6 +61,7 @@ public class ZigZagCardView extends FrameLayout {
         isZig = !isZig;
         for(int i=0; i<count; i++) {
             y = isZig ? h : h - zigzagHeight;
+            y -= getPaddingBottom();
             path.lineTo(x, y);
             x -= zigzagWidth;
             isZig = !isZig;
