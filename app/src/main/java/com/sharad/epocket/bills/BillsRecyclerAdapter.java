@@ -1,10 +1,14 @@
 package com.sharad.epocket.bills;
 
 import android.content.Context;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import com.sharad.epocket.R;
 
@@ -34,8 +38,27 @@ public class BillsRecyclerAdapter extends RecyclerView.Adapter {
     public int getItemCount() { return itemList.size(); }
 
     private class ViewHolder extends RecyclerView.ViewHolder {
-        public ViewHolder(View view) {
-            super(view);
+        private PopupMenu menu;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+
+            ImageButton menuButton = (ImageButton) itemView.findViewById(R.id.contextMenu);
+            menu = new PopupMenu(itemView.getContext(), menuButton, Gravity.CENTER);
+            menu.inflate(R.menu.popup_menu);
+            menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    return false;
+                }
+            });
+
+            menuButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    menu.show();
+                }
+            });
         }
     }
 }
