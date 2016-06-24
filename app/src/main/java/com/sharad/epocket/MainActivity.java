@@ -20,12 +20,14 @@ import com.sharad.epocket.bills.BillsFragment;
 import com.sharad.epocket.budget.BudgetFragment;
 import com.sharad.epocket.cards.CardsFragment;
 import com.sharad.epocket.goals.GoalsFragment;
+import com.sharad.epocket.home.HomeFragment;
 import com.sharad.epocket.utils.RecyclerItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements
+        HomeFragment.OnFragmentInteractionListener,
         AccountsFragment.OnFragmentInteractionListener,
         BillsFragment.OnFragmentInteractionListener,
         BudgetFragment.OnFragmentInteractionListener,
@@ -51,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements
         toggle.syncState();
 
         final List<NavigationDrawerItem> rowListItem = new ArrayList<>();
-        rowListItem.add(new NavigationDrawerItem("Home", R.drawable.ic_home_black_24dp, null));
+        rowListItem.add(new NavigationDrawerItem("Home", R.drawable.ic_home_black_24dp, HomeFragment.newInstance("","")));
         rowListItem.add(new NavigationDrawerItem("Accounts", R.drawable.ic_account_box_black_24dp, AccountsFragment.newInstance("","")));
         rowListItem.add(new NavigationDrawerItem("Budget", R.drawable.ic_budget_black_24px, BudgetFragment.newInstance("","")));
         rowListItem.add(new NavigationDrawerItem("Goals", R.drawable.ic_goal_black_24px, GoalsFragment.newInstance("","")));
