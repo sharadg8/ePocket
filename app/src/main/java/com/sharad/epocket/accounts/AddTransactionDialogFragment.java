@@ -1,9 +1,8 @@
 package com.sharad.epocket.accounts;
 
-import android.app.Activity;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,14 +26,10 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link AddTransactionFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link AddTransactionFragment#newInstance} factory method to
+ * Use the {@link AddTransactionDialogFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AddTransactionFragment extends Fragment {
-    private OnFragmentInteractionListener mListener;
-
+public class AddTransactionDialogFragment extends DialogFragment {
     private static final String ARG_PARAM1 = "type";
     private int mType;
 
@@ -45,19 +40,18 @@ public class AddTransactionFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment AddTransactionFragment.
+     * @return A new instance of fragment AddTransactionDialogFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static AddTransactionFragment newInstance() {
-        int type = TRANSACTION_TYPE_EXPENSE;
-        AddTransactionFragment fragment = new AddTransactionFragment();
+    public static AddTransactionDialogFragment newInstance(int type) {
+        AddTransactionDialogFragment fragment = new AddTransactionDialogFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_PARAM1, type);
         fragment.setArguments(args);
         return fragment;
     }
 
-    public AddTransactionFragment() {
+    public AddTransactionDialogFragment() {
         // Required empty public constructor
     }
 
@@ -69,13 +63,15 @@ public class AddTransactionFragment extends Fragment {
         } else {
             mType = TRANSACTION_TYPE_EXPENSE;
         }
+
+        setStyle(DialogFragment.STYLE_NO_TITLE, android.R.style.Theme_Material_Light_Dialog_MinWidth);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View rootView = inflater.inflate(R.layout.fragment_add_transaction, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_add_transaction_dialog, container, false);
         final TextView categoryText = (TextView) rootView.findViewById(R.id.at_category_text);
         View view4 = rootView.findViewById(R.id.at_accent_box);
         TextView view5 = (TextView) rootView.findViewById(R.id.at_title_text);
@@ -125,9 +121,6 @@ public class AddTransactionFragment extends Fragment {
                     InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 }
-                if (mListener != null) {
-                    mListener.onFragmentInteraction(null);
-                }
             }
         });
 
@@ -156,44 +149,4 @@ public class AddTransactionFragment extends Fragment {
 
         return itemList;
     }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
-    }
-
 }
