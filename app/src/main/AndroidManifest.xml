@@ -25,6 +25,7 @@
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".cards.AddCardActivity"
+            android:windowSoftInputMode="adjustResize"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".accounts.AccountTransactionsActivity"

@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements
         toggle.syncState();
 
         final List<NavigationDrawerItem> rowListItem = new ArrayList<>();
-        rowListItem.add(new NavigationDrawerItem("Home", R.drawable.ic_home_black_24dp, HomeFragment.newInstance("","")));
+        rowListItem.add(new NavigationDrawerItem("Timeline", R.drawable.ic_list_black_24dp, HomeFragment.newInstance("","")));
         rowListItem.add(new NavigationDrawerItem("Accounts", R.drawable.ic_account_box_black_24dp, AccountsFragment.newInstance("","")));
         rowListItem.add(new NavigationDrawerItem("Budget", R.drawable.ic_budget_black_24px, BudgetFragment.newInstance("","")));
         rowListItem.add(new NavigationDrawerItem("Goals", R.drawable.ic_goal_black_24px, GoalsFragment.newInstance("","")));
