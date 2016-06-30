@@ -147,7 +147,7 @@
                         android:layout_marginLeft="16dp"
                         android:layout_marginRight="32dp"
                         android:minEms="8"
-                        android:maxLength="12"
+                        android:maxLength="14"
                         android:digits="0123456789+"
                         android:inputType="textFilter|phone"
                         android:hint="Contact"/>

@@ -214,6 +214,6 @@ public class FloatingActionMenu extends ViewGroup {
     }
 
     private void updateMainFabImage() {
-        mMainButton.setImageResource(isExpanded ? R.drawable.ic_close_white_24dp : R.drawable.ic_more_horiz_black_24dp);
+        mMainButton.setImageResource(isExpanded ? R.drawable.ic_close_black_24dp : R.drawable.ic_more_horiz_black_24dp);
     }
 }

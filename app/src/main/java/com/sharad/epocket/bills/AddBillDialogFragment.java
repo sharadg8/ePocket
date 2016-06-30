@@ -1,11 +1,17 @@
 package com.sharad.epocket.bills;
 
 
+import android.animation.Animator;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AlphaAnimation;
+import android.widget.Button;
 
 import com.sharad.epocket.R;
 
@@ -62,6 +68,57 @@ public class AddBillDialogFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_add_bill_dialog, container, false);
+        View rootView = inflater.inflate(R.layout.dialog_add_bill, container, false);
+
+        final View closingFrame = rootView.findViewById(R.id.ab_closing_frame);
+        closingFrame.setVisibility(View.INVISIBLE);
+        final View doneIcon = rootView.findViewById(R.id.ab_done_icon);
+        doneIcon.setVisibility(View.INVISIBLE);
+        final View doneLabel = rootView.findViewById(R.id.ab_done_label);
+        doneLabel.setVisibility(View.INVISIBLE);
+
+        final Button save = (Button) rootView.findViewById(R.id.ab_save);
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // get the center for the clipping circle
+                int[] pos = new int[2];
+                save.getLocationOnScreen(pos);
+                int cx = pos[0] + save.getWidth()/4;
+                int cy = (int)(pos[1] - 2.85 * save.getHeight());
+
+                // get the final radius for the clipping circle
+                float finalRadius = (float) Math.hypot(cx, cy);
+                Animator anim = ViewAnimationUtils.createCircularReveal(
+                        closingFrame, cx, cy, 0, finalRadius);
+                closingFrame.setVisibility(View.VISIBLE);
+                anim.setDuration(300);
+                anim.setInterpolator(new AccelerateInterpolator());
+                anim.start();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        showFinishFrame();
+                    }
+                }, 400);
+            }
+
+            private void showFinishFrame() {
+                doneIcon.setVisibility(View.VISIBLE);
+                AlphaAnimation anim1 = new AlphaAnimation(0, 1.0f);
+                anim1.setDuration(300);
+                anim1.setFillAfter(true);
+                doneIcon.startAnimation(anim1);
+
+                doneLabel.setVisibility(View.VISIBLE);
+                AlphaAnimation anim2 = new AlphaAnimation(0, 1.0f);
+                anim2.setDuration(300);
+                anim2.setStartOffset(500);
+                anim2.setFillAfter(true);
+                doneLabel.startAnimation(anim1);
+            }
+        });
+
+        return rootView;
     }
 }

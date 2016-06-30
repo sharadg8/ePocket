@@ -71,7 +71,7 @@ public class AddTransactionDialogFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View rootView = inflater.inflate(R.layout.fragment_add_transaction_dialog, container, false);
+        final View rootView = inflater.inflate(R.layout.dialog_add_transaction, container, false);
         final TextView categoryText = (TextView) rootView.findViewById(R.id.at_category_text);
         View view4 = rootView.findViewById(R.id.at_accent_box);
         TextView view5 = (TextView) rootView.findViewById(R.id.at_title_text);
