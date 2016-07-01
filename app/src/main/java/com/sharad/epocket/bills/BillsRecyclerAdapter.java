@@ -9,19 +9,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.sharad.epocket.R;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by Sharad on 23-Jun-16.
  */
 
 public class BillsRecyclerAdapter extends RecyclerView.Adapter {
-    List<String> itemList;
+    ArrayList<BillItem> itemList;
 
-    public BillsRecyclerAdapter(List<String> itemList) {
+    public BillsRecyclerAdapter(ArrayList<BillItem> itemList) {
         this.itemList = itemList;
     }
 
@@ -32,16 +33,29 @@ public class BillsRecyclerAdapter extends RecyclerView.Adapter {
     }
 
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-
+        ViewHolder holder = (ViewHolder) viewHolder;
+        holder.amount.setText(itemList.get(position).getAmountString());
+        holder.title.setText(itemList.get(position).getTitle());
+        holder.date.setText(itemList.get(position).getNextDateString());
+        holder.days.setText(itemList.get(position).getDaysString());
     }
 
     public int getItemCount() { return itemList.size(); }
 
     private class ViewHolder extends RecyclerView.ViewHolder {
         private PopupMenu menu;
+        public TextView amount;
+        public TextView title;
+        public TextView date;
+        public TextView days;
 
         public ViewHolder(View itemView) {
             super(itemView);
+
+            amount = (TextView) itemView.findViewById(R.id.bill_amount);
+            title = (TextView) itemView.findViewById(R.id.bill_title);
+            date = (TextView) itemView.findViewById(R.id.bill_date);
+            days = (TextView) itemView.findViewById(R.id.bill_days_rem);
 
             ImageButton menuButton = (ImageButton) itemView.findViewById(R.id.contextMenu);
             menu = new PopupMenu(itemView.getContext(), menuButton, Gravity.CENTER);

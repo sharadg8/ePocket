@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import com.sharad.epocket.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -75,16 +74,10 @@ public class BillsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_bills, container, false);
 
-        List<String> list = new ArrayList<>();
-        list.add("Bill 1");
-        list.add("Bill 2");
-        list.add("Bill 3");
-        list.add("Bill 4");
-        list.add("Bill 5");
-        list.add("Bill 6");
-        list.add("Bill 7");
-        list.add("Bill 8");
-        list.add("Bill 9");
+        BillDataSource source = new BillDataSource(getContext());
+        ArrayList<BillItem> list = new ArrayList<>();
+        source.getBills(list);
+
         BillsRecyclerAdapter adapter = new BillsRecyclerAdapter(list);
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -136,7 +129,7 @@ public class BillsFragment extends Fragment {
         ft.addToBackStack(null);
 
         // Create and show the dialog.
-        DialogFragment newFragment = AddBillDialogFragment.newInstance("","");
+        DialogFragment newFragment = AddBillDialogFragment.newInstance(AddBillDialogFragment.INVALID_ID);
         newFragment.show(ft, "dialog");
     }
 

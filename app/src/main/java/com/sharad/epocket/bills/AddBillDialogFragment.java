@@ -2,18 +2,28 @@ package com.sharad.epocket.bills;
 
 
 import android.animation.Animator;
+import android.app.DatePickerDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 
 import com.sharad.epocket.R;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 /**
  * A simple {@link DialogFragment} subclass.
@@ -21,15 +31,15 @@ import com.sharad.epocket.R;
  * create an instance of this fragment.
  */
 public class AddBillDialogFragment extends DialogFragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_BILL_ID = "bill_id";
+    public static final long    INVALID_ID = -1;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
+    private int mYear;
+    private int mMonth;
+    private int mDay;
+    private BillDataSource _db;
+    private BillItem _bill;
+    private long _id = INVALID_ID;
 
     public AddBillDialogFragment() {
         // Required empty public constructor
@@ -39,16 +49,13 @@ public class AddBillDialogFragment extends DialogFragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param id Database id for editing, -1 for adding new.
      * @return A new instance of fragment AddBillDialogFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static AddBillDialogFragment newInstance(String param1, String param2) {
+    public static AddBillDialogFragment newInstance(long id) {
         AddBillDialogFragment fragment = new AddBillDialogFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putLong(ARG_BILL_ID, id);
         fragment.setArguments(args);
         return fragment;
     }
@@ -57,8 +64,12 @@ public class AddBillDialogFragment extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            _id = getArguments().getLong(ARG_BILL_ID);
+        }
+
+        _db = new BillDataSource(getContext());
+        if(_id != INVALID_ID) {
+            _bill = _db.getBill(_id);
         }
 
         setStyle(DialogFragment.STYLE_NO_TITLE, android.R.style.Theme_Material_Light_Dialog_MinWidth);
@@ -77,10 +88,54 @@ public class AddBillDialogFragment extends DialogFragment {
         final View doneLabel = rootView.findViewById(R.id.ab_done_label);
         doneLabel.setVisibility(View.INVISIBLE);
 
+        final TextInputLayout textLayoutTitle = (TextInputLayout) rootView.findViewById(R.id.ab_til_title);
+        final EditText editTextTitle = (EditText) rootView.findViewById(R.id.ab_title);
+        final TextInputLayout textLayoutAmount = (TextInputLayout) rootView.findViewById(R.id.ab_til_amount);
+        final EditText editTextAmount = (EditText) rootView.findViewById(R.id.ab_amount);
+
+        final SimpleDateFormat df = new SimpleDateFormat("dd MMM yyyy");
+        Calendar currentDate = Calendar.getInstance();
+        mYear = currentDate.get(Calendar.YEAR);
+        mMonth = currentDate.get(Calendar.MONTH);
+        mDay = currentDate.get(Calendar.DAY_OF_MONTH);
+
+        final Button date = (Button) rootView.findViewById(R.id.ab_date);
+        date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatePickerDialog mDatePicker = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+                    public void onDateSet(DatePicker datepicker, int year, int month, int day) {
+                        Calendar cal = Calendar.getInstance();
+                        cal.set(year, month, day);
+                        if(DateUtils.isToday(cal.getTimeInMillis())) {
+                            date.setText("Today");
+                        } else {
+                            date.setText(df.format(cal.getTime()));
+                        }
+                        mYear = year;
+                        mMonth = month;
+                        mDay = day;
+                    }
+                }, mYear, mMonth, mDay);
+                mDatePicker.show();
+            }
+        });
+
         final Button save = (Button) rootView.findViewById(R.id.ab_save);
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(validate() == false) {
+                    return;
+                }
+                store();
+
+                View view = getActivity().getCurrentFocus();
+                if (view != null) {
+                    InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
+
                 // get the center for the clipping circle
                 int[] pos = new int[2];
                 save.getLocationOnScreen(pos);
@@ -116,6 +171,39 @@ public class AddBillDialogFragment extends DialogFragment {
                 anim2.setStartOffset(500);
                 anim2.setFillAfter(true);
                 doneLabel.startAnimation(anim1);
+            }
+
+            private void store() {
+                if(_id == INVALID_ID) {
+                    Calendar date = Calendar.getInstance();
+                    date.set(mYear, mMonth, mDay);
+                    String title = editTextTitle.getText().toString();
+                    float amount = Float.parseFloat(editTextAmount.getText().toString());
+                    _bill = new BillItem(0, title, "Default", "$", amount, date.getTimeInMillis(), 0, 0);
+                    _db.insertBill(_bill);
+                } else {
+                    _db.updateBill(_id, _bill);
+                }
+            }
+
+            private boolean validate() {
+                if(editTextTitle.getText().length() == 0) {
+                    textLayoutTitle.setError("Title can't be empty!");
+                    textLayoutTitle.setErrorEnabled(true);
+                    return false;
+                } else {
+                    textLayoutTitle.setErrorEnabled(false);
+                }
+
+                if(editTextAmount.getText().length() == 0) {
+                    textLayoutAmount.setError("Amount can't be empty!");
+                    textLayoutAmount.setErrorEnabled(true);
+                    return false;
+                } else {
+                    textLayoutAmount.setErrorEnabled(false);
+                }
+
+                return true;
             }
         });
 
