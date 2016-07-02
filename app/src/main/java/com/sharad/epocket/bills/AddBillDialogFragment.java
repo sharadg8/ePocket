@@ -4,10 +4,12 @@ package com.sharad.epocket.bills;
 import android.animation.Animator;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,10 +17,12 @@ import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.sharad.epocket.R;
 
@@ -63,6 +67,7 @@ public class AddBillDialogFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        _id = INVALID_ID;
         if (getArguments() != null) {
             _id = getArguments().getLong(ARG_BILL_ID);
         }
@@ -92,14 +97,54 @@ public class AddBillDialogFragment extends DialogFragment {
         final EditText editTextTitle = (EditText) rootView.findViewById(R.id.ab_title);
         final TextInputLayout textLayoutAmount = (TextInputLayout) rootView.findViewById(R.id.ab_til_amount);
         final EditText editTextAmount = (EditText) rootView.findViewById(R.id.ab_amount);
+        final Button date = (Button) rootView.findViewById(R.id.ab_date);
+
+        ImageButton close = (ImageButton) rootView.findViewById(R.id.ab_close);
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
+
+        final Button account = (Button) rootView.findViewById(R.id.ab_account);
+        account.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO update the list of accounts
+                final CharSequence[] items = { "Default", "Default" };
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Select Account");
+                builder.setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // TODO update the account selected
+                        dialog.dismiss();
+                    }
+                });
+                builder.create().show();
+            }
+        });
 
         final SimpleDateFormat df = new SimpleDateFormat("dd MMM yyyy");
         Calendar currentDate = Calendar.getInstance();
+
+        /*********** Update data for edit ***********/
+        if(_id != INVALID_ID) {
+            editTextTitle.setText(_bill.getTitle());
+            editTextAmount.setText("" + _bill.getAmount());
+            currentDate.setTime(_bill.getNextDate().getTime());
+            if (DateUtils.isToday(currentDate.getTimeInMillis())) {
+                date.setText("Today");
+            } else {
+                date.setText(df.format(currentDate.getTime()));
+            }
+        }
+        /********************************************/
+
         mYear = currentDate.get(Calendar.YEAR);
         mMonth = currentDate.get(Calendar.MONTH);
         mDay = currentDate.get(Calendar.DAY_OF_MONTH);
-
-        final Button date = (Button) rootView.findViewById(R.id.ab_date);
         date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,13 +173,10 @@ public class AddBillDialogFragment extends DialogFragment {
                 if(validate() == false) {
                     return;
                 }
-                store();
+                InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
 
-                View view = getActivity().getCurrentFocus();
-                if (view != null) {
-                    InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                }
+                store();
 
                 // get the center for the clipping circle
                 int[] pos = new int[2];
@@ -160,17 +202,30 @@ public class AddBillDialogFragment extends DialogFragment {
 
             private void showFinishFrame() {
                 doneIcon.setVisibility(View.VISIBLE);
-                AlphaAnimation anim1 = new AlphaAnimation(0, 1.0f);
+                AlphaAnimation anim1 = new AlphaAnimation(0.1f, 1.0f);
                 anim1.setDuration(300);
+                anim1.setStartOffset(500);
                 anim1.setFillAfter(true);
                 doneIcon.startAnimation(anim1);
 
                 doneLabel.setVisibility(View.VISIBLE);
                 AlphaAnimation anim2 = new AlphaAnimation(0, 1.0f);
                 anim2.setDuration(300);
-                anim2.setStartOffset(500);
                 anim2.setFillAfter(true);
-                doneLabel.startAnimation(anim1);
+                doneLabel.startAnimation(anim2);
+
+                anim1.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) { }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        dismiss();
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) { }
+                });
             }
 
             private void store() {
@@ -200,7 +255,14 @@ public class AddBillDialogFragment extends DialogFragment {
                     textLayoutAmount.setErrorEnabled(true);
                     return false;
                 } else {
-                    textLayoutAmount.setErrorEnabled(false);
+                    float amount = Float.parseFloat(editTextAmount.getText().toString());
+                    if(amount < 0.1f) {
+                        textLayoutAmount.setError("Invalid Amount!");
+                        textLayoutAmount.setErrorEnabled(true);
+                        return false;
+                    } else {
+                        textLayoutAmount.setErrorEnabled(false);
+                    }
                 }
 
                 return true;

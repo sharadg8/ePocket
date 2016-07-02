@@ -20,27 +20,75 @@ import java.util.ArrayList;
  */
 
 public class BillsRecyclerAdapter extends RecyclerView.Adapter {
-    ArrayList<BillItem> itemList;
+    private ArrayList<BillItem> itemList;
+    private OnMenuClickListener mMenuClickListener;
 
     public BillsRecyclerAdapter(ArrayList<BillItem> itemList) {
         this.itemList = itemList;
     }
 
+    @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         View view = LayoutInflater.from(context).inflate(R.layout.bills_item_card, parent, false);
         return new ViewHolder(view);
     }
 
-    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
         ViewHolder holder = (ViewHolder) viewHolder;
         holder.amount.setText(itemList.get(position).getAmountString());
         holder.title.setText(itemList.get(position).getTitle());
         holder.date.setText(itemList.get(position).getNextDateString());
         holder.days.setText(itemList.get(position).getDaysString());
+        holder.menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                boolean status = false;
+                switch (item.getItemId()) {
+                    case R.id.menu_item_edit:
+                        if(mMenuClickListener != null) {
+                            mMenuClickListener.onItemEditClicked(position);
+                        }
+                        status = true;
+                        break;
+                    case R.id.menu_item_delete:
+                        if(mMenuClickListener != null) {
+                            mMenuClickListener.onItemDeleteClicked(position);
+                        }
+                        status = true;
+                        break;
+                }
+                return status;
+            }
+        });
     }
 
+    @Override
     public int getItemCount() { return itemList.size(); }
+
+    public void setOnMenuClickedListener(OnMenuClickListener listener) {
+        mMenuClickListener = listener;
+    }
+
+    public BillItem getItem(int position) {
+        BillItem item = null;
+        if(position < itemList.size()) {
+            item = itemList.get(position);
+        }
+        return item;
+    }
+
+    public void removeAt(int position) {
+        itemList.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, itemList.size());
+    }
+
+    public interface OnMenuClickListener {
+        void onItemEditClicked(int position);
+        void onItemDeleteClicked(int position);
+    }
 
     private class ViewHolder extends RecyclerView.ViewHolder {
         private PopupMenu menu;
@@ -60,13 +108,6 @@ public class BillsRecyclerAdapter extends RecyclerView.Adapter {
             ImageButton menuButton = (ImageButton) itemView.findViewById(R.id.contextMenu);
             menu = new PopupMenu(itemView.getContext(), menuButton, Gravity.CENTER);
             menu.inflate(R.menu.popup_menu);
-            menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    return false;
-                }
-            });
-
             menuButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -75,4 +75,8 @@ public class BillItem {
         }
         return string;
     }
+
+    public Calendar getNextDate() {
+        return nextDate;
+    }
 }

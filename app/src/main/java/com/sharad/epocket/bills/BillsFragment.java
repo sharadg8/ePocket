@@ -1,12 +1,14 @@
 package com.sharad.epocket.bills;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,6 +18,8 @@ import android.view.ViewGroup;
 import com.sharad.epocket.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -74,11 +78,41 @@ public class BillsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_bills, container, false);
 
-        BillDataSource source = new BillDataSource(getContext());
+        final BillDataSource source = new BillDataSource(getContext());
         ArrayList<BillItem> list = new ArrayList<>();
         source.getBills(list);
 
-        BillsRecyclerAdapter adapter = new BillsRecyclerAdapter(list);
+        Collections.sort(list, new Comparator<BillItem>() {
+            public int compare(BillItem o1, BillItem o2) {
+                return (o1.getDaysRemaining() - o2.getDaysRemaining());
+            }
+        });
+
+        final BillsRecyclerAdapter adapter = new BillsRecyclerAdapter(list);
+        adapter.setOnMenuClickedListener(new BillsRecyclerAdapter.OnMenuClickListener() {
+            @Override
+            public void onItemEditClicked(int position) {
+                showDialog(adapter.getItem(position).getId());
+            }
+
+            @Override
+            public void onItemDeleteClicked(final int position) {
+                new AlertDialog.Builder(getContext())
+                        .setTitle("Delete - " + adapter.getItem(position).getTitle() + "?")
+                        .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                source.deleteBill(adapter.getItem(position).getId());
+                                adapter.removeAt(position);
+                            }
+                        })
+                        .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                            }
+                        })
+                        .show();
+            }
+        });
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
@@ -86,7 +120,7 @@ public class BillsFragment extends Fragment {
         FloatingActionButton fabAdd = (FloatingActionButton) view.findViewById(R.id.fab_add);
         fabAdd.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                showDialog();
+                showDialog(AddBillDialogFragment.INVALID_ID);
             }
         });
 
@@ -117,7 +151,7 @@ public class BillsFragment extends Fragment {
         mListener = null;
     }
 
-    void showDialog() {
+    void showDialog(long id) {
         // DialogFragment.show() will take care of adding the fragment
         // in a transaction.  We also want to remove any currently showing
         // dialog, so make our own transaction and take care of that here.
@@ -129,7 +163,7 @@ public class BillsFragment extends Fragment {
         ft.addToBackStack(null);
 
         // Create and show the dialog.
-        DialogFragment newFragment = AddBillDialogFragment.newInstance(AddBillDialogFragment.INVALID_ID);
+        DialogFragment newFragment = AddBillDialogFragment.newInstance(id);
         newFragment.show(ft, "dialog");
     }
 
