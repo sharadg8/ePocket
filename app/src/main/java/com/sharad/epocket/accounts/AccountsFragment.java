@@ -22,9 +22,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -84,44 +82,15 @@ public class AccountsFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_accounts, container, false);
         setupRecyclerView(rootView);
 
-        FloatingActionButton fabExpense = (FloatingActionButton) rootView.findViewById(R.id.fab_expense);
-        fabExpense.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton fabAdd = (FloatingActionButton) rootView.findViewById(R.id.fab_add);
+        fabAdd.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                showDialog(AddTransactionDialogFragment.TRANSACTION_TYPE_EXPENSE);
-            }
-        });
-
-        FloatingActionButton fabIncome = (FloatingActionButton) rootView.findViewById(R.id.fab_income);
-        fabIncome.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                showDialog(AddTransactionDialogFragment.TRANSACTION_TYPE_INCOME);
-            }
-        });
-
-        FloatingActionButton fabTransfer = (FloatingActionButton) rootView.findViewById(R.id.fab_transfer);
-        fabTransfer.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                showDialog(AddTransactionDialogFragment.TRANSACTION_TYPE_TRANSFER);
+                Intent myIntent = new Intent(getActivity(), AddTransactionActivity.class);
+                getActivity().startActivity(myIntent);
             }
         });
 
         return rootView;
-    }
-
-    private void showDialog(int type) {
-        // DialogFragment.show() will take care of adding the fragment
-        // in a transaction.  We also want to remove any currently showing
-        // dialog, so make our own transaction and take care of that here.
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        Fragment prev = getFragmentManager().findFragmentByTag("dialog");
-        if (prev != null) {
-            ft.remove(prev);
-        }
-        ft.addToBackStack(null);
-
-        // Create and show the dialog.
-        DialogFragment newFragment = AddTransactionDialogFragment.newInstance(type);
-        newFragment.show(ft, "dialog");
     }
 
     private void setupRecyclerView(View rootView) {

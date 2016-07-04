@@ -9,7 +9,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:label="Dashboard" >
+            android:label="Dashboard">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -18,18 +18,26 @@
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:noHistory="true">
-        </activity>
+            android:noHistory="true"></activity>
         <activity
             android:name=".budget.CategoryActivity"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".cards.AddCardActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".accounts.AccountTransactionsActivity"
             android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".accounts.AddTransactionActivity"
+            android:label=""
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.sharad.epocket.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

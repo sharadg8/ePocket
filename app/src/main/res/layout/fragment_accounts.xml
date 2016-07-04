@@ -16,28 +16,12 @@
             android:layout_alignParentStart="true" />
     </android.support.percent.PercentRelativeLayout>
 
-    <com.sharad.epocket.utils.FloatingActionMenu
-    android:id="@+id/fabMenu"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="end|bottom">
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_expense"
+        android:id="@+id/fab_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_padding"
+        android:src="@drawable/ic_add_black_24dp"
         android:tint="@android:color/white"
-        android:src="@drawable/ic_trending_down_black_24dp"/>
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_transfer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:tint="@android:color/white"
-        android:src="@drawable/ic_swap_horiz_black_24dp"/>
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_income"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:tint="@android:color/white"
-        android:src="@drawable/ic_trending_up_black_24dp"/>
-    </com.sharad.epocket.utils.FloatingActionMenu>
+        android:layout_gravity="end|bottom" />
 </FrameLayout>

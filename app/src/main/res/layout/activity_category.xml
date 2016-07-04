@@ -33,24 +33,24 @@
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             android:background="?attr/colorPrimary" />
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/text_input_layout"
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/text_input_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="?attr/actionBarSize"
+            android:paddingBottom="48dp"
+            android:paddingLeft="48dp"
+            android:paddingRight="48dp"
+            android:layout_below="@+id/fNameLayout">
+            <EditText
+                android:id="@+id/label_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="?attr/actionBarSize"
-                android:paddingBottom="48dp"
-                android:paddingLeft="48dp"
-                android:paddingRight="48dp"
-                android:layout_below="@+id/fNameLayout">
-                <EditText
-                    android:id="@+id/label_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:textColor="@android:color/white"
-                    android:capitalize="words"
-                    android:hint="Title"/>
-            </android.support.design.widget.TextInputLayout>
+                android:ems="10"
+                android:textColor="@android:color/white"
+                android:capitalize="words"
+                android:hint="Title"/>
+        </android.support.design.widget.TextInputLayout>
 
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
