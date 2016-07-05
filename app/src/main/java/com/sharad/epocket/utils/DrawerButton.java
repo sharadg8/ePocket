@@ -1,6 +1,7 @@
 package com.sharad.epocket.utils;
 
 import android.content.Context;
+import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,8 +44,11 @@ public class DrawerButton extends ViewGroup {
         inflater.inflate(R.layout.navigation_button, this, true);
 
         mIconHolderView = findViewById(R.id.nav_background);
+        ViewCompat.setElevation(mIconHolderView, 10);
         mLineView = findViewById(R.id.nav_line);
+        ViewCompat.setElevation(mLineView, 10);
         mIconView = (ImageView) findViewById(R.id.nav_icon);
+        ViewCompat.setElevation(mIconView, 10);
         mTitleText = (TextView) findViewById(R.id.nav_title);
 
         setBackground(getContext().getDrawable(R.drawable.ripple_drawable));
