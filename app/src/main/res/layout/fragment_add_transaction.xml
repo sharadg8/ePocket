@@ -4,11 +4,11 @@
     android:layout_height="match_parent"
     tools:context="com.sharad.epocket.accounts.AddTransactionActivity$PlaceholderFragment">
 
-    <android.support.v7.widget.RecyclerView
+    <com.sharad.epocket.utils.AutofitRecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp"
-        android:scrollbars="vertical"/>
+        android:columnWidth="@dimen/category_item_size"
+        xmlns:android="http://schemas.android.com/apk/res/android" />
 
 </RelativeLayout>

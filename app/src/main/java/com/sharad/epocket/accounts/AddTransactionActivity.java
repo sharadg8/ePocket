@@ -15,6 +15,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sharad.epocket.R;
+import com.sharad.epocket.utils.AutofitRecyclerView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AddTransactionActivity extends AppCompatActivity {
 
@@ -105,8 +109,43 @@ public class AddTransactionActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_add_transaction, container, false);
-            /*TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));*/
+            AutofitRecyclerView recyclerView = (AutofitRecyclerView)rootView.findViewById(R.id.recyclerView);
+
+            List<Integer> itemList = new ArrayList<>();
+            itemList.add(R.drawable.ic_home_black_24dp);
+            itemList.add(R.drawable.c_account_balance_black_24dp);
+            itemList.add(R.drawable.c_account_balance_wallet_black_24dp);
+            itemList.add(R.drawable.c_airplanemode_active_black_24dp);
+            itemList.add(R.drawable.c_directions_boat_black_24dp);
+            itemList.add(R.drawable.c_directions_bus_black_24dp);
+            itemList.add(R.drawable.c_directions_car_black_24dp);
+            itemList.add(R.drawable.c_favorite_black_24dp);
+            itemList.add(R.drawable.c_extension_black_24dp);
+            itemList.add(R.drawable.c_camera_roll_black_24dp);
+            itemList.add(R.drawable.c_flash_on_black_24dp);
+            itemList.add(R.drawable.c_headset_black_24dp);
+            itemList.add(R.drawable.c_important_devices_black_24dp);
+            itemList.add(R.drawable.c_insert_emoticon_black_24dp);
+            itemList.add(R.drawable.c_language_black_24dp);
+            itemList.add(R.drawable.c_lightbulb_outline_black_24dp);
+            itemList.add(R.drawable.c_live_tv_black_24dp);
+            itemList.add(R.drawable.c_local_activity_black_24dp);
+            itemList.add(R.drawable.c_local_bar_black_24dp);
+            itemList.add(R.drawable.c_local_cafe_black_24dp);
+            itemList.add(R.drawable.c_local_dining_black_24dp);
+            itemList.add(R.drawable.c_local_florist_black_24dp);
+            itemList.add(R.drawable.c_local_gas_station_black_24dp);
+            itemList.add(R.drawable.c_local_grocery_store_black_24dp);
+            itemList.add(R.drawable.c_local_hospital_black_24dp);
+            itemList.add(R.drawable.c_hotel_black_24dp);
+            itemList.add(R.drawable.c_local_mall_black_24dp);
+            itemList.add(R.drawable.c_local_offer_black_24dp);
+            itemList.add(R.drawable.c_local_parking_black_24dp);
+            itemList.add(R.drawable.c_local_phone_black_24dp);
+
+            CategoryRecyclerAdapter rcAdapter = new CategoryRecyclerAdapter(itemList);
+            recyclerView.setAdapter(rcAdapter);
+
             return rootView;
         }
     }
