@@ -3,8 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.sharad.epocket.accounts.AddTransactionActivity">
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+        android:id="@+id/action_save"
+        android:orderInCategory="1"
+        android:title="SAVE"
+        android:icon="@drawable/ic_done_black_24dp"
+        app:showAsAction="always" />
 </menu>

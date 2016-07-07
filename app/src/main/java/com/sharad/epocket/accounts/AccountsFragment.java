@@ -85,8 +85,8 @@ public class AccountsFragment extends Fragment {
         FloatingActionButton fabAdd = (FloatingActionButton) rootView.findViewById(R.id.fab_add);
         fabAdd.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent myIntent = new Intent(getActivity(), AddTransactionActivity.class);
-                getActivity().startActivity(myIntent);
+                Intent myIntent = new Intent(getActivity().getApplicationContext(), AddTransactionActivity.class);
+                getActivity().startActivityForResult(myIntent, 1);
             }
         });
 
@@ -108,9 +108,9 @@ public class AccountsFragment extends Fragment {
                     @Override
                     public void onItemClick(View view, int position) {
                         //Toast.makeText(getActivity().getApplicationContext(), "Item clicked at " + position, Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(getActivity(), AccountTransactionsActivity.class);
+                        Intent intent = new Intent(getActivity().getApplicationContext(), AccountTransactionsActivity.class);
                         intent.putExtra("key", 1); //Optional parameters
-                        getActivity().startActivity(intent);
+                        getActivity().startActivityForResult(intent, 0);
                     }
                 })
         );

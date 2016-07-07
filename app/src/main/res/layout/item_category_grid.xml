@@ -6,6 +6,6 @@
     android:layout_height="@dimen/category_item_size"
     android:src="@drawable/ic_home_black_24dp"
     android:tint="@color/primary"
-    android:padding="8dp"
+    android:padding="16dp"
     android:scaleType="fitCenter"
     android:background="?attr/selectableItemBackgroundBorderless"/>
