@@ -81,16 +81,16 @@ public class CardsFragment extends Fragment {
         FloatingActionButton fabAdd = (FloatingActionButton) rootView.findViewById(R.id.fab_add);
         fabAdd.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent myIntent = new Intent(getActivity(), AddCardActivity.class);
-                getActivity().startActivity(myIntent);
+                Intent myIntent = new Intent(getActivity().getApplicationContext(), AddCardActivity.class);
+                getActivity().startActivityForResult(myIntent, 2);
             }
         });
 
         FloatingActionButton fabEdit = (FloatingActionButton) rootView.findViewById(R.id.fab_edit);
         fabEdit.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent myIntent = new Intent(getActivity(), AddCardActivity.class);
-                getActivity().startActivity(myIntent);
+                Intent myIntent = new Intent(getActivity().getApplicationContext(), AddCardActivity.class);
+                getActivity().startActivityForResult(myIntent, 3);
             }
         });
 
