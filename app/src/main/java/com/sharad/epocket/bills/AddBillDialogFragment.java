@@ -153,7 +153,7 @@ public class AddBillDialogFragment extends DialogFragment {
                         Calendar cal = Calendar.getInstance();
                         cal.set(year, month, day);
                         if(DateUtils.isToday(cal.getTimeInMillis())) {
-                            date.setText("Today");
+                            date.setText("TODAY");
                         } else {
                             date.setText(df.format(cal.getTime()));
                         }

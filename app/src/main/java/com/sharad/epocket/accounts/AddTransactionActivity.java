@@ -1,5 +1,6 @@
 package com.sharad.epocket.accounts;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -8,20 +9,42 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateUtils;
+import android.text.format.Time;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sharad.epocket.R;
+import com.sharad.epocket.utils.recurrencepicker.EventRecurrence;
+import com.sharad.epocket.utils.recurrencepicker.RecurrencePickerDialog;
 
-public class AddTransactionActivity extends AppCompatActivity {
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
+public class AddTransactionActivity extends AppCompatActivity implements
+        RecurrencePickerDialog.OnRecurrenceSetListener {
+    private static final String TAG = "AddTransactionActivity";
+
+    private static final String FRAG_TAG_RECUR_PICKER = "recurrencePickerDialogFragment";
+
     private final int TAB_EXPENSE = 0;
     private final int TAB_INCOME = 1;
     private final int TAB_TRANSFER = 2;
+
+    private int mYear;
+    private int mMonth;
+    private int mDay;
+
+    private String mRrule;
+    private EventRecurrence mEventRecurrence = new EventRecurrence();
+    private Time mStartTime;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -51,10 +74,7 @@ public class AddTransactionActivity extends AppCompatActivity {
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+        mStartTime = new Time();
 
         final TextView fromCurrency = (TextView) findViewById(R.id.from_currency);
         final EditText fromAmount = (EditText) findViewById(R.id.from_amount);
@@ -67,6 +87,57 @@ public class AddTransactionActivity extends AppCompatActivity {
         final Button repeat = (Button) findViewById(R.id.repeat);
         final Button toAccount = (Button) findViewById(R.id.transfer_account);
 
+        final SimpleDateFormat df = new SimpleDateFormat("dd MMM yyyy");
+        Calendar currentDate = Calendar.getInstance();
+        mYear = currentDate.get(Calendar.YEAR);
+        mMonth = currentDate.get(Calendar.MONTH);
+        mDay = currentDate.get(Calendar.DAY_OF_MONTH);
+        date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatePickerDialog mDatePicker = new DatePickerDialog(AddTransactionActivity.this, new DatePickerDialog.OnDateSetListener() {
+                    public void onDateSet(DatePicker datepicker, int year, int month, int day) {
+                        Calendar cal = Calendar.getInstance();
+                        cal.set(year, month, day);
+                        if(DateUtils.isToday(cal.getTimeInMillis())) {
+                            date.setText("TODAY");
+                        } else {
+                            date.setText(df.format(cal.getTime()));
+                        }
+                        mYear = year;
+                        mMonth = month;
+                        mDay = day;
+                    }
+                }, mYear, mMonth, mDay);
+                mDatePicker.show();
+            }
+        });
+
+        repeat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle b = new Bundle();
+                b.putLong(RecurrencePickerDialog.BUNDLE_START_TIME_MILLIS, mStartTime.toMillis(false));
+                b.putString(RecurrencePickerDialog.BUNDLE_TIME_ZONE, mStartTime.timezone);
+
+                // TODO may be more efficient to serialize and pass in EventRecurrence
+                b.putString(RecurrencePickerDialog.BUNDLE_RRULE, mRrule);
+
+                FragmentManager fm = getSupportFragmentManager();
+                RecurrencePickerDialog rpd = (RecurrencePickerDialog) fm.findFragmentByTag(FRAG_TAG_RECUR_PICKER);
+                if (rpd != null) {
+                    rpd.dismiss();
+                }
+                rpd = new RecurrencePickerDialog();
+                rpd.setArguments(b);
+                rpd.setOnRecurrenceSetListener(AddTransactionActivity.this);
+                rpd.show(fm, FRAG_TAG_RECUR_PICKER);
+            }
+        });
+
+        // Set up the ViewPager with the sections adapter.
+        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
         tabLayout.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager) {
@@ -101,6 +172,17 @@ public class AddTransactionActivity extends AppCompatActivity {
         );
 
         mCategoryImage = (ImageView) findViewById(R.id.selected_category);
+    }
+
+    @Override
+    public void onRecurrenceSet(String rrule) {
+        Log.d(TAG, "Old rrule:" + mRrule);
+        Log.d(TAG, "New rrule:" + rrule);
+        mRrule = rrule;
+        if (mRrule != null) {
+            mEventRecurrence.parse(mRrule);
+        }
+        //populateRepeats();
     }
 
 

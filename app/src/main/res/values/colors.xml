@@ -47,6 +47,11 @@
     <color name="colorInactive">#d2d0d1</color>
     <color name="withoutColoredBackground">#757575</color>
 
+    <!-- RecurrencePicker items -->
+    <color name="recurrence_picker_background">#fff2f2f2</color>
+    <color name="recurrence_bubble_text_normal">#ff737373</color>
+    <color name="recurrence_bubble_text_color">#ff737373</color>
+    <color name="recurrence_spinner_text_color">#ff737373</color>
 
     <color name="light_palette00">#f44336</color>
     <color name="dark_palette00">#b71c1c</color>

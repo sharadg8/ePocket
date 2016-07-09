@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">ePocket</string>
     <string name="title_activity_login">Welcome</string>
 
@@ -41,5 +41,55 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="title_activity_add_transaction">AddTransactionActivity</string>
     <string name="section_format">Hello World from section: %1$d</string>
+
+    <!-- Strings to describe how frequently to repeat an event (e.g. every 5 days) -->
+    <plurals name="recurrence_interval_daily">
+        <!-- Singular form [CHAR LIMIT=30] -->
+        <item quantity="one">Every <xliff:g id="count">%d</xliff:g> day</item>
+        <!-- Plural form [CHAR LIMIT=30] -->
+        <item quantity="other">Every <xliff:g id="count">%d</xliff:g> days</item>
+    </plurals>
+    <!-- Strings to describe how frequently to repeat an event (e.g. every 5 weeks) -->
+    <plurals name="recurrence_interval_weekly">
+        <!-- Singular form [CHAR LIMIT=30] -->
+        <item quantity="one">Every <xliff:g id="count">%d</xliff:g> week</item>
+        <!-- Plural form [CHAR LIMIT=30] -->
+        <item quantity="other">Every <xliff:g id="count">%d</xliff:g> weeks</item>
+    </plurals>
+    <!-- Strings to describe how frequently to repeat an event (e.g. every 5 months) -->
+    <plurals name="recurrence_interval_monthly">
+        <!-- Singular form [CHAR LIMIT=30] -->
+        <item quantity="one">Every <xliff:g id="count">%d</xliff:g> month</item>
+        <!-- Plural form [CHAR LIMIT=30] -->
+        <item quantity="other">Every <xliff:g id="count">%d</xliff:g> months</item>
+    </plurals>
+    <!-- Strings to describe how frequently to repeat an event (e.g. every 5 years) -->
+    <plurals name="recurrence_interval_yearly">
+        <!-- Singular form [CHAR LIMIT=30] -->
+        <item quantity="one">Every <xliff:g id="count">%d</xliff:g> year</item>
+        <!-- Plural form [CHAR LIMIT=30] -->
+        <item quantity="other">Every <xliff:g id="count">%d</xliff:g> years</item>
+    </plurals>
+
+    <!-- Repeat an monthly event on the same day of every month [CHAR LIMIT=20] -->
+    <string name="recurrence_month_pattern_by_day">on the same day each month</string>
+
+    <!-- Specifies that a repeating event to repeat forever (based on the defined frequency) instead of ending at a future date[CHAR LIMIT=20] -->
+    <string name="recurrence_end_continously">Forever</string>
+    <!-- Specifies that a repeating event to repeat until a certain date[CHAR LIMIT=25] -->
+    <string name="recurrence_end_date_label">Until a date</string>
+    <!-- Specifies that a repeating event to repeat until a certain date[CHAR LIMIT=20] -->
+    <string name="recurrence_end_date">Until <xliff:g id="date">%s</xliff:g></string>
+    <!-- Specifies that a repeating event to repeat for a number of times. A repeating event can repeat forever, repeat in a certain frequency until a certain date, or repeat for a number of times. e.g. repeat 10 times and stop. This string is for the last case [CHAR LIMIT=25] -->
+    <string name="recurrence_end_count_label">For a number of events</string>
+
+    <!-- Specifies that a repeating event should repeat for a certain number of iterations. [CHAR LIMIT=20]-->
+    <plurals name="recurrence_end_count">
+        <item quantity="one">For <xliff:g id="event_count">%d</xliff:g> event</item>
+        <item quantity="other">For <xliff:g id="event_count">%d</xliff:g> events</item>
+    </plurals>
+
+    <!-- The button label for saving an event -->
+    <string name="save_label">Done</string>
 
 </resources>
