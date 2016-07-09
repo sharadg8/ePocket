@@ -78,4 +78,11 @@
         <!-- The color of an activated tab. Will only be considered if bnv_colored_background is false, no default is set -->
         <attr name="bnv_active_color" format="color" />
     </declare-styleable>
+
+    <declare-styleable name="SwitchButton">
+        <!-- Left icon -->
+        <attr name="sb_src_left" format="reference" />
+        <!-- Right icon -->
+        <attr name="sb_src_right" format="reference" />
+    </declare-styleable>
 </resources>
