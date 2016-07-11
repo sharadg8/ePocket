@@ -30,8 +30,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sharad.epocket.R;
-import com.sharad.epocket.utils.RecyclerItemClickListener;
-import com.sharad.epocket.utils.SnappyRecyclerView;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -94,6 +92,13 @@ public class AccountsFragment extends Fragment {
     }
 
     private void setupRecyclerView(View rootView) {
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+        AccountsRecycler recyclerAdapter = new AccountsRecycler(createItemList());
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(recyclerAdapter);
+    }
+/*
+    private void setupRecyclerView(View rootView) {
         SnappyRecyclerView recyclerView = (SnappyRecyclerView) rootView.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setSnapEnabled(true, true);
@@ -115,7 +120,7 @@ public class AccountsFragment extends Fragment {
                 })
         );
     }
-
+*/
     private List<AccountItem> createItemList() {
         List<AccountItem> itemList = new ArrayList<>();
         DecimalFormat nf = new DecimalFormat("##,##,###");

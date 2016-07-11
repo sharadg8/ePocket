@@ -23,7 +23,7 @@ public class CardsRecycler extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
-        View view = LayoutInflater.from(context).inflate(R.layout.home_list_card, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_card_list, parent, false);
         view.setMinimumWidth((int)(parent.getMeasuredWidth() * 0.8));
         return new DetailViewHolder(view);
     }

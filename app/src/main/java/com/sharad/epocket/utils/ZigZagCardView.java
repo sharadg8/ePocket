@@ -2,6 +2,7 @@ package com.sharad.epocket.utils;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
@@ -15,6 +16,8 @@ import android.view.View;
 import android.view.ViewOutlineProvider;
 import android.widget.FrameLayout;
 
+import com.sharad.epocket.R;
+
 /**
  * Created by Sharad on 23-Jun-16.
  */
@@ -26,6 +29,7 @@ public class ZigZagCardView extends FrameLayout {
     private final int DESIRED_DUTY_CYCLE = 12;
     private float zigzagWidth;
     private float zigzagHeight;
+    private int color;
 
     public ZigZagCardView(Context context) {
         this(context, null, 0);
@@ -38,10 +42,16 @@ public class ZigZagCardView extends FrameLayout {
     public ZigZagCardView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
+        if (attrs != null) {
+            final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ZigZagCardView);
+            color = a.getColor(R.styleable.ZigZagCardView_zc_background, Color.WHITE);
+            a.recycle();
+        }
+
         setWillNotDraw(false);
 
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setColor(Color.WHITE);
+        paint.setColor(color);
 
         shadowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         shadowPaint.setColor(Color.BLACK);
@@ -107,7 +117,9 @@ public class ZigZagCardView extends FrameLayout {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        canvas.drawRect(canvas.getClipBounds(), shadowPaint);
+        if(getElevation() > 0) {
+            canvas.drawRect(canvas.getClipBounds(), shadowPaint);
+        }
         canvas.drawPath(path, paint);
     }
 }

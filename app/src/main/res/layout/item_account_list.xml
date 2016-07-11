@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/dt_background"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp"
+    app:cardCornerRadius="10dp"
+    android:backgroundTint="@color/primary">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/primary_dark"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Axis Bank"
+                android:textSize="24sp"
+                android:id="@+id/textView"
+                android:textColor="@android:color/white" />
+
+            <ImageButton
+                android:id="@+id/contextMenu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_more_vert_black_24dp"
+                android:tint="@android:color/white"
+                android:background="?attr/selectableItemBackgroundBorderless"/>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:gravity="center">
+                <android.support.design.widget.FloatingActionButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    app:backgroundTint="@android:color/white"
+                    android:tint="@color/primary_dark"
+                    android:src="@drawable/ic_add_black_24dp"
+                    android:layout_gravity="center"
+                    app:fabSize="mini"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Balance"
+                    android:textColor="@android:color/white"
+                    android:gravity="right" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="$2600"
+                    android:textSize="30dp"
+                    android:textColor="@android:color/white"
+                    android:gravity="right" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:text="Last updated: Today 5:20 pm"
+                    android:textColor="@android:color/white"
+                    android:layout_alignParentBottom="true"/>
+            </LinearLayout>
+        </LinearLayout>
+        <com.sharad.epocket.utils.ZigZagCardView
+            android:id="@+id/expanded_items"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            app:zc_background="#E0E0E0"
+            android:visibility="gone">
+
+        </com.sharad.epocket.utils.ZigZagCardView>
+        <ImageButton
+            android:id="@+id/expand_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="16dp"
+            android:src="@drawable/ic_expand_more_black_24dp"
+            android:tint="@android:color/white"
+            android:background="?attr/selectableItemBackgroundBorderless"/>
+
+    </LinearLayout>
+</android.support.v7.widget.CardView>

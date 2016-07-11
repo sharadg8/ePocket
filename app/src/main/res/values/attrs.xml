@@ -85,4 +85,9 @@
         <!-- Right icon -->
         <attr name="sb_src_right" format="reference" />
     </declare-styleable>
+
+    <declare-styleable name="ZigZagCardView">
+        <!-- Background color -->
+        <attr name="zc_background" format="color" />
+    </declare-styleable>
 </resources>
