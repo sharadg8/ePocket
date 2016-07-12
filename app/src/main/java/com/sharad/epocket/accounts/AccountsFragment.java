@@ -17,12 +17,13 @@
 package com.sharad.epocket.accounts;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -31,8 +32,6 @@ import android.view.ViewGroup;
 
 import com.sharad.epocket.R;
 
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,57 +79,71 @@ public class AccountsFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_accounts, container, false);
         setupRecyclerView(rootView);
 
-        FloatingActionButton fabAdd = (FloatingActionButton) rootView.findViewById(R.id.fab_add);
-        fabAdd.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent myIntent = new Intent(getActivity().getApplicationContext(), AddTransactionActivity.class);
-                getActivity().startActivityForResult(myIntent, 1);
-            }
-        });
-
         return rootView;
     }
 
     private void setupRecyclerView(View rootView) {
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
-        AccountsRecycler recyclerAdapter = new AccountsRecycler(createItemList());
+        final AccountsRecyclerAdapter recyclerAdapter = new AccountsRecyclerAdapter(createItemList());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(recyclerAdapter);
-    }
-/*
-    private void setupRecyclerView(View rootView) {
-        SnappyRecyclerView recyclerView = (SnappyRecyclerView) rootView.findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setSnapEnabled(true, true);
-        recyclerView.showIndicator(true);
-        AccountsRecycler recyclerAdapter = new AccountsRecycler(createItemList());
-        recyclerView.setAdapter(recyclerAdapter);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-        recyclerView.setLayoutManager(layoutManager);
 
-        recyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        //Toast.makeText(getActivity().getApplicationContext(), "Item clicked at " + position, Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(getActivity().getApplicationContext(), AccountTransactionsActivity.class);
-                        intent.putExtra("key", 1); //Optional parameters
-                        getActivity().startActivityForResult(intent, 0);
-                    }
-                })
-        );
+        recyclerAdapter.setOnItemClickListener(new AccountsRecyclerAdapter.OnItemClickListener() {
+            @Override
+            public void onAddTransactionClicked(int position, AccountItem account) {
+                Intent intent = new Intent(getActivity().getApplicationContext(), AddTransactionActivity.class);
+                intent.putExtra("KEY_ACCOUNT_ID", account.getId());
+                getActivity().startActivityForResult(intent, 0);
+            }
+
+            @Override
+            public void onEditAccountClicked(int position, AccountItem account) {
+
+            }
+
+            @Override
+            public void onDeleteAccountClicked(final int position, final AccountItem account) {
+                new AlertDialog.Builder(getContext())
+                        .setTitle("Delete - " + account.getTitle() + "?")
+                        .setMessage("This will clear all the transactions of this account, can't be undone!!")
+                        .setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                //source.deleteBill(account.getId());
+                                recyclerAdapter.removeAt(position);
+                            }
+                        })
+                        .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                // do nothing
+                            }
+                        })
+                        .show();
+            }
+
+            @Override
+            public void onViewTransactionClicked(int position, AccountItem account) {
+                Intent intent = new Intent(getActivity().getApplicationContext(), AccountTransactionsActivity.class);
+                intent.putExtra("KEY_ACCOUNT_ID", account.getId());
+                getActivity().startActivityForResult(intent, 0);
+            }
+
+            @Override
+            public void onViewTrendsClicked(int position, AccountItem account) {
+
+            }
+
+            @Override
+            public void onViewInfoClicked(int position, AccountItem account) {
+
+            }
+        });
     }
-*/
+
     private List<AccountItem> createItemList() {
         List<AccountItem> itemList = new ArrayList<>();
-        DecimalFormat nf = new DecimalFormat("##,##,###");
-        SimpleDateFormat df = new SimpleDateFormat("EEE, dd MMM yyyy");
 
-        itemList.add(new AccountItem("Title01", "Title", R.drawable.ic_home_black_24dp, getResources().getColor(R.color.dark_palette00)));
-        itemList.add(new AccountItem("Title02", "Bank Name", R.drawable.ic_home_black_24dp, getResources().getColor(R.color.dark_palette04)));
-        itemList.add(new AccountItem("Title03", "Account Number", R.drawable.ic_home_black_24dp, getResources().getColor(R.color.dark_palette08)));
-        itemList.add(new AccountItem("Title04", "Title", R.drawable.ic_home_black_24dp, getResources().getColor(R.color.dark_palette01)));
-        itemList.add(new AccountItem("Title05", "Bank Name", R.drawable.ic_home_black_24dp, getResources().getColor(R.color.dark_palette09)));
+        itemList.add(new AccountItem("Title01"));
+        itemList.add(new AccountItem("Title02"));
 
         return itemList;
     }

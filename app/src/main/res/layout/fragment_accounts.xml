@@ -1,34 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!--
-    <android.support.percent.PercentRelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <com.sharad.epocket.utils.SnappyRecyclerView
-            android:id="@+id/recyclerView"
-            app:layout_widthPercent="100%"
-            app:layout_aspectRatio="148%"
-            android:background="@color/primary"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true" />
-    </android.support.percent.PercentRelativeLayout>
-    -->
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_add"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_padding"
-        android:src="@drawable/ic_add_black_24dp"
-        android:tint="@android:color/white"
-        android:layout_gravity="end|bottom" />
 </FrameLayout>

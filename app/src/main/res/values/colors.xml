@@ -36,7 +36,7 @@
 
     <color name="transaction_expense">#F44336</color>
     <color name="transaction_income">#43A047</color>
-    <color name="transaction_transfer">#009688</color>
+    <color name="transaction_transfer">#00ADD2</color>
 
     <color name="fpi_default_indicator_inactive_color">#80FFFFFF</color>
     <color name="fpi_default_indicator_active_color">#FFFFFF</color>
