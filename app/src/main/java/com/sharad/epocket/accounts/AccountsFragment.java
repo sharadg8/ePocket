@@ -27,12 +27,16 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.sharad.epocket.R;
+import com.sharad.epocket.utils.CurrencyUtils;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -77,9 +81,26 @@ public class AccountsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_accounts, container, false);
+        setHasOptionsMenu(true);
+
         setupRecyclerView(rootView);
 
         return rootView;
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.action_new_account).setVisible(true);
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_new_account:
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void setupRecyclerView(View rootView) {
@@ -142,8 +163,20 @@ public class AccountsFragment extends Fragment {
     private List<AccountItem> createItemList() {
         List<AccountItem> itemList = new ArrayList<>();
 
-        itemList.add(new AccountItem("Title01"));
-        itemList.add(new AccountItem("Title02"));
+        itemList.add(new AccountItem(0, CurrencyUtils.CURRENCY_INDIAN_RUPEE, "Travel Card", "This is note", "009010101842643", "009207859",
+                "Don'tKnow", 2084, 80.86f, 24.83f, 74.73f, AccountItem.ACCOUNT_TYPE_CASH_CARD, Calendar.getInstance()));
+
+        itemList.add(new AccountItem(0, CurrencyUtils.CURRENCY_EURO, "Axis bank", "This is note", "009010101842643", "009207859",
+                "Don'tKnow", 20894, 180.86f, 8724.83f, 89274.73f, AccountItem.ACCOUNT_TYPE_CASH_CARD, Calendar.getInstance()));
+
+        itemList.add(new AccountItem(0, CurrencyUtils.CURRENCY_INDIAN_RUPEE, "SBI", "This is note", "009010101842643", "009207859",
+                "Don'tKnow", 237894, 1804.86f, 87324.83f, 89274.73f, AccountItem.ACCOUNT_TYPE_CARD_ONLY, Calendar.getInstance()));
+
+        itemList.add(new AccountItem(0, CurrencyUtils.CURRENCY_INDIAN_RUPEE, "PPF", "This is note", "009010101842643", "009207859",
+                "Don'tKnow", 2087694, 0f, 80000, 0f, AccountItem.ACCOUNT_TYPE_CARD_ONLY, Calendar.getInstance()));
+
+        itemList.add(new AccountItem(0, CurrencyUtils.CURRENCY_EURO, "AIB", "This is note", "009010101842643", "009207859",
+                "Don'tKnow", 20894, 0f, 0f, 0f, AccountItem.ACCOUNT_TYPE_CARD_ONLY, Calendar.getInstance()));
 
         return itemList;
     }

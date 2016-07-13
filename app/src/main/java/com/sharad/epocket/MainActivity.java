@@ -21,7 +21,7 @@ import com.sharad.epocket.budget.BudgetFragment;
 import com.sharad.epocket.cards.CardsFragment;
 import com.sharad.epocket.goals.GoalsFragment;
 import com.sharad.epocket.home.HomeFragment;
-import com.sharad.epocket.utils.RecyclerItemClickListener;
+import com.sharad.epocket.widget.RecyclerItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;

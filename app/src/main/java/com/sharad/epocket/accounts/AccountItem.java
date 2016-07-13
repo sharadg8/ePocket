@@ -1,14 +1,23 @@
 package com.sharad.epocket.accounts;
 
+import android.text.format.DateUtils;
+
+import com.sharad.epocket.utils.CurrencyUtils;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 /**
  * Created by Sharad on 12-Sep-15.
  */
 public class AccountItem {
+    public final static int ACCOUNT_TYPE_CASH_CARD = 0;
+    public final static int ACCOUNT_TYPE_CARD_ONLY = 1;
+    public final static int ACCOUNT_TYPE_CASH_ONLY = 2;
+
     long id;
-    String currency;
+    int currency;
     String title;
     String note;
     String accountNumber;
@@ -18,26 +27,27 @@ public class AccountItem {
     float  balanceCash;
     float  inflow;
     float  outflow;
-    boolean splitAccount;
+    int accountType;
     Calendar lastUpdate;
+    public Locale locale;
 
     AccountItem(String title) {
         this.title = title;
     }
 
-    AccountItem(long id, String currency, String title, String note, String accountNumber,
+    AccountItem(long id, int currency, String title, String note, String accountNumber,
                 String loginId, String password, float balanceCard, float  balanceCash,
-                float  inflow, float  outflow, boolean splitAccount, long lastUpdateMSec) {
+                float  inflow, float  outflow, int accountType, long lastUpdateMSec) {
         this(id, currency, title, note, accountNumber, loginId, password, balanceCard, balanceCash,
-                inflow, outflow, splitAccount, null);
+                inflow, outflow, accountType, null);
 
         lastUpdate = Calendar.getInstance();
         lastUpdate.setTimeInMillis(lastUpdateMSec);
     }
 
-    AccountItem(long id, String currency, String title, String note, String accountNumber,
+    AccountItem(long id, int currency, String title, String note, String accountNumber,
                 String loginId, String password, float balanceCard, float  balanceCash,
-                float  inflow, float  outflow, boolean splitAccount, Calendar lastUpdate) {
+                float  inflow, float  outflow, int accountType, Calendar lastUpdate) {
         this.id = id;
         this.currency = currency;
         this.title = title;
@@ -49,8 +59,9 @@ public class AccountItem {
         this.balanceCash = balanceCash;
         this.inflow = inflow;
         this.outflow = outflow;
-        this.splitAccount = splitAccount;
+        this.accountType = accountType;
         this.lastUpdate = lastUpdate;
+        this.locale = Locale.GERMANY;
     }
 
     public long getId() {        return id;    }
@@ -58,19 +69,29 @@ public class AccountItem {
 
     public String getTitle() {         return title; }
     public String getNote() {          return note; }
-    public String getCurrency() {      return currency; }
     public String getAccountNumber() { return accountNumber; }
     public String getLoginId() {       return loginId; }
     public String getPassword() {      return password; }
     public Calendar getLastUpdate() {  return lastUpdate; }
     public float getBalanceCard() {    return balanceCard; }
     public float getBalanceCash() {    return balanceCash; }
+    public float getBalance() {        return balanceCash + balanceCard;  }
     public float getInflow() {         return inflow; }
     public float getOutflow() {        return outflow; }
-    public boolean isSplitAccount() {  return splitAccount; }
+    public int getAccountType() {   return accountType; }
+    public Locale getLocale() {     return CurrencyUtils.getLocale(currency); }
+
 
     public String getLastUpdateString() {
-        SimpleDateFormat sdf = new SimpleDateFormat("Last Update: EEE, dd MMM yyyy");
-        return sdf.format(lastUpdate.getTime());
+        String string;
+        if(DateUtils.isToday(lastUpdate.getTimeInMillis())) {
+            SimpleDateFormat sdf = new SimpleDateFormat("h:mm a");
+            string = "Last Update: Today " + sdf.format(lastUpdate.getTime());
+        } else {
+            SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy");
+            string = "Last Update: " + sdf.format(lastUpdate.getTime());
+        }
+
+        return string;
     }
 }

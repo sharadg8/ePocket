@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.sharad.epocket.utils.CircleButton
+<com.sharad.epocket.widget.CircleButton
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/at_category_item"
     android:layout_width="48dp"

@@ -13,8 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sharad.epocket.R;
-import com.sharad.epocket.utils.RecyclerItemClickListener;
-import com.sharad.epocket.utils.SnappyRecyclerView;
+import com.sharad.epocket.widget.RecyclerItemClickListener;
+import com.sharad.epocket.widget.SnappyRecyclerView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

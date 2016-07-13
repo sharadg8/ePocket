@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sharad.epocket.R;
-import com.sharad.epocket.utils.viewpager.HollyViewPagerBus;
+import com.sharad.epocket.widget.viewpager.HollyViewPagerBus;
 
 /**
  * Created by Sharad on 13-Jun-16.

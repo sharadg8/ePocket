@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.sharad.epocket.utils.DrawerButton;
+import com.sharad.epocket.widget.DrawerButton;
 
 import java.util.List;
 

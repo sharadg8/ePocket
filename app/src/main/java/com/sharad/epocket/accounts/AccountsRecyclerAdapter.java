@@ -7,9 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.sharad.epocket.R;
-import com.sharad.epocket.utils.ZigZagCardView;
+import com.sharad.epocket.utils.Utils;
+import com.sharad.epocket.widget.ZigZagCardView;
 
 import java.util.List;
 
@@ -34,11 +36,23 @@ public class AccountsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
         DetailViewHolder holder = (DetailViewHolder) viewHolder;
+        final AccountItem account = itemList.get(position);
+
+        /* Set account item parameters */
+        holder.title.setText(account.getTitle());
+        holder.balance.setText(Utils.formatCurrency(account.getLocale(), account.getBalance()));
+        holder.balanceCard.setText(Utils.formatCurrency(account.getLocale(), account.getBalanceCard()));
+        holder.balanceCash.setText(Utils.formatCurrency(account.getLocale(), account.getBalanceCash()));
+        holder.inflow.setText(Utils.formatCurrency(account.getLocale(), account.getInflow()));
+        holder.outflow.setText(Utils.formatCurrency(account.getLocale(), account.getOutflow()));
+        holder.lastUpdate.setText(account.getLastUpdateString());
+
+        /* Create listener callbacks */
         holder.addTransaction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(itemClickListener != null) {
-                    itemClickListener.onAddTransactionClicked(position, itemList.get(position));
+                    itemClickListener.onAddTransactionClicked(position, account);
                 }
             }
         });
@@ -46,7 +60,7 @@ public class AccountsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
             @Override
             public void onClick(View v) {
                 if(itemClickListener != null) {
-                    itemClickListener.onEditAccountClicked(position, itemList.get(position));
+                    itemClickListener.onEditAccountClicked(position, account);
                 }
             }
         });
@@ -54,7 +68,7 @@ public class AccountsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
             @Override
             public void onClick(View v) {
                 if(itemClickListener != null) {
-                    itemClickListener.onDeleteAccountClicked(position, itemList.get(position));
+                    itemClickListener.onDeleteAccountClicked(position, account);
                 }
             }
         });
@@ -62,7 +76,7 @@ public class AccountsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
             @Override
             public void onClick(View v) {
                 if(itemClickListener != null) {
-                    itemClickListener.onViewTransactionClicked(position, itemList.get(position));
+                    itemClickListener.onViewTransactionClicked(position, account);
                 }
             }
         });
@@ -70,7 +84,7 @@ public class AccountsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
             @Override
             public void onClick(View v) {
                 if(itemClickListener != null) {
-                    itemClickListener.onViewTrendsClicked(position, itemList.get(position));
+                    itemClickListener.onViewTrendsClicked(position, account);
                 }
             }
         });
@@ -78,7 +92,7 @@ public class AccountsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
             @Override
             public void onClick(View v) {
                 if(itemClickListener != null) {
-                    itemClickListener.onViewInfoClicked(position, itemList.get(position));
+                    itemClickListener.onViewInfoClicked(position, account);
                 }
             }
         });
@@ -115,11 +129,18 @@ public class AccountsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
         public ImageButton viewInfo;
         public ImageButton editAccount;
         public ImageButton deleteAccount;
+        public TextView title;
+        public TextView balance;
+        public TextView balanceCash;
+        public TextView balanceCard;
+        public TextView inflow;
+        public TextView outflow;
+        public TextView lastUpdate;
 
         public DetailViewHolder(final View parent) {
             super(parent);
-            final ZigZagCardView expandedItems = (ZigZagCardView) parent.findViewById(R.id.expanded_items);
-            final ImageButton expandMore = (ImageButton) parent.findViewById(R.id.expand_more);
+            final ZigZagCardView expandedItems = (ZigZagCardView) parent.findViewById(R.id.account_expanded_items);
+            final ImageButton expandMore = (ImageButton) parent.findViewById(R.id.account_expand_more);
             expandMore.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -139,6 +160,14 @@ public class AccountsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
             viewInfo = (ImageButton) parent.findViewById(R.id.account_info);
             editAccount = (ImageButton) parent.findViewById(R.id.account_edit);
             deleteAccount = (ImageButton) parent.findViewById(R.id.account_delete);
+
+            title = (TextView) parent.findViewById(R.id.account_title);
+            balance = (TextView) parent.findViewById(R.id.account_balance);
+            balanceCash = (TextView) parent.findViewById(R.id.account_balance_cash);
+            balanceCard = (TextView) parent.findViewById(R.id.account_balance_card);
+            inflow = (TextView) parent.findViewById(R.id.account_inflow);
+            outflow = (TextView) parent.findViewById(R.id.account_outflow);
+            lastUpdate = (TextView) parent.findViewById(R.id.account_last_update);
         }
     }
 }

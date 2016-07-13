@@ -18,12 +18,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sharad.epocket.R;
-import com.sharad.epocket.utils.recurrencepicker.EventRecurrence;
-import com.sharad.epocket.utils.recurrencepicker.RecurrencePickerDialog;
+import com.sharad.epocket.utils.Utils;
+import com.sharad.epocket.widget.recurrencepicker.EventRecurrence;
+import com.sharad.epocket.widget.recurrencepicker.RecurrencePickerDialog;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -84,8 +86,7 @@ public class AddTransactionActivity extends AppCompatActivity implements
         final View toIcon = findViewById(R.id.transfer_icon);
         final View fromSwitch = findViewById(R.id.from_switch);
         final Button date = (Button) findViewById(R.id.date);
-        final Button repeat = (Button) findViewById(R.id.repeat);
-        final Button toAccount = (Button) findViewById(R.id.transfer_account);
+        final ImageButton repeat = (ImageButton) findViewById(R.id.repeat);
 
         final SimpleDateFormat df = new SimpleDateFormat("dd MMM yyyy");
         Calendar currentDate = Calendar.getInstance();
@@ -149,22 +150,16 @@ public class AddTransactionActivity extends AppCompatActivity implements
                                                            toLayout.setVisibility(View.GONE);
                                                            toIcon.setVisibility(View.GONE);
                                                            fromSwitch.setVisibility(View.VISIBLE);
-                                                           repeat.setVisibility(View.VISIBLE);
-                                                           toAccount.setVisibility(View.GONE);
                                                            break;
                                                        case TAB_INCOME:
                                                            toLayout.setVisibility(View.GONE);
                                                            toIcon.setVisibility(View.GONE);
                                                            fromSwitch.setVisibility(View.VISIBLE);
-                                                           repeat.setVisibility(View.VISIBLE);
-                                                           toAccount.setVisibility(View.GONE);
                                                            break;
                                                        case TAB_TRANSFER:
                                                            toLayout.setVisibility(View.VISIBLE);
                                                            toIcon.setVisibility(View.VISIBLE);
                                                            fromSwitch.setVisibility(View.GONE);
-                                                           repeat.setVisibility(View.GONE);
-                                                           toAccount.setVisibility(View.VISIBLE);
                                                            break;
                                                    }
                                                }
@@ -190,6 +185,7 @@ public class AddTransactionActivity extends AppCompatActivity implements
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_add_transaction, menu);
+        Utils.tintMenuIcon(this, menu.findItem(R.id.action_save), android.R.color.white);
         return true;
     }
 

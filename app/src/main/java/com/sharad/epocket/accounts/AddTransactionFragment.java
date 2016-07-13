@@ -7,8 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sharad.epocket.R;
-import com.sharad.epocket.utils.AutofitRecyclerView;
-import com.sharad.epocket.utils.RecyclerItemClickListener;
+import com.sharad.epocket.widget.AutofitRecyclerView;
+import com.sharad.epocket.widget.RecyclerItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -23,11 +23,13 @@
             android:paddingTop="8dp"
             android:paddingBottom="8dp">
             <TextView
+                android:id="@+id/account_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Axis Bank"
-                android:textSize="24sp"
-                android:id="@+id/textView"
+                android:lines="1"
+                android:ellipsize="end"
+                android:textAppearance="@android:style/TextAppearance.Material.Large"
                 android:textColor="@android:color/white" />
         </RelativeLayout>
 
@@ -64,6 +66,7 @@
                     android:text="Balance"
                     android:gravity="right" />
                 <TextView
+                    android:id="@+id/account_balance"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="$2600"
@@ -71,8 +74,8 @@
                     android:textAppearance="@android:style/TextAppearance.Material.Display1" />
             </LinearLayout>
         </LinearLayout>
-        <com.sharad.epocket.utils.ZigZagCardView
-            android:id="@+id/expanded_items"
+        <com.sharad.epocket.widget.ZigZagCardView
+            android:id="@+id/account_expanded_items"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:zc_background="#E0E0E0"
@@ -139,16 +142,17 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
                     <TextView
+                        android:id="@+id/account_balance_cash"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:drawableLeft="@drawable/ic_cash_black_24px"
                         android:drawablePadding="8dp"
                         android:drawableTint="@color/transaction_transfer"
-                        android:textColor="@color/transaction_transfer"
                         android:text="$ 180.60"
-                        android:textAppearance="@android:style/TextAppearance.Material.Large" />
+                        android:textSize="20sp" />
                     <TextView
+                        android:id="@+id/account_balance_card"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
@@ -157,7 +161,7 @@
                         android:drawableTint="@color/transaction_transfer"
                         android:textColor="@color/transaction_transfer"
                         android:text="$ 4800.60"
-                        android:textAppearance="@android:style/TextAppearance.Material.Large" />
+                        android:textSize="20sp" />
                 </LinearLayout>
 
                 <TextView
@@ -171,6 +175,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
                     <TextView
+                        android:id="@+id/account_outflow"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
@@ -179,8 +184,9 @@
                         android:drawableTint="@color/transaction_expense"
                         android:textColor="@color/transaction_expense"
                         android:text="$ 180.60"
-                        android:textAppearance="@android:style/TextAppearance.Material.Large" />
+                        android:textSize="20sp" />
                     <TextView
+                        android:id="@+id/account_inflow"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
@@ -189,18 +195,19 @@
                         android:drawableTint="@color/transaction_income"
                         android:textColor="@color/transaction_income"
                         android:text="$ 4800.60"
-                        android:textAppearance="@android:style/TextAppearance.Material.Large" />
+                        android:textSize="20sp" />
                 </LinearLayout>
 
                 <TextView
+                    android:id="@+id/account_last_update"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingTop="16dp"
                     android:text="Last updated: Today 5:20 pm"/>
             </LinearLayout>
-        </com.sharad.epocket.utils.ZigZagCardView>
+        </com.sharad.epocket.widget.ZigZagCardView>
         <ImageButton
-            android:id="@+id/expand_more"
+            android:id="@+id/account_expand_more"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"

@@ -10,7 +10,7 @@ import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 
 import com.sharad.epocket.R;
-import com.sharad.epocket.utils.FlipAnimation;
+import com.sharad.epocket.widget.FlipAnimation;
 
 public class AddCardActivity extends AppCompatActivity {
 

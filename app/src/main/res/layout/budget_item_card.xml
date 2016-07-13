@@ -48,7 +48,7 @@
                     android:text="Info"/>
             </LinearLayout>
         </RelativeLayout>
-        <com.sharad.epocket.utils.ProgressView
+        <com.sharad.epocket.widget.ProgressView
             android:id="@+id/dt_progress"
             android:layout_width="match_parent"
             android:layout_height="14dp" />

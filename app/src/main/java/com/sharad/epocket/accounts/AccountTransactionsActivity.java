@@ -7,8 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.sharad.epocket.R;
-import com.sharad.epocket.utils.viewpager.HollyViewPager;
-import com.sharad.epocket.utils.viewpager.HollyViewPagerConfigurator;
+import com.sharad.epocket.widget.viewpager.HollyViewPager;
+import com.sharad.epocket.widget.viewpager.HollyViewPagerConfigurator;
 
 public class AccountTransactionsActivity extends AppCompatActivity {
 

@@ -2,9 +2,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.sharad.epocket.accounts.AddTransactionActivity$PlaceholderFragment">
+    tools:context="com.sharad.epocket.accounts.AddTransactionFragment">
 
-    <com.sharad.epocket.utils.AutofitRecyclerView
+    <com.sharad.epocket.widget.AutofitRecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

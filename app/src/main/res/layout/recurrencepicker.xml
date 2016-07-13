@@ -115,7 +115,7 @@
                             android:layout_height="wrap_content" />
                     </LinearLayout>
 
-                    <com.sharad.epocket.utils.recurrencepicker.LinearLayoutWithMaxWidth
+                    <com.sharad.epocket.widget.recurrencepicker.LinearLayoutWithMaxWidth
                         android:id="@+id/weekGroup"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -125,22 +125,22 @@
                         android:gravity="center_horizontal"
                         android:orientation="horizontal" >
 
-                        <com.sharad.epocket.utils.recurrencepicker.WeekButton style="@style/RecurrenceDayOfWeekStyle" />
+                        <com.sharad.epocket.widget.recurrencepicker.WeekButton style="@style/RecurrenceDayOfWeekStyle" />
 
-                        <com.sharad.epocket.utils.recurrencepicker.WeekButton style="@style/RecurrenceDayOfWeekStyle" />
+                        <com.sharad.epocket.widget.recurrencepicker.WeekButton style="@style/RecurrenceDayOfWeekStyle" />
 
-                        <com.sharad.epocket.utils.recurrencepicker.WeekButton style="@style/RecurrenceDayOfWeekStyle" />
+                        <com.sharad.epocket.widget.recurrencepicker.WeekButton style="@style/RecurrenceDayOfWeekStyle" />
 
-                        <com.sharad.epocket.utils.recurrencepicker.WeekButton style="@style/RecurrenceDayOfWeekStyle" />
+                        <com.sharad.epocket.widget.recurrencepicker.WeekButton style="@style/RecurrenceDayOfWeekStyle" />
 
-                        <com.sharad.epocket.utils.recurrencepicker.WeekButton style="@style/RecurrenceDayOfWeekStyle" />
+                        <com.sharad.epocket.widget.recurrencepicker.WeekButton style="@style/RecurrenceDayOfWeekStyle" />
 
-                        <com.sharad.epocket.utils.recurrencepicker.WeekButton style="@style/RecurrenceDayOfWeekStyle" />
+                        <com.sharad.epocket.widget.recurrencepicker.WeekButton style="@style/RecurrenceDayOfWeekStyle" />
 
-                        <com.sharad.epocket.utils.recurrencepicker.WeekButton style="@style/RecurrenceDayOfWeekStyle" />
-                    </com.sharad.epocket.utils.recurrencepicker.LinearLayoutWithMaxWidth>
+                        <com.sharad.epocket.widget.recurrencepicker.WeekButton style="@style/RecurrenceDayOfWeekStyle" />
+                    </com.sharad.epocket.widget.recurrencepicker.LinearLayoutWithMaxWidth>
 
-                    <com.sharad.epocket.utils.recurrencepicker.LinearLayoutWithMaxWidth
+                    <com.sharad.epocket.widget.recurrencepicker.LinearLayoutWithMaxWidth
                         android:id="@+id/weekGroup2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -150,16 +150,16 @@
                         android:orientation="horizontal"
                         android:visibility="gone" >
 
-                        <com.sharad.epocket.utils.recurrencepicker.WeekButton style="@style/RecurrenceDayOfWeekStyle" />
+                        <com.sharad.epocket.widget.recurrencepicker.WeekButton style="@style/RecurrenceDayOfWeekStyle" />
 
-                        <com.sharad.epocket.utils.recurrencepicker.WeekButton style="@style/RecurrenceDayOfWeekStyle" />
+                        <com.sharad.epocket.widget.recurrencepicker.WeekButton style="@style/RecurrenceDayOfWeekStyle" />
 
-                        <com.sharad.epocket.utils.recurrencepicker.WeekButton style="@style/RecurrenceDayOfWeekStyle" />
+                        <com.sharad.epocket.widget.recurrencepicker.WeekButton style="@style/RecurrenceDayOfWeekStyle" />
 
-                        <com.sharad.epocket.utils.recurrencepicker.WeekButton
+                        <com.sharad.epocket.widget.recurrencepicker.WeekButton
                             style="@style/RecurrenceDayOfWeekStyle"
                             android:visibility="invisible" />
-                    </com.sharad.epocket.utils.recurrencepicker.LinearLayoutWithMaxWidth>
+                    </com.sharad.epocket.widget.recurrencepicker.LinearLayoutWithMaxWidth>
 
                     <RadioGroup
                         android:id="@+id/monthGroup"
