@@ -40,12 +40,15 @@ public class AccountsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         /* Set account item parameters */
         holder.title.setText(account.getTitle());
-        holder.balance.setText(Utils.formatCurrency(account.getLocale(), account.getBalance()));
-        holder.balanceCard.setText(Utils.formatCurrency(account.getLocale(), account.getBalanceCard()));
-        holder.balanceCash.setText(Utils.formatCurrency(account.getLocale(), account.getBalanceCash()));
-        holder.inflow.setText(Utils.formatCurrency(account.getLocale(), account.getInflow()));
-        holder.outflow.setText(Utils.formatCurrency(account.getLocale(), account.getOutflow()));
+        holder.balance.setText(Utils.formatCurrency(account.getIsoCurrency(), account.getBalance()));
+        holder.balanceCard.setText(Utils.formatCurrency(account.getIsoCurrency(), account.getBalanceCard()));
+        holder.balanceCash.setText(Utils.formatCurrency(account.getIsoCurrency(), account.getBalanceCash()));
+        holder.inflow.setText(Utils.formatCurrency(account.getIsoCurrency(), account.getInflow()));
+        holder.outflow.setText(Utils.formatCurrency(account.getIsoCurrency(), account.getOutflow()));
         holder.lastUpdate.setText(account.getLastUpdateString());
+
+        holder.balanceCard.setVisibility((account.hasCardAccount() ? View.VISIBLE : View.GONE));
+        holder.balanceCash.setVisibility((account.hasCashAccount() ? View.VISIBLE : View.GONE));
 
         /* Create listener callbacks */
         holder.addTransaction.setOnClickListener(new View.OnClickListener() {

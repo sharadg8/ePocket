@@ -7,6 +7,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.view.MenuItem;
 
+import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.util.Locale;
 
@@ -16,17 +17,28 @@ import java.util.Locale;
 
 public class Utils {
 
-    public static String formatCurrency(Locale locale, float value) {
-        NumberFormat nf = NumberFormat.getCurrencyInstance(locale);
+    public static String formatCurrency(String isoCurrency, float value) {
+        NumberFormat nf = NumberFormat.getCurrencyInstance(getLocale(isoCurrency));
+        nf.setRoundingMode(RoundingMode.HALF_DOWN);
         nf.setMaximumFractionDigits(0);
         return nf.format(value);
     }
 
-    public static String formatCurrencyDec(Locale locale, float value) {
-        NumberFormat nf = NumberFormat.getCurrencyInstance(locale);
+    public static String formatCurrencyDec(String isoCurrency, float value) {
+        NumberFormat nf = NumberFormat.getCurrencyInstance(getLocale(isoCurrency));
         nf.setMinimumFractionDigits(2);
         nf.setMaximumFractionDigits(2);
         return nf.format(value);
+    }
+
+    private static Locale getLocale(String isoCurrency) {
+        for (Locale locale : NumberFormat.getAvailableLocales()) {
+            String code = NumberFormat.getCurrencyInstance(locale).getCurrency().getCurrencyCode();
+            if (isoCurrency.equals(code)) {
+                return new Locale.Builder().setLocale(locale).setLanguage("en").build();
+            }
+        }
+        return Locale.getDefault();
     }
 
     public static void tintMenuIcon(Context context, MenuItem item, @ColorRes int color) {

@@ -149,6 +149,7 @@
                         android:drawableLeft="@drawable/ic_cash_black_24px"
                         android:drawablePadding="8dp"
                         android:drawableTint="@color/transaction_transfer"
+                        android:textColor="@color/transaction_transfer"
                         android:text="$ 180.60"
                         android:textSize="20sp" />
                     <TextView

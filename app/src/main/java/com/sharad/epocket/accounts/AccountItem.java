@@ -2,11 +2,8 @@ package com.sharad.epocket.accounts;
 
 import android.text.format.DateUtils;
 
-import com.sharad.epocket.utils.CurrencyUtils;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Locale;
 
 /**
  * Created by Sharad on 12-Sep-15.
@@ -17,7 +14,7 @@ public class AccountItem {
     public final static int ACCOUNT_TYPE_CASH_ONLY = 2;
 
     long id;
-    int currency;
+    String isoCurrency;
     String title;
     String note;
     String accountNumber;
@@ -29,27 +26,26 @@ public class AccountItem {
     float  outflow;
     int accountType;
     Calendar lastUpdate;
-    public Locale locale;
 
     AccountItem(String title) {
         this.title = title;
     }
 
-    AccountItem(long id, int currency, String title, String note, String accountNumber,
+    AccountItem(long id, String isoCurrency, String title, String note, String accountNumber,
                 String loginId, String password, float balanceCard, float  balanceCash,
                 float  inflow, float  outflow, int accountType, long lastUpdateMSec) {
-        this(id, currency, title, note, accountNumber, loginId, password, balanceCard, balanceCash,
+        this(id, isoCurrency, title, note, accountNumber, loginId, password, balanceCard, balanceCash,
                 inflow, outflow, accountType, null);
 
         lastUpdate = Calendar.getInstance();
         lastUpdate.setTimeInMillis(lastUpdateMSec);
     }
 
-    AccountItem(long id, int currency, String title, String note, String accountNumber,
+    AccountItem(long id, String isoCurrency, String title, String note, String accountNumber,
                 String loginId, String password, float balanceCard, float  balanceCash,
                 float  inflow, float  outflow, int accountType, Calendar lastUpdate) {
         this.id = id;
-        this.currency = currency;
+        this.isoCurrency = isoCurrency;
         this.title = title;
         this.note = note;
         this.accountNumber = accountNumber;
@@ -61,7 +57,6 @@ public class AccountItem {
         this.outflow = outflow;
         this.accountType = accountType;
         this.lastUpdate = lastUpdate;
-        this.locale = Locale.GERMANY;
     }
 
     public long getId() {        return id;    }
@@ -78,9 +73,11 @@ public class AccountItem {
     public float getBalance() {        return balanceCash + balanceCard;  }
     public float getInflow() {         return inflow; }
     public float getOutflow() {        return outflow; }
-    public int getAccountType() {   return accountType; }
-    public Locale getLocale() {     return CurrencyUtils.getLocale(currency); }
+    public int getAccountType() {      return accountType; }
+    public String getIsoCurrency() {   return isoCurrency; }
 
+    public boolean hasCardAccount() { return ((accountType == ACCOUNT_TYPE_CASH_CARD) || (accountType == ACCOUNT_TYPE_CARD_ONLY));  }
+    public boolean hasCashAccount() { return ((accountType == ACCOUNT_TYPE_CASH_CARD) || (accountType == ACCOUNT_TYPE_CASH_ONLY));  }
 
     public String getLastUpdateString() {
         String string;
