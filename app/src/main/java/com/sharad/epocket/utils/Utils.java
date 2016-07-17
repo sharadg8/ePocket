@@ -9,6 +9,7 @@ import android.view.MenuItem;
 
 import java.math.RoundingMode;
 import java.text.NumberFormat;
+import java.util.HashMap;
 import java.util.Locale;
 
 /**
@@ -16,6 +17,7 @@ import java.util.Locale;
  */
 
 public class Utils {
+    private static HashMap<String, Locale> localeMap = new HashMap<>();
 
     public static String formatCurrency(String isoCurrency, float value) {
         NumberFormat nf = NumberFormat.getCurrencyInstance(getLocale(isoCurrency));
@@ -32,13 +34,23 @@ public class Utils {
     }
 
     private static Locale getLocale(String isoCurrency) {
-        for (Locale locale : NumberFormat.getAvailableLocales()) {
-            String code = NumberFormat.getCurrencyInstance(locale).getCurrency().getCurrencyCode();
-            if (isoCurrency.equals(code)) {
-                return new Locale.Builder().setLocale(locale).setLanguage("en").build();
+        Locale selectedLocale = localeMap.get(isoCurrency);
+        if(selectedLocale == null) {
+            for (Locale locale : NumberFormat.getAvailableLocales()) {
+                String code = NumberFormat.getCurrencyInstance(locale).getCurrency().getCurrencyCode();
+                if (isoCurrency.equals(code)) {
+                    selectedLocale = new Locale.Builder().setLocale(locale).setLanguage("en").build();
+                    localeMap.put(isoCurrency, selectedLocale);
+                    break;
+                }
             }
         }
-        return Locale.getDefault();
+
+        if(selectedLocale == null) {
+            selectedLocale = Locale.getDefault();
+            localeMap.put(isoCurrency, selectedLocale);
+        }
+        return selectedLocale;
     }
 
     public static void tintMenuIcon(Context context, MenuItem item, @ColorRes int color) {

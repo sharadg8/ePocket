@@ -1,5 +1,5 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="app_name">ePocket</string>
+    <string name="app_name"> </string>
     <string name="title_activity_login">Welcome</string>
 
     <string name="action_settings">Settings</string>
@@ -38,6 +38,7 @@
         <item>Medical</item>
         <item>Personal</item>
     </string-array>
+
     <string name="title_activity_main2">Main2Activity</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>

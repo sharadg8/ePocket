@@ -1,7 +1,6 @@
 package com.sharad.epocket.accounts;
 
 import android.content.Context;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +10,6 @@ import android.widget.TextView;
 
 import com.sharad.epocket.R;
 import com.sharad.epocket.utils.Utils;
-import com.sharad.epocket.widget.ZigZagCardView;
 
 import java.util.List;
 
@@ -51,14 +49,6 @@ public class AccountsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
         holder.balanceCash.setVisibility((account.hasCashAccount() ? View.VISIBLE : View.GONE));
 
         /* Create listener callbacks */
-        holder.addTransaction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(itemClickListener != null) {
-                    itemClickListener.onAddTransactionClicked(position, account);
-                }
-            }
-        });
         holder.editAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -117,7 +107,6 @@ public class AccountsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public interface OnItemClickListener {
-        void onAddTransactionClicked(int position, AccountItem account);
         void onEditAccountClicked(int position, AccountItem account);
         void onDeleteAccountClicked(int position, AccountItem account);
         void onViewTransactionClicked(int position, AccountItem account);
@@ -126,7 +115,6 @@ public class AccountsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     class DetailViewHolder extends RecyclerView.ViewHolder {
-        public FloatingActionButton addTransaction;
         public ImageButton viewTransaction;
         public ImageButton viewTrends;
         public ImageButton viewInfo;
@@ -142,7 +130,7 @@ public class AccountsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         public DetailViewHolder(final View parent) {
             super(parent);
-            final ZigZagCardView expandedItems = (ZigZagCardView) parent.findViewById(R.id.account_expanded_items);
+            final View expandedItems = parent.findViewById(R.id.account_expanded_items);
             final ImageButton expandMore = (ImageButton) parent.findViewById(R.id.account_expand_more);
             expandMore.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -157,7 +145,6 @@ public class AccountsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
                 }
             });
 
-            addTransaction = (FloatingActionButton) parent.findViewById(R.id.add_transaction);
             viewTransaction = (ImageButton) parent.findViewById(R.id.account_transactions);
             viewTrends = (ImageButton) parent.findViewById(R.id.account_trends);
             viewInfo = (ImageButton) parent.findViewById(R.id.account_info);

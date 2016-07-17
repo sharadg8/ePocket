@@ -32,230 +32,192 @@
             android:orientation="vertical">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="72dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center_vertical"
                 android:orientation="horizontal">
-                <LinearLayout
-                    android:layout_width="56dp"
+                <ImageView
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_gravity="center_vertical">
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/c_account_balance_wallet_black_24dp"
-                        android:tint="@color/secondary_text"/>
-                </LinearLayout>
-                <android.support.design.widget.TextInputLayout
+                    android:src="@drawable/c_account_balance_wallet_black_24dp"
+                    android:tint="@color/secondary_text"/>
+                <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center">
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Account Name"/>
-                </android.support.design.widget.TextInputLayout>
+                    android:layout_marginLeft="16dp"
+                    android:hint="Account Name"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="72dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center_vertical"
                 android:orientation="horizontal">
-                <LinearLayout
-                    android:layout_width="56dp"
+                <ImageView
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_gravity="center_vertical">
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/ic_monetization_on_black_24px"
-                        android:tint="@color/secondary_text"/>
-                </LinearLayout>
-                <android.support.design.widget.TextInputLayout
+                    android:src="@drawable/ic_monetization_on_black_24px"
+                    android:tint="@color/secondary_text"/>
+                <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center">
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Currency"/>
-                </android.support.design.widget.TextInputLayout>
+                    android:layout_marginLeft="16dp"
+                    android:hint="Currency"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="72dp"
-                android:orientation="horizontal">
-                <LinearLayout
-                    android:layout_width="56dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_vertical">
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/ic_insert_comment_black_24dp"
-                        android:tint="@color/secondary_text"/>
-                </LinearLayout>
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center">
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Description"/>
-                </android.support.design.widget.TextInputLayout>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="72dp"
+                android:layout_height="48dp"
                 android:gravity="center"
                 android:orientation="horizontal">
-                <Button
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
+                <ToggleButton
+                    android:id="@+id/account_button_cash"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/primary"
-                    android:textColor="@android:color/white"
-                    android:text="CASH &amp; CARD"/>
-                <Button
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
+                    android:textColor="@color/toggle_button_text"
+                    android:backgroundTint="@color/toggle_button_background"
+                    android:checked="true"
+                    android:textOn="CASH"
+                    android:textOff="CASH"/>
+                <ToggleButton
+                    android:id="@+id/account_button_card"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="CASH ONLY"/>
-                <Button
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:text="CARD ONLY"/>
+                    android:textColor="@color/toggle_button_text"
+                    android:backgroundTint="@color/toggle_button_background"
+                    android:checked="true"
+                    android:textOn="CARD"
+                    android:textOff="CARD"/>
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/layout_account_cash"
                 android:layout_width="match_parent"
-                android:layout_height="72dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center_vertical"
                 android:orientation="horizontal">
-                <LinearLayout
-                    android:layout_width="56dp"
+                <ImageView
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_gravity="center_vertical">
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/ic_cash_black_24px"
-                        android:tint="@color/secondary_text"/>
-                </LinearLayout>
-                <android.support.design.widget.TextInputLayout
+                    android:src="@drawable/ic_cash_black_24px"
+                    android:tint="@color/secondary_text"/>
+                <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center">
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Initial Cash Balance"/>
-                </android.support.design.widget.TextInputLayout>
+                    android:layout_marginLeft="16dp"
+                    android:hint="Initial Cash Balance"/>
             </LinearLayout>
             <LinearLayout
+                android:id="@+id/layout_account_card"
                 android:layout_width="match_parent"
-                android:layout_height="72dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center_vertical"
                 android:orientation="horizontal">
-                <LinearLayout
-                    android:layout_width="56dp"
+                <ImageView
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_gravity="center_vertical">
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/ic_credit_card_black_24dp"
-                        android:tint="@color/secondary_text"/>
-                </LinearLayout>
-                <android.support.design.widget.TextInputLayout
+                    android:src="@drawable/ic_credit_card_black_24dp"
+                    android:tint="@color/secondary_text"/>
+                <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center">
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Initial Card Balance"/>
-                </android.support.design.widget.TextInputLayout>
+                    android:layout_marginLeft="16dp"
+                    android:hint="Initial Card Balance"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/layout_account_description"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_gravity="center_vertical"
+                android:visibility="gone"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_insert_comment_black_24dp"
+                    android:tint="@color/secondary_text"/>
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:hint="Description"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/layout_account_contact"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_gravity="center_vertical"
+                android:visibility="gone"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/c_local_phone_black_24dp"
+                    android:tint="@color/secondary_text"/>
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:hint="Contact Number"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/layout_account_number"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_gravity="center_vertical"
+                android:visibility="gone"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_label_black_24dp"
+                    android:tint="@color/secondary_text"/>
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:hint="Account Number"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/layout_account_login"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_gravity="center_vertical"
+                android:visibility="gone"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_input_black_24dp"
+                    android:tint="@color/secondary_text"/>
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:hint="User Name"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/layout_account_password"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_gravity="center_vertical"
+                android:visibility="gone"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_vpn_key_black_24dp"
+                    android:tint="@color/secondary_text"/>
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:hint="Password"/>
             </LinearLayout>
             <Button
-                android:layout_width="match_parent"
-                android:layout_height="72dp"
-                android:text="More fields"
-                android:textColor="@color/primary"
-                android:backgroundTint="@android:color/transparent"/>
-            <LinearLayout
+                android:id="@+id/account_add_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="72dp"
-                    android:orientation="horizontal">
-                    <LinearLayout
-                        android:layout_width="56dp"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center_vertical">
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:src="@drawable/ic_credit_card_black_24dp"
-                            android:tint="@color/secondary_text"/>
-                    </LinearLayout>
-                    <android.support.design.widget.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center">
-                        <EditText
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="Account Number"/>
-                    </android.support.design.widget.TextInputLayout>
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="72dp"
-                    android:orientation="horizontal">
-                    <LinearLayout
-                        android:layout_width="56dp"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center_vertical">
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:src="@drawable/ic_credit_card_black_24dp"
-                            android:tint="@color/secondary_text"/>
-                    </LinearLayout>
-                    <android.support.design.widget.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center">
-                        <EditText
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="Login"/>
-                    </android.support.design.widget.TextInputLayout>
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="72dp"
-                    android:orientation="horizontal">
-                    <LinearLayout
-                        android:layout_width="56dp"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center_vertical">
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:src="@drawable/ic_credit_card_black_24dp"
-                            android:tint="@color/secondary_text"/>
-                    </LinearLayout>
-                    <android.support.design.widget.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center">
-                        <EditText
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="Password"/>
-                    </android.support.design.widget.TextInputLayout>
-                </LinearLayout>
-            </LinearLayout>
+                android:layout_gravity="center"
+                android:text="ADD FIELDS"
+                android:textColor="@color/primary"
+                android:background="?android:attr/selectableItemBackground"/>
         </LinearLayout>
     </ScrollView>
 

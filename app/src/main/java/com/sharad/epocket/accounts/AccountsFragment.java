@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -84,6 +85,16 @@ public class AccountsFragment extends Fragment {
 
         setupRecyclerView(rootView);
 
+        FloatingActionButton addTransaction = (FloatingActionButton) rootView.findViewById(R.id.fab_add);
+        addTransaction.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity().getApplicationContext(), AddTransactionActivity.class);
+                intent.putExtra("KEY_ACCOUNT_ID", 0);
+                getActivity().startActivityForResult(intent, 0);
+            }
+        });
+
         return rootView;
     }
 
@@ -113,13 +124,6 @@ public class AccountsFragment extends Fragment {
 
         recyclerAdapter.setOnItemClickListener(new AccountsRecyclerAdapter.OnItemClickListener() {
             @Override
-            public void onAddTransactionClicked(int position, AccountItem account) {
-                Intent intent = new Intent(getActivity().getApplicationContext(), AddTransactionActivity.class);
-                intent.putExtra("KEY_ACCOUNT_ID", account.getId());
-                getActivity().startActivityForResult(intent, 0);
-            }
-
-            @Override
             public void onEditAccountClicked(int position, AccountItem account) {
 
             }
@@ -135,11 +139,7 @@ public class AccountsFragment extends Fragment {
                                 recyclerAdapter.removeAt(position);
                             }
                         })
-                        .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // do nothing
-                            }
-                        })
+                        .setNegativeButton(android.R.string.cancel, null)
                         .show();
             }
 
@@ -166,19 +166,34 @@ public class AccountsFragment extends Fragment {
         List<AccountItem> itemList = new ArrayList<>();
 
         itemList.add(new AccountItem(0, "EUR", "Travel Card", "This is note", "009010101842643", "009207859",
-                "Don'tKnow", 2084, 80.86f, 24.83f, 74.73f, AccountItem.ACCOUNT_TYPE_CASH_CARD, Calendar.getInstance()));
+                "Don'tKnow", "", 2084, 80.86f, 24.83f, 74.73f, AccountItem.ACCOUNT_TYPE_CASH_CARD, Calendar.getInstance()));
 
         itemList.add(new AccountItem(0, "INR", "Axis bank", "This is note", "009010101842643", "009207859",
-                "Don'tKnow", 20894, 180.86f, 8724.83f, 89274.73f, AccountItem.ACCOUNT_TYPE_CASH_CARD, Calendar.getInstance()));
+                "Don'tKnow", "", 20894, 180.86f, 8724.83f, 89274.73f, AccountItem.ACCOUNT_TYPE_CASH_CARD, Calendar.getInstance()));
 
         itemList.add(new AccountItem(0, "INR", "SBI", "This is note", "009010101842643", "009207859",
-                "Don'tKnow", 237894, 1804.86f, 87324.83f, 89274.73f, AccountItem.ACCOUNT_TYPE_CARD_ONLY, Calendar.getInstance()));
+                "Don'tKnow", "", 237894, 1804.86f, 87324.83f, 89274.73f, AccountItem.ACCOUNT_TYPE_CARD_ONLY, Calendar.getInstance()));
 
         itemList.add(new AccountItem(0, "INR", "PPF", "This is note", "009010101842643", "009207859",
-                "Don'tKnow", 2087694, 0f, 80000, 0f, AccountItem.ACCOUNT_TYPE_CARD_ONLY, Calendar.getInstance()));
+                "Don'tKnow", "", 2087694, 0f, 80000, 0f, AccountItem.ACCOUNT_TYPE_CARD_ONLY, Calendar.getInstance()));
 
         itemList.add(new AccountItem(0, "EUR", "AIB", "This is note", "009010101842643", "009207859",
-                "Don'tKnow", 20894, 0f, 0f, 0f, AccountItem.ACCOUNT_TYPE_CARD_ONLY, Calendar.getInstance()));
+                "Don'tKnow", "", 20894, 0f, 0f, 0f, AccountItem.ACCOUNT_TYPE_CARD_ONLY, Calendar.getInstance()));
+
+        itemList.add(new AccountItem(0, "EUR", "Travel Card", "This is note", "009010101842643", "009207859",
+                "Don'tKnow", "", 2084, 80.86f, 24.83f, 74.73f, AccountItem.ACCOUNT_TYPE_CASH_CARD, Calendar.getInstance()));
+
+        itemList.add(new AccountItem(0, "INR", "Axis bank", "This is note", "009010101842643", "009207859",
+                "Don'tKnow", "", 20894, 180.86f, 8724.83f, 89274.73f, AccountItem.ACCOUNT_TYPE_CASH_CARD, Calendar.getInstance()));
+
+        itemList.add(new AccountItem(0, "INR", "SBI", "This is note", "009010101842643", "009207859",
+                "Don'tKnow", "", 237894, 1804.86f, 87324.83f, 89274.73f, AccountItem.ACCOUNT_TYPE_CARD_ONLY, Calendar.getInstance()));
+
+        itemList.add(new AccountItem(0, "INR", "PPF", "This is note", "009010101842643", "009207859",
+                "Don'tKnow", "", 2087694, 0f, 80000, 0f, AccountItem.ACCOUNT_TYPE_CARD_ONLY, Calendar.getInstance()));
+
+        itemList.add(new AccountItem(0, "EUR", "AIB", "This is note", "009010101842643", "009207859",
+                "Don'tKnow", "", 20894, 0f, 0f, 0f, AccountItem.ACCOUNT_TYPE_CARD_ONLY, Calendar.getInstance()));
 
         return itemList;
     }

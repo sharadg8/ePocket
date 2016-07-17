@@ -20,6 +20,7 @@ public class AccountItem {
     String accountNumber;
     String loginId;
     String password;
+    String contact;
     float  balanceCard;
     float  balanceCash;
     float  inflow;
@@ -27,22 +28,18 @@ public class AccountItem {
     int accountType;
     Calendar lastUpdate;
 
-    AccountItem(String title) {
-        this.title = title;
-    }
-
     AccountItem(long id, String isoCurrency, String title, String note, String accountNumber,
-                String loginId, String password, float balanceCard, float  balanceCash,
+                String loginId, String password, String contact, float balanceCard, float  balanceCash,
                 float  inflow, float  outflow, int accountType, long lastUpdateMSec) {
-        this(id, isoCurrency, title, note, accountNumber, loginId, password, balanceCard, balanceCash,
-                inflow, outflow, accountType, null);
+        this(id, isoCurrency, title, note, accountNumber, loginId, password, contact,
+                balanceCard, balanceCash, inflow, outflow, accountType, null);
 
         lastUpdate = Calendar.getInstance();
         lastUpdate.setTimeInMillis(lastUpdateMSec);
     }
 
     AccountItem(long id, String isoCurrency, String title, String note, String accountNumber,
-                String loginId, String password, float balanceCard, float  balanceCash,
+                String loginId, String password, String contact, float balanceCard, float  balanceCash,
                 float  inflow, float  outflow, int accountType, Calendar lastUpdate) {
         this.id = id;
         this.isoCurrency = isoCurrency;
@@ -51,6 +48,7 @@ public class AccountItem {
         this.accountNumber = accountNumber;
         this.loginId = loginId;
         this.password = password;
+        this.contact = contact;
         this.balanceCard = balanceCard;
         this.balanceCash = balanceCash;
         this.inflow = inflow;
@@ -67,7 +65,9 @@ public class AccountItem {
     public String getAccountNumber() { return accountNumber; }
     public String getLoginId() {       return loginId; }
     public String getPassword() {      return password; }
+    public String getContact() {      return contact; }
     public Calendar getLastUpdate() {  return lastUpdate; }
+    public long getLastUpdateMSec() {  return lastUpdate.getTimeInMillis(); }
     public float getBalanceCard() {    return balanceCard; }
     public float getBalanceCash() {    return balanceCash; }
     public float getBalance() {        return balanceCash + balanceCard;  }
