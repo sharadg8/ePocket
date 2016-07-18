@@ -2,6 +2,8 @@ package com.sharad.epocket.accounts;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -10,12 +12,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ToggleButton;
 
 import com.sharad.epocket.R;
 import com.sharad.epocket.utils.Utils;
 
+import java.util.Currency;
+
 public class AddAccountActivity extends AppCompatActivity {
+    EditText editTextCurrency;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +31,8 @@ public class AddAccountActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        editTextCurrency = (EditText) findViewById(R.id.account_currency);
 
         final ToggleButton btnCash = (ToggleButton) findViewById(R.id.account_button_cash);
         final ToggleButton btnCard = (ToggleButton) findViewById(R.id.account_button_card);
@@ -102,6 +110,33 @@ public class AddAccountActivity extends AppCompatActivity {
                         })
                         .setNegativeButton(android.R.string.cancel, null)
                         .show();
+            }
+        });
+
+        View layoutCurrency = findViewById(R.id.layout_account_currency);
+        layoutCurrency.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showCurrencyPicker();
+            }
+        });
+    }
+
+    private void showCurrencyPicker(){
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("CurrencyPickerDialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        // Create and show the dialog.
+        CurrencyPickerDialog newFragment = CurrencyPickerDialog.newInstance();
+        newFragment.show(ft, "CurrencyPickerDialog");
+        newFragment.setOnCurrencySelectedListener(new CurrencyPickerDialog.OnCurrencySelectedListener() {
+            @Override
+            public void onCurrencySelected(Currency currency) {
+                editTextCurrency.setText(currency.getSymbol() + " - " + currency.getDisplayName());
             }
         });
     }
