@@ -36,8 +36,7 @@ import android.view.ViewGroup;
 import com.sharad.epocket.R;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+
 
 
 /**
@@ -49,6 +48,8 @@ public class AccountsFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    AccountsRecyclerAdapter recyclerAdapter;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -109,8 +110,8 @@ public class AccountsFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.action_new_account:
                 Intent intent = new Intent(getActivity().getApplicationContext(), AddAccountActivity.class);
-                intent.putExtra("KEY_ACCOUNT_ID", -1);
-                getActivity().startActivityForResult(intent, 0);
+                intent.putExtra("AddAccountActivityKeyAccountId", -1);
+                startActivityForResult(intent, 210);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -118,14 +119,16 @@ public class AccountsFragment extends Fragment {
 
     private void setupRecyclerView(View rootView) {
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
-        final AccountsRecyclerAdapter recyclerAdapter = new AccountsRecyclerAdapter(createItemList());
+        recyclerAdapter = new AccountsRecyclerAdapter(createItemList());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(recyclerAdapter);
 
         recyclerAdapter.setOnItemClickListener(new AccountsRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onEditAccountClicked(int position, AccountItem account) {
-
+                Intent intent = new Intent(getActivity().getApplicationContext(), AddAccountActivity.class);
+                intent.putExtra("AddAccountActivityKeyAccountId", account.getId());
+                startActivityForResult(intent, 210);
             }
 
             @Override
@@ -135,7 +138,8 @@ public class AccountsFragment extends Fragment {
                         .setMessage("This will clear all the transactions of this account, can't be undone!!")
                         .setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                //source.deleteBill(account.getId());
+                                AccountDataSource source = new AccountDataSource(getActivity());
+                                source.deleteAccount(account.getId());
                                 recyclerAdapter.removeAt(position);
                             }
                         })
@@ -147,7 +151,7 @@ public class AccountsFragment extends Fragment {
             public void onViewTransactionClicked(int position, AccountItem account) {
                 Intent intent = new Intent(getActivity().getApplicationContext(), AccountTransactionsActivity.class);
                 intent.putExtra("KEY_ACCOUNT_ID", account.getId());
-                getActivity().startActivityForResult(intent, 0);
+                startActivityForResult(intent, 220);
             }
 
             @Override
@@ -162,38 +166,23 @@ public class AccountsFragment extends Fragment {
         });
     }
 
-    private List<AccountItem> createItemList() {
-        List<AccountItem> itemList = new ArrayList<>();
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if( requestCode == 210 ) {
+            long accountId = data.getExtras().getLong("AddAccountActivityKeyAccountId", -1);
+            if(accountId != -1) {
+                AccountDataSource source = new AccountDataSource(getActivity());
+                source.getAccounts(recyclerAdapter.getItemList());
+                recyclerAdapter.notifyDataSetChanged();
+            }
+        }
+    }
 
-        itemList.add(new AccountItem(0, "EUR", "Travel Card", "This is note", "009010101842643", "009207859",
-                "Don'tKnow", "", 2084, 80.86f, 24.83f, 74.73f, AccountItem.ACCOUNT_TYPE_CASH_CARD, Calendar.getInstance()));
+    private ArrayList<AccountItem> createItemList() {
+        ArrayList<AccountItem> itemList = new ArrayList<>();
 
-        itemList.add(new AccountItem(0, "INR", "Axis bank", "This is note", "009010101842643", "009207859",
-                "Don'tKnow", "", 20894, 180.86f, 8724.83f, 89274.73f, AccountItem.ACCOUNT_TYPE_CASH_CARD, Calendar.getInstance()));
-
-        itemList.add(new AccountItem(0, "INR", "SBI", "This is note", "009010101842643", "009207859",
-                "Don'tKnow", "", 237894, 1804.86f, 87324.83f, 89274.73f, AccountItem.ACCOUNT_TYPE_CARD_ONLY, Calendar.getInstance()));
-
-        itemList.add(new AccountItem(0, "INR", "PPF", "This is note", "009010101842643", "009207859",
-                "Don'tKnow", "", 2087694, 0f, 80000, 0f, AccountItem.ACCOUNT_TYPE_CARD_ONLY, Calendar.getInstance()));
-
-        itemList.add(new AccountItem(0, "EUR", "AIB", "This is note", "009010101842643", "009207859",
-                "Don'tKnow", "", 20894, 0f, 0f, 0f, AccountItem.ACCOUNT_TYPE_CARD_ONLY, Calendar.getInstance()));
-
-        itemList.add(new AccountItem(0, "EUR", "Travel Card", "This is note", "009010101842643", "009207859",
-                "Don'tKnow", "", 2084, 80.86f, 24.83f, 74.73f, AccountItem.ACCOUNT_TYPE_CASH_CARD, Calendar.getInstance()));
-
-        itemList.add(new AccountItem(0, "INR", "Axis bank", "This is note", "009010101842643", "009207859",
-                "Don'tKnow", "", 20894, 180.86f, 8724.83f, 89274.73f, AccountItem.ACCOUNT_TYPE_CASH_CARD, Calendar.getInstance()));
-
-        itemList.add(new AccountItem(0, "INR", "SBI", "This is note", "009010101842643", "009207859",
-                "Don'tKnow", "", 237894, 1804.86f, 87324.83f, 89274.73f, AccountItem.ACCOUNT_TYPE_CARD_ONLY, Calendar.getInstance()));
-
-        itemList.add(new AccountItem(0, "INR", "PPF", "This is note", "009010101842643", "009207859",
-                "Don'tKnow", "", 2087694, 0f, 80000, 0f, AccountItem.ACCOUNT_TYPE_CARD_ONLY, Calendar.getInstance()));
-
-        itemList.add(new AccountItem(0, "EUR", "AIB", "This is note", "009010101842643", "009207859",
-                "Don'tKnow", "", 20894, 0f, 0f, 0f, AccountItem.ACCOUNT_TYPE_CARD_ONLY, Calendar.getInstance()));
+        AccountDataSource source = new AccountDataSource(getActivity());
+        source.getAccounts(itemList);
 
         return itemList;
     }

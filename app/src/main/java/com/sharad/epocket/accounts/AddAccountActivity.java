@@ -1,6 +1,7 @@
 package com.sharad.epocket.accounts;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -13,20 +14,30 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.sharad.epocket.R;
 import com.sharad.epocket.utils.Utils;
 
+import java.util.Calendar;
 import java.util.Currency;
+import java.util.Locale;
 
 public class AddAccountActivity extends AppCompatActivity {
+    public static final String KEY_ACCOUNT_ID = "AddAccountActivityKeyAccountId";
+    public static final int ACCOUNT_ADD_NEW = -1;
     EditText editTextCurrency;
+    private long accountId = ACCOUNT_ADD_NEW;
+    private Currency selectedCurrency = Currency.getInstance(Locale.getDefault());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_account);
+
+        Bundle extras = getIntent().getExtras();
+        accountId = extras.getLong(KEY_ACCOUNT_ID, ACCOUNT_ADD_NEW);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -113,13 +124,71 @@ public class AddAccountActivity extends AppCompatActivity {
             }
         });
 
-        View layoutCurrency = findViewById(R.id.layout_account_currency);
-        layoutCurrency.setOnClickListener(new View.OnClickListener() {
+        editTextCurrency.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showCurrencyPicker();
             }
         });
+
+        EditText accountName = (EditText)findViewById(R.id.account_name);
+        EditText accountCashBal = (EditText)findViewById(R.id.account_cash_balance);
+        EditText accountCardBal = (EditText)findViewById(R.id.account_card_balance);
+        EditText accountNote = (EditText)findViewById(R.id.account_note);
+        EditText accountLogin = (EditText)findViewById(R.id.account_login);
+        EditText accountPassword = (EditText)findViewById(R.id.account_password);
+        EditText accountNumber = (EditText)findViewById(R.id.account_number);
+        EditText accountContact = (EditText)findViewById(R.id.account_contact);
+        if(accountId != ACCOUNT_ADD_NEW) {
+            AccountDataSource source = new AccountDataSource(this);
+            AccountItem account = source.getAccount(accountId);
+            if(account != null) {
+                btnCash.setChecked(account.hasCashAccount());
+                layoutCash.setVisibility(account.hasCashAccount() ? View.VISIBLE : View.GONE);
+                btnCard.setChecked(account.hasCardAccount());
+                layoutCard.setVisibility(account.hasCardAccount() ? View.VISIBLE : View.GONE);
+
+                accountName.setText(account.getTitle());
+                accountCashBal.setText("" + account.getBalanceCash());
+                accountCardBal.setText("" + account.getBalanceCard());
+                if(account.getNote().length() > 0) {
+                    accountNote.setText(account.getNote());
+                    layoutDescription.setVisibility(View.VISIBLE);
+                    checkedFields[0] = true;
+                }
+                if(account.getAccountNumber().length() > 0) {
+                    accountNumber.setText(account.getAccountNumber());
+                    layoutAccountNumber.setVisibility(View.VISIBLE);
+                    checkedFields[1] = true;
+                }
+                if(account.getLoginId().length() > 0) {
+                    accountLogin.setText(account.getLoginId());
+                    layoutLogin.setVisibility(View.VISIBLE);
+                    checkedFields[2] = true;
+                }
+                if(account.getPassword().length() > 0) {
+                    accountPassword.setText(account.getPassword());
+                    layoutPassword.setVisibility(View.VISIBLE);
+                    checkedFields[3] = true;
+                }
+                if(account.getContact().length() > 0) {
+                    accountContact.setText(account.getContact());
+                    layoutContact.setVisibility(View.VISIBLE);
+                    checkedFields[4] = true;
+                }
+                selectedCurrency = Currency.getInstance(account.getIsoCurrency());
+            }
+        } else {
+            accountName.setText("");
+            accountCashBal.setText("");
+            accountCardBal.setText("");
+            accountNote.setText("");
+            accountLogin.setText("");
+            accountPassword.setText("");
+            accountNumber.setText("");
+            accountContact.setText("");
+        }
+        editTextCurrency.setText(selectedCurrency.getSymbol() + " - " + selectedCurrency.getDisplayName());
     }
 
     private void showCurrencyPicker(){
@@ -136,6 +205,7 @@ public class AddAccountActivity extends AppCompatActivity {
         newFragment.setOnCurrencySelectedListener(new CurrencyPickerDialog.OnCurrencySelectedListener() {
             @Override
             public void onCurrencySelected(Currency currency) {
+                selectedCurrency = currency;
                 editTextCurrency.setText(currency.getSymbol() + " - " + currency.getDisplayName());
             }
         });
@@ -151,9 +221,64 @@ public class AddAccountActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_save) {
+            saveAccount();
             finish();
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void saveAccount() {
+        EditText accountName = (EditText)findViewById(R.id.account_name);
+        EditText accountCashBal = (EditText)findViewById(R.id.account_cash_balance);
+        EditText accountCardBal = (EditText)findViewById(R.id.account_card_balance);
+        EditText accountNote = (EditText)findViewById(R.id.account_note);
+        EditText accountLogin = (EditText)findViewById(R.id.account_login);
+        EditText accountPassword = (EditText)findViewById(R.id.account_password);
+        EditText accountNumber = (EditText)findViewById(R.id.account_number);
+        EditText accountContact = (EditText)findViewById(R.id.account_contact);
+        ToggleButton btnCash = (ToggleButton) findViewById(R.id.account_button_cash);
+        ToggleButton btnCard = (ToggleButton) findViewById(R.id.account_button_card);
+
+        if(accountName.getText().length() > 0) {
+            int accountType = AccountItem.ACCOUNT_TYPE_CASH_CARD;
+
+            if((btnCard.isChecked()) && (btnCash.isChecked())) {
+                accountType = AccountItem.ACCOUNT_TYPE_CASH_CARD;
+            } else if(btnCard.isChecked()) {
+                accountType = AccountItem.ACCOUNT_TYPE_CARD_ONLY;
+            } else if(btnCash.isChecked()) {
+                accountType = AccountItem.ACCOUNT_TYPE_CASH_ONLY;
+            }
+
+            float cardBal = 0;
+            if(accountCardBal.getText().length() > 0) {
+                cardBal = Float.parseFloat(accountCardBal.getText().toString());
+            }
+            float cashBal = 0;
+            if(accountCashBal.getText().length() > 0) {
+                cashBal = Float.parseFloat(accountCashBal.getText().toString());
+            }
+
+            AccountItem account = new AccountItem(accountId, selectedCurrency.getCurrencyCode(),
+                    accountName.getText().toString(), accountNote.getText().toString(),
+                    accountNumber.getText().toString(), accountLogin.getText().toString(),
+                    accountPassword.getText().toString(), accountContact.getText().toString(),
+                    cardBal, cashBal, 0, 0, accountType, Calendar.getInstance().getTimeInMillis());
+
+            AccountDataSource source = new AccountDataSource(this);
+            if(accountId == ACCOUNT_ADD_NEW) {
+                accountId = source.insertAccount(account);
+                Toast.makeText(getApplicationContext(), "New Account Added", Toast.LENGTH_SHORT).show();
+            } else {
+                source.updateAccount(accountId, account);
+                Toast.makeText(getApplicationContext(), "Account Updated", Toast.LENGTH_SHORT).show();
+            }
+            Bundle activityResult = new Bundle();
+            activityResult.putLong("AddAccountActivityKeyAccountId", accountId);
+            Intent intent = new Intent();
+            intent.putExtras(activityResult);
+            setResult(RESULT_OK, intent);
+        }
     }
 }

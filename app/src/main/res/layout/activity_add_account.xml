@@ -32,7 +32,8 @@
             android:orientation="vertical">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
                 android:layout_gravity="center_vertical"
                 android:orientation="horizontal">
                 <ImageView
@@ -41,17 +42,19 @@
                     android:src="@drawable/c_account_balance_wallet_black_24dp"
                     android:tint="@color/secondary_text"/>
                 <EditText
+                    android:id="@+id/account_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
+                    android:lines="1"
+                    android:inputType="textCapWords"
                     android:hint="Account Name"/>
             </LinearLayout>
             <LinearLayout
-                android:id="@+id/layout_account_currency"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
                 android:layout_gravity="center_vertical"
-                android:clickable="true"
                 android:orientation="horizontal">
                 <ImageView
                     android:layout_width="wrap_content"
@@ -63,13 +66,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
-                    android:focusable="false"
+                    android:lines="1"
+                    android:ellipsize="end"
+                    android:editable="false"
                     android:inputType="none"
                     android:hint="Currency"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
                 android:gravity="center"
                 android:orientation="horizontal">
                 <ToggleButton
@@ -94,7 +100,8 @@
             <LinearLayout
                 android:id="@+id/layout_account_cash"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
                 android:layout_gravity="center_vertical"
                 android:orientation="horizontal">
                 <ImageView
@@ -103,15 +110,18 @@
                     android:src="@drawable/ic_cash_black_24px"
                     android:tint="@color/secondary_text"/>
                 <EditText
+                    android:id="@+id/account_cash_balance"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
+                    android:inputType="numberDecimal"
                     android:hint="Initial Cash Balance"/>
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/layout_account_card"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
                 android:layout_gravity="center_vertical"
                 android:orientation="horizontal">
                 <ImageView
@@ -120,15 +130,18 @@
                     android:src="@drawable/ic_credit_card_black_24dp"
                     android:tint="@color/secondary_text"/>
                 <EditText
+                    android:id="@+id/account_card_balance"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
+                    android:inputType="numberDecimal"
                     android:hint="Initial Card Balance"/>
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/layout_account_description"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
                 android:layout_gravity="center_vertical"
                 android:visibility="gone"
                 android:orientation="horizontal">
@@ -138,15 +151,18 @@
                     android:src="@drawable/ic_insert_comment_black_24dp"
                     android:tint="@color/secondary_text"/>
                 <EditText
+                    android:id="@+id/account_note"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
+                    android:inputType="textCapSentences"
                     android:hint="Description"/>
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/layout_account_contact"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
                 android:layout_gravity="center_vertical"
                 android:visibility="gone"
                 android:orientation="horizontal">
@@ -156,15 +172,18 @@
                     android:src="@drawable/c_local_phone_black_24dp"
                     android:tint="@color/secondary_text"/>
                 <EditText
+                    android:id="@+id/account_contact"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
+                    android:inputType="phone"
                     android:hint="Contact Number"/>
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/layout_account_number"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
                 android:layout_gravity="center_vertical"
                 android:visibility="gone"
                 android:orientation="horizontal">
@@ -174,15 +193,18 @@
                     android:src="@drawable/ic_label_black_24dp"
                     android:tint="@color/secondary_text"/>
                 <EditText
+                    android:id="@+id/account_number"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
+                    android:inputType="textCapCharacters"
                     android:hint="Account Number"/>
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/layout_account_login"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
                 android:layout_gravity="center_vertical"
                 android:visibility="gone"
                 android:orientation="horizontal">
@@ -192,6 +214,7 @@
                     android:src="@drawable/ic_input_black_24dp"
                     android:tint="@color/secondary_text"/>
                 <EditText
+                    android:id="@+id/account_login"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
@@ -200,7 +223,8 @@
             <LinearLayout
                 android:id="@+id/layout_account_password"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
                 android:layout_gravity="center_vertical"
                 android:visibility="gone"
                 android:orientation="horizontal">
@@ -210,6 +234,7 @@
                     android:src="@drawable/ic_vpn_key_black_24dp"
                     android:tint="@color/secondary_text"/>
                 <EditText
+                    android:id="@+id/account_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"

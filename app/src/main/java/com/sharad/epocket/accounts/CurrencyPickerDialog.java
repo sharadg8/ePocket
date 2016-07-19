@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Currency;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 /**
@@ -27,6 +30,7 @@ import java.util.Set;
 public class CurrencyPickerDialog extends DialogFragment {
     private Set<Currency> currencies;
     private List<CurrencyItem> selectedCurrencies;
+    private CurrencyRecyclerAdapter recyclerAdapter;
     private OnCurrencySelectedListener listener;
 
     public interface OnCurrencySelectedListener {
@@ -77,7 +81,7 @@ public class CurrencyPickerDialog extends DialogFragment {
 
         EditText searchEditText = (EditText) rootView.findViewById(R.id.currency_picker_search);
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.currency_picker_recycler_view);
-        CurrencyRecyclerAdapter recyclerAdapter = new CurrencyRecyclerAdapter(selectedCurrencies);
+        recyclerAdapter = new CurrencyRecyclerAdapter(selectedCurrencies);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(recyclerAdapter);
 
@@ -92,7 +96,32 @@ public class CurrencyPickerDialog extends DialogFragment {
             }
         }));
 
+        searchEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                search(s.toString());
+            }
+        });
         return rootView;
+    }
+
+    private void search(String s) {
+        selectedCurrencies.clear();
+        for (Iterator<Currency> it = currencies.iterator(); it.hasNext();) {
+            Currency currency = it.next();
+            if((currency.getDisplayName().toLowerCase(Locale.ENGLISH).contains(s.toLowerCase()))
+            || (currency.getSymbol().toLowerCase(Locale.ENGLISH).contains(s.toLowerCase()))){
+                selectedCurrencies.add(new CurrencyItem(currency.getCurrencyCode(),
+                        currency.getDisplayName(), currency.getSymbol()));
+            }
+        }
+        recyclerAdapter.notifyDataSetChanged();
     }
 
     private class CurrencyItem {

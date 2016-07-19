@@ -10,6 +10,9 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:hint="Search&#8230;"
+        android:drawablePadding="8dp"
+        android:inputType="textCapWords"
+        android:drawableTint="@color/secondary_text"
         android:drawableLeft="@drawable/ic_search_black_24dp" />
 
     <android.support.v7.widget.RecyclerView

@@ -79,8 +79,8 @@ public class AccountDataSource extends DatabaseAdapter {
 
     private AccountItem parseAccount(Cursor c) {
         long id 		    = c.getLong(c.getColumnIndex(KEY_ACCOUNT_ROWID));
-        String isoCurrency  = c.getString(c.getColumnIndex(KEY_ACCOUNT_TITLE));
-        String title        = c.getString(c.getColumnIndex(KEY_ACCOUNT_CURRENCY));
+        String title        = c.getString(c.getColumnIndex(KEY_ACCOUNT_TITLE));
+        String isoCurrency  = c.getString(c.getColumnIndex(KEY_ACCOUNT_CURRENCY));
         String note         = c.getString(c.getColumnIndex(KEY_ACCOUNT_NOTE));
         String accountNum   = c.getString(c.getColumnIndex(KEY_ACCOUNT_NUMBER));
         String loginId      = c.getString(c.getColumnIndex(KEY_ACCOUNT_LOGIN));

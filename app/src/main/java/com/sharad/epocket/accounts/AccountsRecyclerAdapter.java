@@ -11,18 +11,20 @@ import android.widget.TextView;
 import com.sharad.epocket.R;
 import com.sharad.epocket.utils.Utils;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by Sharad on 12-Sep-15.
  */
 public class AccountsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private List<AccountItem> itemList;
+    private ArrayList<AccountItem> itemList;
     private OnItemClickListener itemClickListener;
 
-    public AccountsRecyclerAdapter(List<AccountItem> itemList) {
+    public AccountsRecyclerAdapter(ArrayList<AccountItem> itemList) {
         this.itemList = itemList;
     }
+
+    public ArrayList<AccountItem> getItemList() { return itemList; }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
