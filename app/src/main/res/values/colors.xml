@@ -30,7 +30,7 @@
     <color name="hint_text">#B2B2B2</color>
     <color name="icons_dark">#455A64</color>
     <color name="mask_background">#88000000</color>
-    <color name="light_white">#CBFFFFFF</color>
+    <color name="light_white">#A0FFFFFF</color>
     <color name="Error">#FF0000</color>
     <color name="toolbarTransparent">#00000000</color>
 
@@ -160,5 +160,41 @@
         <item>@color/dark_palette16</item>
         <item>@color/dark_palette17</item>
     </array>
+
+    <!-- Default background color for the status bar. -->
+    <color name="calculator_accent_color">#00BCD4</color>
+
+    <!-- Color to indicate an error has occured. -->
+    <color name="calculator_error_color">#F40056</color>
+
+    <!-- Background color of the calculator display. -->
+    <color name="display_background_color">#FFF</color>
+
+    <!-- Text color for the formula in the calculator display. -->
+    <color name="display_formula_text_color">#8A000000</color>
+
+    <!-- Text color for the result in the calculator display. -->
+    <color name="display_result_text_color">#6C000000</color>
+
+    <!-- Background color for the numeric pad. -->
+    <color name="pad_numeric_background_color">#434343</color>
+
+    <!-- Background color for the operator pad. -->
+    <color name="pad_operator_background_color">#636363</color>
+
+    <!-- Background color for the advanced pad. -->
+    <color name="pad_advanced_background_color">#1DE9B6</color>
+
+    <!-- Text color for a button in a pad. -->
+    <color name="pad_button_text_color">#FFF</color>
+
+    <!-- Text color for a button in the advanced pad. -->
+    <color name="pad_button_advanced_text_color">#91000000</color>
+
+    <!-- Ripple color when a button is pressed in a pad. -->
+    <color name="pad_button_ripple_color">#33FFFFFF</color>
+
+    <!-- Ripple color when a button is pressed in a pad. -->
+    <color name="pad_button_advanced_ripple_color">#1A000000</color>
 
 </resources>

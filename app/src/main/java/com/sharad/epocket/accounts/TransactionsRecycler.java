@@ -32,7 +32,7 @@ public class TransactionsRecycler extends RecyclerView.Adapter<RecyclerView.View
                 view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.hvp_header_placeholder,viewGroup,false);
                 break;
             default:
-                view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.transactions_content_card,viewGroup,false);
+                view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_transactions_list,viewGroup,false);
                 break;
         }
         return new RecyclerView.ViewHolder(view) {};

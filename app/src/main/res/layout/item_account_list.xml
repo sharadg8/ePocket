@@ -180,7 +180,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:src="@drawable/ic_expand_more_black_24dp"
-            android:tint="@color/light_white"
+            android:tint="@color/primary_light"
             android:background="?attr/selectableItemBackgroundBorderless"/>
 
     </LinearLayout>

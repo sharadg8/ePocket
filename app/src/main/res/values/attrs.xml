@@ -90,4 +90,11 @@
         <!-- Background color -->
         <attr name="zc_background" format="color" />
     </declare-styleable>
+
+    <declare-styleable name="TransactionEditText">
+        <attr name="minTextSize" format="dimension" />
+        <attr name="maxTextSize" format="dimension" />
+        <attr name="stepTextSize" format="dimension" />
+    </declare-styleable>
+
 </resources>

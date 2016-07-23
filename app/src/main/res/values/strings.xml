@@ -96,4 +96,22 @@
     <!-- The button label for saving an event -->
     <string name="save_label">Done</string>
 
+    <!-- Error displayed when expression evaluates to NaN. [CHAR_LIMIT=14] -->
+    <string name="error_nan">Not a number</string>
+    <!-- Error displayed when expression contains a syntax error. [CHAR_LIMIT=14] -->
+    <string name="error_syntax">Error</string>
+    <!-- Clear operation to clear the currently entered expression. [CHAR_LIMIT=3] -->
+    <string name="clr">clr</string>
+    <!-- Delete operation to remove last entered token. [CHAR_LIMIT=3] -->
+    <string name="del">del</string>
+    <!-- Addition operator (e.g. "1 + 2"). [CHAR_LIMIT=1] -->
+    <string name="op_add">+</string>
+    <!-- Divide operator (e.g. "1 ÷ 2"). [CHAR_LIMIT=1] -->
+    <string name="op_div">÷</string>
+    <!-- Multiply operator (e.g. "1 × 2"). [CHAR_LIMIT=1] -->
+    <string name="op_mul">×</string>
+    <!-- Subtraction operator (e.g. "1 - 2"). [CHAR_LIMIT=1] -->
+    <string name="op_sub">−</string>
+    <!-- Equals operator (e.g. "1 + 2 = ?"). [CHAR_LIMIT=1] -->
+    <string name="eq">=</string>
 </resources>

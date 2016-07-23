@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/display"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/display_background_color"
+    android:elevation="4dip">
+
+    <com.sharad.epocket.widget.transaction.TransactionEditText
+        android:id="@+id/formula"
+        style="@style/DisplayEditTextStyle.Formula"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text|textNoSuggestions" />
+
+    <com.sharad.epocket.widget.transaction.TransactionEditText
+        android:id="@+id/result"
+        style="@style/DisplayEditTextStyle.Result"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/formula"
+        android:inputType="none"
+        android:focusable="false" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/result"
+        android:paddingLeft="16dp"
+        android:paddingRight="8dp"
+        android:background="@color/primary"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/account"
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="wrap_content"
+            android:gravity="left|center_vertical"
+            android:drawablePadding="8dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:text="DEFAULT"
+            android:lines="1"
+            android:ellipsize="end"
+            android:drawableLeft="@drawable/ic_account_box_black_24dp"
+            android:textColor="@android:color/white"
+            android:drawableTint="@android:color/white" />
+        <Button
+            android:id="@+id/date"
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="wrap_content"
+            android:gravity="left|center_vertical"
+            android:drawablePadding="8dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:text="TODAY"
+            android:lines="1"
+            android:ellipsize="end"
+            android:drawableLeft="@drawable/ic_event_black_24dp"
+            android:textColor="@android:color/white"
+            android:drawableTint="@android:color/white" />
+        <ImageButton
+            android:id="@+id/repeat"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:gravity="left|center_vertical"
+            android:background="?android:attr/selectableItemBackground"
+            android:src="@drawable/ic_autorenew_black_24dp"
+            android:tint="@color/primary_light"/>
+        <ImageButton
+            android:id="@+id/comment"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:gravity="left|center_vertical"
+            android:background="?android:attr/selectableItemBackground"
+            android:src="@drawable/ic_insert_comment_black_24dp"
+            android:tint="@color/primary_light"/>
+    </LinearLayout>
+
+</RelativeLayout>
