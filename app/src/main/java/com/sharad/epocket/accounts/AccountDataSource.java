@@ -100,16 +100,16 @@ public class AccountDataSource extends DatabaseAdapter {
 
     public AccountItem getAccount(long rowId) {
         SQLiteDatabase db = openDb();
-        AccountItem deposit = null;
+        AccountItem account = null;
         String where = KEY_ACCOUNT_ROWID + "=" + rowId;
         Cursor c = 	db.query(true, DATABASE_TABLE_ACCOUNT, ALL_KEYS_ACCOUNT,
                 where, null, null, null, null, null);
         if(c.moveToFirst()) {
-            deposit = parseAccount(c);
+            account = parseAccount(c);
         }
 
         closeDb();
-        return deposit;
+        return account;
     }
 
     public void getAccounts(ArrayList<AccountItem> accounts) {

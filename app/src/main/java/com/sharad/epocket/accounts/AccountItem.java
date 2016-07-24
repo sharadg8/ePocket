@@ -28,9 +28,9 @@ public class AccountItem {
     int accountType;
     Calendar lastUpdate;
 
-    AccountItem(long id, String isoCurrency, String title, String note, String accountNumber,
-                String loginId, String password, String contact, float balanceCard, float  balanceCash,
-                float  inflow, float  outflow, int accountType, long lastUpdateMSec) {
+    public AccountItem(long id, String isoCurrency, String title, String note, String accountNumber,
+                       String loginId, String password, String contact, float balanceCard, float balanceCash,
+                       float inflow, float outflow, int accountType, long lastUpdateMSec) {
         this(id, isoCurrency, title, note, accountNumber, loginId, password, contact,
                 balanceCard, balanceCash, inflow, outflow, accountType, null);
 

@@ -58,6 +58,7 @@ public class DatabaseAdapter {
         public void onCreate(SQLiteDatabase _db) {
             _db.execSQL(DATABASE_CREATE_SQL_ACCOUNT);
             _db.execSQL(DATABASE_CREATE_SQL_BILL);
+            _db.execSQL(DATABASE_CREATE_SQL_CATEGORY);
         }
 
         @Override
@@ -68,6 +69,7 @@ public class DatabaseAdapter {
             // Destroy old database:
             _db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_ACCOUNT);
             _db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_BILL);
+            _db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_CATEGORY);
 
             // Recreate new database:
             onCreate(_db);
@@ -146,5 +148,30 @@ public class DatabaseAdapter {
             + KEY_ACCOUNT_OUTFLOW     + " float not null, "
             + KEY_ACCOUNT_TYPE        + " integer not null, "
             + KEY_ACCOUNT_LAST_UPDATE + " integer not null"
+            + ");";
+
+    /**
+     * Data table for categories
+     */
+    public static final String KEY_CATEGORY_ROWID      = "_id";
+    public static final String KEY_CATEGORY_TITLE      = "title";
+    public static final String KEY_CATEGORY_COUNT      = "count";
+    public static final String KEY_CATEGORY_IMAGE_IDX  = "image_idx";
+    public static final String KEY_CATEGORY_COLOR      = "color";
+    public static final String KEY_CATEGORY_TYPE       = "type";
+
+    public static final String[] ALL_KEYS_CATEGORY = new String[] {KEY_CATEGORY_ROWID, KEY_CATEGORY_TITLE,
+            KEY_CATEGORY_COUNT, KEY_CATEGORY_IMAGE_IDX, KEY_CATEGORY_COLOR, KEY_CATEGORY_TYPE };
+
+    public static final String DATABASE_TABLE_CATEGORY = "category_table";
+
+    protected static final String DATABASE_CREATE_SQL_CATEGORY = "create table " + DATABASE_TABLE_CATEGORY
+            + " ("
+            + KEY_CATEGORY_ROWID     + " integer primary key autoincrement, "
+            + KEY_CATEGORY_TITLE     + " text not null, "
+            + KEY_CATEGORY_COUNT     + " integer not null, "
+            + KEY_CATEGORY_IMAGE_IDX + " integer not null, "
+            + KEY_CATEGORY_COLOR     + " integer not null, "
+            + KEY_CATEGORY_TYPE      + " integer not null"
             + ");";
 }

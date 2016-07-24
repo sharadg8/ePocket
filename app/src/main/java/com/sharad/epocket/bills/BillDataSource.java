@@ -19,9 +19,7 @@ public class BillDataSource extends DatabaseAdapter {
         super(context);
     }
 
-    public long insertBill(BillItem bill) {
-        SQLiteDatabase db = openDb();
-
+    private ContentValues getContentValues(BillItem bill) {
         // Create row's data:
         ContentValues content = new ContentValues();
         content.put(KEY_BILL_TITLE     , bill.getTitle());
@@ -31,6 +29,14 @@ public class BillDataSource extends DatabaseAdapter {
         content.put(KEY_BILL_DATE      , bill.getStartDateLong());
         content.put(KEY_BILL_END_DATE  , bill.getEndDateLong());
         content.put(KEY_BILL_REPEAT    , bill.getRepeat());
+
+        return content;
+    }
+
+    public long insertBill(BillItem bill) {
+        SQLiteDatabase db = openDb();
+
+        ContentValues content = getContentValues(bill);
 
         // Insert it into the database.
         long id = db.insert(DATABASE_TABLE_BILL, null, content);
@@ -42,15 +48,7 @@ public class BillDataSource extends DatabaseAdapter {
         SQLiteDatabase db = openDb();
         String where = KEY_BILL_ROWID + "=" + rowId;
 
-        // Create row's data:
-        ContentValues content = new ContentValues();
-        content.put(KEY_BILL_TITLE     , bill.getTitle());
-        content.put(KEY_BILL_ACCOUNT   , bill.getAccount());
-        content.put(KEY_BILL_CURRENCY  , bill.getCurrency());
-        content.put(KEY_BILL_AMOUNT    , bill.getAmount());
-        content.put(KEY_BILL_DATE      , bill.getStartDateLong());
-        content.put(KEY_BILL_END_DATE  , bill.getEndDateLong());
-        content.put(KEY_BILL_REPEAT    , bill.getRepeat());
+        ContentValues content = getContentValues(bill);
 
         // Update it into the database.
         boolean status = db.update(DATABASE_TABLE_BILL, content, where, null) != 0;
@@ -88,16 +86,16 @@ public class BillDataSource extends DatabaseAdapter {
 
     public BillItem getBill(long rowId) {
         SQLiteDatabase db = openDb();
-        BillItem deposit = null;
+        BillItem bill = null;
         String where = KEY_BILL_ROWID + "=" + rowId;
         Cursor c = 	db.query(true, DATABASE_TABLE_BILL, ALL_KEYS_BILL,
                 where, null, null, null, null, null);
         if(c.moveToFirst()) {
-            deposit = parseBill(c);
+            bill = parseBill(c);
         }
 
         closeDb();
-        return deposit;
+        return bill;
     }
 
     public void getBills(ArrayList<BillItem> bills) {

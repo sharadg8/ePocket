@@ -43,10 +43,12 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sharad.epocket.R;
+import com.sharad.epocket.transaction.Transaction;
 import com.sharad.epocket.widget.recurrencepicker.EventRecurrence;
 import com.sharad.epocket.widget.recurrencepicker.RecurrencePickerDialog;
 import com.sharad.epocket.widget.transaction.CalculatorExpressionBuilder;
@@ -65,6 +67,8 @@ public class AddTransactionActivity extends AppCompatActivity implements
         OnTextSizeChangeListener, EvaluateCallback, OnLongClickListener,
         RecurrencePickerDialog.OnRecurrenceSetListener {
     private static final String TAG = "AddTransactionActivity";
+
+    Transaction transaction;
 
     private final int TAB_EXPENSE = 0;
     private final int TAB_INCOME = 1;
@@ -147,15 +151,13 @@ public class AddTransactionActivity extends AppCompatActivity implements
     private View mDeleteButton;
     private View mClearButton;
     private View mEqualButton;
+    private ImageView mCategoryIcon;
+    private TextView mCategoryText;
+    private TextView mTransactionType;
 
     private Animator mCurrentAnimator;
 
-
-
     private static final String FRAG_TAG_RECUR_PICKER = "recurrencePickerDialogFragment";
-    private int mYear;
-    private int mMonth;
-    private int mDay;
 
     private String mRrule;
     private EventRecurrence mEventRecurrence = new EventRecurrence();
@@ -198,6 +200,10 @@ public class AddTransactionActivity extends AppCompatActivity implements
         mFormulaEditText.setOnTextSizeChangeListener(this);
         mDeleteButton.setOnLongClickListener(this);
 
+        mCategoryIcon = (ImageView) findViewById(R.id.category_icon);
+        mCategoryText = (TextView) findViewById(R.id.category_text);
+        mTransactionType = (TextView) findViewById(R.id.transaction_type);
+
         // Set up the ViewPager with the sections adapter.
         mCategoryPagerAdapter = new CategoryPagerAdapter(getSupportFragmentManager());
         ViewPager viewPager = (ViewPager) findViewById(R.id.container);
@@ -205,120 +211,11 @@ public class AddTransactionActivity extends AppCompatActivity implements
         TabLayout tabLayout = (TabLayout) findViewById(R.id.category_tabs);
         tabLayout.setupWithViewPager(viewPager);
 
-        final SimpleDateFormat df = new SimpleDateFormat("dd MMM yyyy");
-        Calendar currentDate = Calendar.getInstance();
-        mYear = currentDate.get(Calendar.YEAR);
-        mMonth = currentDate.get(Calendar.MONTH);
-        mDay = currentDate.get(Calendar.DAY_OF_MONTH);
-
-        final Button date = (Button) findViewById(R.id.date);
-        date.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DatePickerDialog mDatePicker = new DatePickerDialog(AddTransactionActivity.this, new DatePickerDialog.OnDateSetListener() {
-                    public void onDateSet(DatePicker datepicker, int year, int month, int day) {
-                        Calendar cal = Calendar.getInstance();
-                        cal.set(year, month, day);
-                        if(DateUtils.isToday(cal.getTimeInMillis())) {
-                            date.setText("TODAY");
-                        } else {
-                            date.setText(df.format(cal.getTime()));
-                        }
-                        mYear = year;
-                        mMonth = month;
-                        mDay = day;
-                    }
-                }, mYear, mMonth, mDay);
-                mDatePicker.show();
-            }
-        });
-
+        Calendar today = Calendar.getInstance();
         mStartTime = new Time();
-        final ImageButton repeat = (ImageButton) findViewById(R.id.repeat);
-        repeat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle b = new Bundle();
-                b.putLong(RecurrencePickerDialog.BUNDLE_START_TIME_MILLIS, mStartTime.toMillis(false));
-                b.putString(RecurrencePickerDialog.BUNDLE_TIME_ZONE, mStartTime.timezone);
 
-                // TODO may be more efficient to serialize and pass in EventRecurrence
-                b.putString(RecurrencePickerDialog.BUNDLE_RRULE, mRrule);
-
-                FragmentManager fm = getSupportFragmentManager();
-                RecurrencePickerDialog rpd = (RecurrencePickerDialog) fm.findFragmentByTag(FRAG_TAG_RECUR_PICKER);
-                if (rpd != null) {
-                    rpd.dismiss();
-                }
-                rpd = new RecurrencePickerDialog();
-                rpd.setArguments(b);
-                rpd.setOnRecurrenceSetListener(AddTransactionActivity.this);
-                rpd.show(fm, FRAG_TAG_RECUR_PICKER);
-            }
-        });
-
-        final Button account = (Button) findViewById(R.id.account);
-        account.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ArrayList<AccountItem> accounts = new ArrayList<>();
-                AccountDataSource source = new AccountDataSource(AddTransactionActivity.this);
-                source.getAccounts(accounts);
-                final CharSequence[] items = new CharSequence[accounts.size()];
-                for(int i=0; i<accounts.size(); i++) {
-                    items[i] = accounts.get(i).getTitle();
-                }
-                AlertDialog.Builder builder = new AlertDialog.Builder(AddTransactionActivity.this);
-                builder.setTitle("Select Account");
-                builder.setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // TODO update the account selected
-                        account.setText(items[which]);
-                        dialog.dismiss();
-                    }
-                });
-                builder.create().show();
-            }
-        });
-
-        final ImageButton comment = (ImageButton) findViewById(R.id.comment);
-        comment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int marginPx = (int) TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP, 16,
-                        AddTransactionActivity.this.getResources().getDisplayMetrics()
-                );
-                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                layoutParams.setMargins(marginPx, 0, marginPx, 0);
-
-                final EditText commentField = new EditText(AddTransactionActivity.this);
-                commentField.setLayoutParams(layoutParams);
-                commentField.setImeOptions(EditorInfo.IME_FLAG_NO_ENTER_ACTION);
-                commentField.setInputType(InputType.TYPE_CLASS_TEXT
-                        | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
-                        | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
-                commentField.setHorizontalScrollBarEnabled(false);
-                new AlertDialog.Builder(AddTransactionActivity.this)
-                        .setTitle("Comment")
-                        .setView(commentField)
-                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                if(commentField.length() > 0) {
-                                    comment.setColorFilter(ContextCompat.getColor(
-                                            AddTransactionActivity.this,android.R.color.white));
-                                } else {
-                                    comment.setColorFilter(ContextCompat.getColor(
-                                            AddTransactionActivity.this, R.color.primary_light));
-                                }
-                            }
-                        })
-                        .setNegativeButton(android.R.string.cancel, null)
-                        .show();
-            }
-        });
+        transaction = new Transaction();
+        transaction.setDate(today.getTimeInMillis());
     }
 
     @Override
@@ -420,9 +317,145 @@ public class AddTransactionActivity extends AppCompatActivity implements
             case R.id.clr:
                 onClear();
                 break;
+            case R.id.show_category:
+                onShowCategory();
+                break;
+            case R.id.date:
+                onDatePicker(view);
+                break;
+            case R.id.account:
+                onAccountPicker(view);
+                break;
+            case R.id.comment:
+                onComment(view);
+                break;
+            case R.id.repeat:
+                onRecurrencePicker(view);
+                break;
+            case R.id.source:
+                onAccountSource(view);
+                break;
             default:
                 mFormulaEditText.append(((Button) view).getText());
                 break;
+        }
+    }
+
+    private void onDatePicker(View view) {
+        final Button button = (Button) view;
+        final SimpleDateFormat df = new SimpleDateFormat("dd MMM yyyy");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(transaction.getDate());
+        DatePickerDialog datePicker = new DatePickerDialog(AddTransactionActivity.this, new DatePickerDialog.OnDateSetListener() {
+            public void onDateSet(DatePicker datepicker, int year, int month, int day) {
+                Calendar cal = Calendar.getInstance();
+                cal.set(year, month, day);
+                if(DateUtils.isToday(cal.getTimeInMillis())) {
+                    button.setText("TODAY");
+                } else {
+                    button.setText(df.format(cal.getTime()));
+                }
+                transaction.setDate(cal.getTimeInMillis());
+            }
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE));
+        datePicker.show();
+    }
+
+    private void onAccountSource(View view) {
+        ImageButton button = (ImageButton) view;
+        if(transaction.getSubType() == Transaction.TRANSACTION_SUB_TYPE_ACCOUNT_CASH) {
+            button.setImageResource(R.drawable.ic_credit_card_black_24dp);
+            transaction.setSubType(Transaction.TRANSACTION_SUB_TYPE_ACCOUNT_CARD);
+        } else {
+            button.setImageResource(R.drawable.ic_cash_black_24px);
+            transaction.setSubType(Transaction.TRANSACTION_SUB_TYPE_ACCOUNT_CASH);
+        }
+    }
+
+    private void onRecurrencePicker(View view) {
+        Bundle b = new Bundle();
+        b.putLong(RecurrencePickerDialog.BUNDLE_START_TIME_MILLIS, mStartTime.toMillis(false));
+        b.putString(RecurrencePickerDialog.BUNDLE_TIME_ZONE, mStartTime.timezone);
+
+        // TODO may be more efficient to serialize and pass in EventRecurrence
+        b.putString(RecurrencePickerDialog.BUNDLE_RRULE, mRrule);
+
+        FragmentManager fm = getSupportFragmentManager();
+        RecurrencePickerDialog rpd = (RecurrencePickerDialog) fm.findFragmentByTag(FRAG_TAG_RECUR_PICKER);
+        if (rpd != null) {
+            rpd.dismiss();
+        }
+        rpd = new RecurrencePickerDialog();
+        rpd.setArguments(b);
+        rpd.setOnRecurrenceSetListener(AddTransactionActivity.this);
+        rpd.show(fm, FRAG_TAG_RECUR_PICKER);
+    }
+
+    private void onComment(View view) {
+        final ImageButton button = (ImageButton) view;
+        int marginPx = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP, 16,
+                AddTransactionActivity.this.getResources().getDisplayMetrics()
+        );
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.setMargins(marginPx, 0, marginPx, 0);
+
+        final EditText commentField = new EditText(AddTransactionActivity.this);
+        commentField.setLayoutParams(layoutParams);
+        commentField.setImeOptions(EditorInfo.IME_FLAG_NO_ENTER_ACTION);
+        commentField.setInputType(InputType.TYPE_CLASS_TEXT
+                | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
+                | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        commentField.setHorizontalScrollBarEnabled(false);
+        commentField.setText(transaction.getComment());
+
+        new AlertDialog.Builder(this)
+                .setTitle("Comment")
+                .setView(commentField)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(commentField.length() > 0) {
+                            button.setColorFilter(ContextCompat.getColor(
+                                    AddTransactionActivity.this,android.R.color.white));
+                        } else {
+                            button.setColorFilter(ContextCompat.getColor(
+                                    AddTransactionActivity.this, R.color.primary_light));
+                        }
+                        transaction.setComment(commentField.getText().toString());
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+
+    private void onAccountPicker(View view) {
+        final Button button = (Button) view;
+        final ArrayList<AccountItem> accounts = new ArrayList<>();
+        AccountDataSource source = new AccountDataSource(AddTransactionActivity.this);
+        source.getAccounts(accounts);
+        final CharSequence[] items = new CharSequence[accounts.size()];
+        int selectedItem = 0;
+        for(int i=0; i<accounts.size(); i++) {
+            items[i] = accounts.get(i).getTitle();
+            selectedItem = (accounts.get(i).getId() == transaction.getFrom()) ? i : selectedItem;
+        }
+        new AlertDialog.Builder(this)
+                .setTitle("Select Account")
+                .setSingleChoiceItems(items, selectedItem, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        button.setText(items[which]);
+                        transaction.setFrom(accounts.get(which).getId());
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
+
+    private void onShowCategory() {
+        if(mPadViewPager != null) {
+            mPadViewPager.setCurrentItem(1, true);
         }
     }
 
@@ -655,7 +688,37 @@ public class AddTransactionActivity extends AppCompatActivity implements
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return AddTransactionFragment.newInstance(position + 1);
+            AddTransactionFragment fragment = AddTransactionFragment.newInstance(position);
+            fragment.setOnItemSelectedListener(new AddTransactionFragment.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(int tabNum, long categoryId) {
+                    transaction.setCategory(categoryId);
+                    switch (tabNum) {
+                        case TAB_EXPENSE:
+                            mCategoryIcon.setImageResource((int)categoryId);
+                            mTransactionType.setText("Expense");
+                            transaction.setType(Transaction.TRANSACTION_TYPE_ACCOUNT_EXPENSE);
+                            break;
+                        case TAB_INCOME:
+                            mCategoryIcon.setImageResource((int)categoryId);
+                            mTransactionType.setText("Income");
+                            transaction.setType(Transaction.TRANSACTION_TYPE_ACCOUNT_INCOME);
+                            break;
+                        case TAB_TRANSFER:
+                            mTransactionType.setText("Transfer");
+                            mCategoryIcon.setImageResource((int)categoryId);
+                            transaction.setType(Transaction.TRANSACTION_TYPE_ACCOUNT_TRANSFER);
+                            break;
+                    }
+
+                    /* Hide category selector */
+                    if(mPadViewPager != null) {
+                        mPadViewPager.setCurrentItem(0, true);
+                    }
+                }
+            });
+
+            return fragment;
         }
 
         @Override
