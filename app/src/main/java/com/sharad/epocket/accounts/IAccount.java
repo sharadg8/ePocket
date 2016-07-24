@@ -2,18 +2,19 @@ package com.sharad.epocket.accounts;
 
 import android.text.format.DateUtils;
 
+import com.sharad.epocket.utils.Item;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 /**
  * Created by Sharad on 12-Sep-15.
  */
-public class AccountItem {
+public class IAccount extends Item{
     public final static int ACCOUNT_TYPE_CASH_CARD = 0;
     public final static int ACCOUNT_TYPE_CARD_ONLY = 1;
     public final static int ACCOUNT_TYPE_CASH_ONLY = 2;
 
-    long id;
     String isoCurrency;
     String title;
     String note;
@@ -28,9 +29,9 @@ public class AccountItem {
     int accountType;
     Calendar lastUpdate;
 
-    public AccountItem(long id, String isoCurrency, String title, String note, String accountNumber,
-                       String loginId, String password, String contact, float balanceCard, float balanceCash,
-                       float inflow, float outflow, int accountType, long lastUpdateMSec) {
+    public IAccount(long id, String isoCurrency, String title, String note, String accountNumber,
+                    String loginId, String password, String contact, float balanceCard, float balanceCash,
+                    float inflow, float outflow, int accountType, long lastUpdateMSec) {
         this(id, isoCurrency, title, note, accountNumber, loginId, password, contact,
                 balanceCard, balanceCash, inflow, outflow, accountType, null);
 
@@ -38,10 +39,11 @@ public class AccountItem {
         lastUpdate.setTimeInMillis(lastUpdateMSec);
     }
 
-    AccountItem(long id, String isoCurrency, String title, String note, String accountNumber,
-                String loginId, String password, String contact, float balanceCard, float  balanceCash,
-                float  inflow, float  outflow, int accountType, Calendar lastUpdate) {
-        this.id = id;
+    IAccount(long id, String isoCurrency, String title, String note, String accountNumber,
+             String loginId, String password, String contact, float balanceCard, float  balanceCash,
+             float  inflow, float  outflow, int accountType, Calendar lastUpdate) {
+        super(id);
+
         this.isoCurrency = isoCurrency;
         this.title = title;
         this.note = note;
@@ -56,9 +58,6 @@ public class AccountItem {
         this.accountType = accountType;
         this.lastUpdate = lastUpdate;
     }
-
-    public long getId() {        return id;    }
-    public void setId(long id) {        this.id = id;    }
 
     public String getTitle() {         return title; }
     public String getNote() {          return note; }

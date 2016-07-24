@@ -13,12 +13,12 @@ import java.util.ArrayList;
  * Created by Sharad on 17-Jul-16.
  */
 
-public class AccountDataSource extends DatabaseAdapter {
-    public AccountDataSource(Context context) {
+public class DataSourceAccount extends DatabaseAdapter {
+    public DataSourceAccount(Context context) {
         super(context);
     }
 
-    private ContentValues getContentValues(AccountItem account) {
+    private ContentValues getContentValues(IAccount account) {
         // Create row's data:
         ContentValues content = new ContentValues();
         content.put(KEY_ACCOUNT_TITLE,       account.getTitle());
@@ -38,7 +38,7 @@ public class AccountDataSource extends DatabaseAdapter {
         return content;
     }
 
-    public long insertAccount(AccountItem account) {
+    public long insertAccount(IAccount account) {
         SQLiteDatabase db = openDb();
 
         ContentValues content = getContentValues(account);
@@ -49,7 +49,7 @@ public class AccountDataSource extends DatabaseAdapter {
         return id;
     }
 
-    public boolean updateAccount(long rowId, AccountItem account) {
+    public boolean updateAccount(long rowId, IAccount account) {
         SQLiteDatabase db = openDb();
         String where = KEY_ACCOUNT_ROWID + "=" + rowId;
 
@@ -77,7 +77,7 @@ public class AccountDataSource extends DatabaseAdapter {
         closeDb();
     }
 
-    private AccountItem parseAccount(Cursor c) {
+    private IAccount parseAccount(Cursor c) {
         long id 		    = c.getLong(c.getColumnIndex(KEY_ACCOUNT_ROWID));
         String title        = c.getString(c.getColumnIndex(KEY_ACCOUNT_TITLE));
         String isoCurrency  = c.getString(c.getColumnIndex(KEY_ACCOUNT_CURRENCY));
@@ -93,14 +93,14 @@ public class AccountDataSource extends DatabaseAdapter {
         int accountType     = c.getInt(c.getColumnIndex(KEY_ACCOUNT_TYPE));
         long lastUpdateMSec = c.getLong(c.getColumnIndex(KEY_ACCOUNT_LAST_UPDATE));
 
-        AccountItem account = new AccountItem(id, isoCurrency, title, note, accountNum, loginId,
+        IAccount account = new IAccount(id, isoCurrency, title, note, accountNum, loginId,
                 password, contact, balanceCard, balanceCash, inflow, outflow, accountType, lastUpdateMSec);
         return account;
     }
 
-    public AccountItem getAccount(long rowId) {
+    public IAccount getAccount(long rowId) {
         SQLiteDatabase db = openDb();
-        AccountItem account = null;
+        IAccount account = null;
         String where = KEY_ACCOUNT_ROWID + "=" + rowId;
         Cursor c = 	db.query(true, DATABASE_TABLE_ACCOUNT, ALL_KEYS_ACCOUNT,
                 where, null, null, null, null, null);
@@ -112,11 +112,11 @@ public class AccountDataSource extends DatabaseAdapter {
         return account;
     }
 
-    public void getAccounts(ArrayList<AccountItem> accounts) {
+    public void getAccounts(ArrayList<IAccount> accounts) {
         getAccounts(accounts, null);
     }
 
-    public void getAccounts(ArrayList<AccountItem> accounts, String where) {
+    public void getAccounts(ArrayList<IAccount> accounts, String where) {
         SQLiteDatabase db = openDb();
         accounts.clear();
         Cursor c = 	db.query(true, DATABASE_TABLE_ACCOUNT, ALL_KEYS_ACCOUNT,

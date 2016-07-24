@@ -17,14 +17,14 @@ import java.util.ArrayList;
  * Created by Sharad on 12-Sep-15.
  */
 public class AccountsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private ArrayList<AccountItem> itemList;
+    private ArrayList<IAccount> itemList;
     private OnItemClickListener itemClickListener;
 
-    public AccountsRecyclerAdapter(ArrayList<AccountItem> itemList) {
+    public AccountsRecyclerAdapter(ArrayList<IAccount> itemList) {
         this.itemList = itemList;
     }
 
-    public ArrayList<AccountItem> getItemList() { return itemList; }
+    public ArrayList<IAccount> getItemList() { return itemList; }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -36,7 +36,7 @@ public class AccountsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
         DetailViewHolder holder = (DetailViewHolder) viewHolder;
-        final AccountItem account = itemList.get(position);
+        final IAccount account = itemList.get(position);
 
         /* Set account item parameters */
         holder.title.setText(account.getTitle());
@@ -109,11 +109,11 @@ public class AccountsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public interface OnItemClickListener {
-        void onEditAccountClicked(int position, AccountItem account);
-        void onDeleteAccountClicked(int position, AccountItem account);
-        void onViewTransactionClicked(int position, AccountItem account);
-        void onViewTrendsClicked(int position, AccountItem account);
-        void onViewInfoClicked(int position, AccountItem account);
+        void onEditAccountClicked(int position, IAccount account);
+        void onDeleteAccountClicked(int position, IAccount account);
+        void onViewTransactionClicked(int position, IAccount account);
+        void onViewTrendsClicked(int position, IAccount account);
+        void onViewInfoClicked(int position, IAccount account);
     }
 
     class DetailViewHolder extends RecyclerView.ViewHolder {

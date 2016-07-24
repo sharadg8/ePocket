@@ -140,8 +140,8 @@ public class AddAccountActivity extends AppCompatActivity {
         EditText accountNumber = (EditText)findViewById(R.id.account_number);
         EditText accountContact = (EditText)findViewById(R.id.account_contact);
         if(accountId != ACCOUNT_ADD_NEW) {
-            AccountDataSource source = new AccountDataSource(this);
-            AccountItem account = source.getAccount(accountId);
+            DataSourceAccount source = new DataSourceAccount(this);
+            IAccount account = source.getAccount(accountId);
             if(account != null) {
                 btnCash.setChecked(account.hasCashAccount());
                 layoutCash.setVisibility(account.hasCashAccount() ? View.VISIBLE : View.GONE);
@@ -241,14 +241,14 @@ public class AddAccountActivity extends AppCompatActivity {
         ToggleButton btnCard = (ToggleButton) findViewById(R.id.account_button_card);
 
         if(accountName.getText().length() > 0) {
-            int accountType = AccountItem.ACCOUNT_TYPE_CASH_CARD;
+            int accountType = IAccount.ACCOUNT_TYPE_CASH_CARD;
 
             if((btnCard.isChecked()) && (btnCash.isChecked())) {
-                accountType = AccountItem.ACCOUNT_TYPE_CASH_CARD;
+                accountType = IAccount.ACCOUNT_TYPE_CASH_CARD;
             } else if(btnCard.isChecked()) {
-                accountType = AccountItem.ACCOUNT_TYPE_CARD_ONLY;
+                accountType = IAccount.ACCOUNT_TYPE_CARD_ONLY;
             } else if(btnCash.isChecked()) {
-                accountType = AccountItem.ACCOUNT_TYPE_CASH_ONLY;
+                accountType = IAccount.ACCOUNT_TYPE_CASH_ONLY;
             }
 
             float cardBal = 0;
@@ -260,13 +260,13 @@ public class AddAccountActivity extends AppCompatActivity {
                 cashBal = Float.parseFloat(accountCashBal.getText().toString());
             }
 
-            AccountItem account = new AccountItem(accountId, selectedCurrency.getCurrencyCode(),
+            IAccount account = new IAccount(accountId, selectedCurrency.getCurrencyCode(),
                     accountName.getText().toString(), accountNote.getText().toString(),
                     accountNumber.getText().toString(), accountLogin.getText().toString(),
                     accountPassword.getText().toString(), accountContact.getText().toString(),
                     cardBal, cashBal, 0, 0, accountType, Calendar.getInstance().getTimeInMillis());
 
-            AccountDataSource source = new AccountDataSource(this);
+            DataSourceAccount source = new DataSourceAccount(this);
             if(accountId == ACCOUNT_ADD_NEW) {
                 accountId = source.insertAccount(account);
                 Toast.makeText(getApplicationContext(), "New Account Added", Toast.LENGTH_SHORT).show();

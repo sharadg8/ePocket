@@ -41,8 +41,8 @@ public class AddBillDialogFragment extends DialogFragment {
     private int mYear;
     private int mMonth;
     private int mDay;
-    private BillDataSource _db;
-    private BillItem _bill;
+    private DataSourceBill _db;
+    private IBill _bill;
     private long _id = INVALID_ID;
 
     public AddBillDialogFragment() {
@@ -72,7 +72,7 @@ public class AddBillDialogFragment extends DialogFragment {
             _id = getArguments().getLong(ARG_BILL_ID);
         }
 
-        _db = new BillDataSource(getContext());
+        _db = new DataSourceBill(getContext());
         if(_id != INVALID_ID) {
             _bill = _db.getBill(_id);
         }
@@ -234,7 +234,7 @@ public class AddBillDialogFragment extends DialogFragment {
                     date.set(mYear, mMonth, mDay);
                     String title = editTextTitle.getText().toString();
                     float amount = Float.parseFloat(editTextAmount.getText().toString());
-                    _bill = new BillItem(0, title, "Default", "$", amount, date.getTimeInMillis(), 0, 0);
+                    _bill = new IBill(0, title, "Default", "$", amount, date.getTimeInMillis(), 0, 0);
                     _db.insertBill(_bill);
                 } else {
                     _db.updateBill(_id, _bill);

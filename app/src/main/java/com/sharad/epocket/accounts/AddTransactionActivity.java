@@ -48,7 +48,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sharad.epocket.R;
-import com.sharad.epocket.transaction.Transaction;
 import com.sharad.epocket.widget.recurrencepicker.EventRecurrence;
 import com.sharad.epocket.widget.recurrencepicker.RecurrencePickerDialog;
 import com.sharad.epocket.widget.transaction.CalculatorExpressionBuilder;
@@ -68,7 +67,7 @@ public class AddTransactionActivity extends AppCompatActivity implements
         RecurrencePickerDialog.OnRecurrenceSetListener {
     private static final String TAG = "AddTransactionActivity";
 
-    Transaction transaction;
+    ITransaction transaction;
 
     private final int TAB_EXPENSE = 0;
     private final int TAB_INCOME = 1;
@@ -214,7 +213,7 @@ public class AddTransactionActivity extends AppCompatActivity implements
         Calendar today = Calendar.getInstance();
         mStartTime = new Time();
 
-        transaction = new Transaction();
+        transaction = new ITransaction();
         transaction.setDate(today.getTimeInMillis());
     }
 
@@ -363,12 +362,12 @@ public class AddTransactionActivity extends AppCompatActivity implements
 
     private void onAccountSource(View view) {
         ImageButton button = (ImageButton) view;
-        if(transaction.getSubType() == Transaction.TRANSACTION_SUB_TYPE_ACCOUNT_CASH) {
+        if(transaction.getSubType() == ITransaction.TRANSACTION_SUB_TYPE_ACCOUNT_CASH) {
             button.setImageResource(R.drawable.ic_credit_card_black_24dp);
-            transaction.setSubType(Transaction.TRANSACTION_SUB_TYPE_ACCOUNT_CARD);
+            transaction.setSubType(ITransaction.TRANSACTION_SUB_TYPE_ACCOUNT_CARD);
         } else {
             button.setImageResource(R.drawable.ic_cash_black_24px);
-            transaction.setSubType(Transaction.TRANSACTION_SUB_TYPE_ACCOUNT_CASH);
+            transaction.setSubType(ITransaction.TRANSACTION_SUB_TYPE_ACCOUNT_CASH);
         }
     }
 
@@ -431,14 +430,14 @@ public class AddTransactionActivity extends AppCompatActivity implements
 
     private void onAccountPicker(View view) {
         final Button button = (Button) view;
-        final ArrayList<AccountItem> accounts = new ArrayList<>();
-        AccountDataSource source = new AccountDataSource(AddTransactionActivity.this);
+        final ArrayList<IAccount> accounts = new ArrayList<>();
+        DataSourceAccount source = new DataSourceAccount(AddTransactionActivity.this);
         source.getAccounts(accounts);
         final CharSequence[] items = new CharSequence[accounts.size()];
         int selectedItem = 0;
         for(int i=0; i<accounts.size(); i++) {
             items[i] = accounts.get(i).getTitle();
-            selectedItem = (accounts.get(i).getId() == transaction.getFrom()) ? i : selectedItem;
+            selectedItem = (accounts.get(i).getId() == transaction.getAccount()) ? i : selectedItem;
         }
         new AlertDialog.Builder(this)
                 .setTitle("Select Account")
@@ -446,7 +445,7 @@ public class AddTransactionActivity extends AppCompatActivity implements
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         button.setText(items[which]);
-                        transaction.setFrom(accounts.get(which).getId());
+                        transaction.setAccount(accounts.get(which).getId());
                         dialog.dismiss();
                     }
                 })
@@ -691,23 +690,25 @@ public class AddTransactionActivity extends AppCompatActivity implements
             AddTransactionFragment fragment = AddTransactionFragment.newInstance(position);
             fragment.setOnItemSelectedListener(new AddTransactionFragment.OnItemSelectedListener() {
                 @Override
-                public void onItemSelected(int tabNum, long categoryId) {
-                    transaction.setCategory(categoryId);
+                public void onItemSelected(int tabNum, ICategory category) {
+                    transaction.setCategory(category.getId());
                     switch (tabNum) {
                         case TAB_EXPENSE:
-                            mCategoryIcon.setImageResource((int)categoryId);
+                            mCategoryIcon.setImageResource(category.getImageResource());
                             mTransactionType.setText("Expense");
-                            transaction.setType(Transaction.TRANSACTION_TYPE_ACCOUNT_EXPENSE);
+                            mCategoryText.setText(category.getTitle());
+                            transaction.setType(ITransaction.TRANSACTION_TYPE_ACCOUNT_EXPENSE);
                             break;
                         case TAB_INCOME:
-                            mCategoryIcon.setImageResource((int)categoryId);
+                            mCategoryIcon.setImageResource(category.getImageResource());
                             mTransactionType.setText("Income");
-                            transaction.setType(Transaction.TRANSACTION_TYPE_ACCOUNT_INCOME);
+                            mCategoryText.setText(category.getTitle());
+                            transaction.setType(ITransaction.TRANSACTION_TYPE_ACCOUNT_INCOME);
                             break;
                         case TAB_TRANSFER:
                             mTransactionType.setText("Transfer");
-                            mCategoryIcon.setImageResource((int)categoryId);
-                            transaction.setType(Transaction.TRANSACTION_TYPE_ACCOUNT_TRANSFER);
+                            mCategoryIcon.setImageResource(category.getImageResource());
+                            transaction.setType(ITransaction.TRANSACTION_TYPE_ACCOUNT_TRANSFER);
                             break;
                     }
 

@@ -14,7 +14,7 @@ public class DatabaseAdapter {
 
     public static final String DATABASE_NAME = "finance";
 
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 4;
 
     private final Context mContext;
 
@@ -66,13 +66,13 @@ public class DatabaseAdapter {
             Log.w(TAG, "Upgrading application's database from version " + oldVersion
                     + " to " + newVersion + ", which will destroy all old data!");
 
-            // Destroy old database:
-            _db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_ACCOUNT);
-            _db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_BILL);
-            _db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_CATEGORY);
-
-            // Recreate new database:
-            onCreate(_db);
+            switch (oldVersion) {
+                case 1:
+                case 2:
+                    _db.execSQL(DATABASE_CREATE_SQL_CATEGORY);
+                case 3:
+                    _db.execSQL(DATABASE_CREATE_SQL_TRANSACTION);
+            }
         }
     }
 
@@ -173,5 +173,41 @@ public class DatabaseAdapter {
             + KEY_CATEGORY_IMAGE_IDX + " integer not null, "
             + KEY_CATEGORY_COLOR     + " integer not null, "
             + KEY_CATEGORY_TYPE      + " integer not null"
+            + ");";
+
+    /**
+     * Data table for transactions
+     */
+    public static final String KEY_TRANSACTION_ROWID        = "_id";
+    public static final String KEY_TRANSACTION_DATE         = "date";
+    public static final String KEY_TRANSACTION_COMMENT      = "comment";
+    public static final String KEY_TRANSACTION_REPEAT       = "repeat";
+    public static final String KEY_TRANSACTION_TYPE         = "type";
+    public static final String KEY_TRANSACTION_SUB_TYPE     = "sub_type";
+    public static final String KEY_TRANSACTION_ACCOUNT      = "account";
+    public static final String KEY_TRANSACTION_CATEGORY     = "category";
+    public static final String KEY_TRANSACTION_AMOUNT       = "amount";
+
+    public static final String[] ALL_KEYS_TRANSACTION = new String[] {KEY_TRANSACTION_ROWID,
+            KEY_TRANSACTION_DATE, KEY_TRANSACTION_COMMENT, KEY_TRANSACTION_REPEAT,
+            KEY_TRANSACTION_TYPE, KEY_TRANSACTION_SUB_TYPE, KEY_TRANSACTION_ACCOUNT,
+            KEY_TRANSACTION_CATEGORY, KEY_TRANSACTION_AMOUNT  };
+
+    public static final String DATABASE_TABLE_TRANSACTION = "transaction_table";
+
+    protected static final String DATABASE_CREATE_SQL_TRANSACTION = "create table " + DATABASE_TABLE_TRANSACTION
+            + " ("
+            + KEY_TRANSACTION_ROWID     + " integer primary key autoincrement, "
+            + KEY_TRANSACTION_DATE      + " integer not null, "
+            + KEY_TRANSACTION_COMMENT   + " text not null, "
+            + KEY_TRANSACTION_REPEAT    + " text not null, "
+            + KEY_TRANSACTION_TYPE      + " integer not null, "
+            + KEY_TRANSACTION_SUB_TYPE  + " integer not null, "
+            + KEY_TRANSACTION_ACCOUNT   + " integer not null, "
+            + KEY_TRANSACTION_CATEGORY  + " integer not null, "
+            + KEY_TRANSACTION_AMOUNT    + " float not null, "
+
+            + "FOREIGN KEY (" + KEY_TRANSACTION_ACCOUNT + ") REFERENCES " + DATABASE_TABLE_ACCOUNT + " (" + KEY_ACCOUNT_ROWID + "), "
+            + "FOREIGN KEY (" + KEY_TRANSACTION_CATEGORY + ") REFERENCES " + DATABASE_TABLE_CATEGORY + " (" + KEY_CATEGORY_ROWID + ")"
             + ");";
 }

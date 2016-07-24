@@ -9,16 +9,16 @@ import android.widget.ImageButton;
 
 import com.sharad.epocket.R;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by Sharad on 06-Jul-16.
  */
 
 public class CategoryRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private List<Integer> mItemList;
+    private ArrayList<ICategory> mItemList;
 
-    public CategoryRecyclerAdapter(List<Integer> itemList) {
+    public CategoryRecyclerAdapter(ArrayList<ICategory> itemList) {
         mItemList = itemList;
     }
 
@@ -32,7 +32,7 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         ViewHolder holder = (ViewHolder) viewHolder;
-        holder.button.setImageResource(mItemList.get(position).intValue());
+        holder.button.setImageResource(mItemList.get(position).getImageResource());
     }
 
     @Override

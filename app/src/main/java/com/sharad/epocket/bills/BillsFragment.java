@@ -78,12 +78,12 @@ public class BillsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_bills, container, false);
 
-        final BillDataSource source = new BillDataSource(getContext());
-        ArrayList<BillItem> list = new ArrayList<>();
+        final DataSourceBill source = new DataSourceBill(getContext());
+        ArrayList<IBill> list = new ArrayList<>();
         source.getBills(list);
 
-        Collections.sort(list, new Comparator<BillItem>() {
-            public int compare(BillItem o1, BillItem o2) {
+        Collections.sort(list, new Comparator<IBill>() {
+            public int compare(IBill o1, IBill o2) {
                 return (o1.getDaysRemaining() - o2.getDaysRemaining());
             }
         });

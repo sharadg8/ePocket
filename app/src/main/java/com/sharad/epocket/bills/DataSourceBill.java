@@ -13,13 +13,13 @@ import java.util.ArrayList;
  * Created by Sharad on 01-Jul-16.
  */
 
-public class BillDataSource extends DatabaseAdapter {
+public class DataSourceBill extends DatabaseAdapter {
 
-    public BillDataSource(Context context) {
+    public DataSourceBill(Context context) {
         super(context);
     }
 
-    private ContentValues getContentValues(BillItem bill) {
+    private ContentValues getContentValues(IBill bill) {
         // Create row's data:
         ContentValues content = new ContentValues();
         content.put(KEY_BILL_TITLE     , bill.getTitle());
@@ -33,7 +33,7 @@ public class BillDataSource extends DatabaseAdapter {
         return content;
     }
 
-    public long insertBill(BillItem bill) {
+    public long insertBill(IBill bill) {
         SQLiteDatabase db = openDb();
 
         ContentValues content = getContentValues(bill);
@@ -44,7 +44,7 @@ public class BillDataSource extends DatabaseAdapter {
         return id;
     }
 
-    public boolean updateBill(long rowId, BillItem bill) {
+    public boolean updateBill(long rowId, IBill bill) {
         SQLiteDatabase db = openDb();
         String where = KEY_BILL_ROWID + "=" + rowId;
 
@@ -71,7 +71,7 @@ public class BillDataSource extends DatabaseAdapter {
         closeDb();
     }
 
-    private BillItem parseBill(Cursor c) {
+    private IBill parseBill(Cursor c) {
         long id 		= c.getLong(c.getColumnIndex(KEY_BILL_ROWID));
         String title 	= c.getString(c.getColumnIndex(KEY_BILL_TITLE));
         String account  = c.getString(c.getColumnIndex(KEY_BILL_ACCOUNT));
@@ -80,13 +80,13 @@ public class BillDataSource extends DatabaseAdapter {
         long stDate		= c.getLong(c.getColumnIndex(KEY_BILL_DATE));
         long endDate	= c.getLong(c.getColumnIndex(KEY_BILL_END_DATE));
         int repeat		= c.getInt(c.getColumnIndex(KEY_BILL_REPEAT));
-        BillItem bill = new BillItem(id, title, account, currency, amount, stDate, endDate, repeat);
+        IBill bill = new IBill(id, title, account, currency, amount, stDate, endDate, repeat);
         return bill;
     }
 
-    public BillItem getBill(long rowId) {
+    public IBill getBill(long rowId) {
         SQLiteDatabase db = openDb();
-        BillItem bill = null;
+        IBill bill = null;
         String where = KEY_BILL_ROWID + "=" + rowId;
         Cursor c = 	db.query(true, DATABASE_TABLE_BILL, ALL_KEYS_BILL,
                 where, null, null, null, null, null);
@@ -98,11 +98,11 @@ public class BillDataSource extends DatabaseAdapter {
         return bill;
     }
 
-    public void getBills(ArrayList<BillItem> bills) {
+    public void getBills(ArrayList<IBill> bills) {
         getBills(bills, null);
     }
 
-    public void getBills(ArrayList<BillItem> bills, String where) {
+    public void getBills(ArrayList<IBill> bills, String where) {
         SQLiteDatabase db = openDb();
         bills.clear();
         Cursor c = 	db.query(true, DATABASE_TABLE_BILL, ALL_KEYS_BILL,

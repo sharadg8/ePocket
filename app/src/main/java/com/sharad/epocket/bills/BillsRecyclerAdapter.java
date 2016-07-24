@@ -20,10 +20,10 @@ import java.util.ArrayList;
  */
 
 public class BillsRecyclerAdapter extends RecyclerView.Adapter {
-    private ArrayList<BillItem> itemList;
+    private ArrayList<IBill> itemList;
     private OnMenuClickListener mMenuClickListener;
 
-    public BillsRecyclerAdapter(ArrayList<BillItem> itemList) {
+    public BillsRecyclerAdapter(ArrayList<IBill> itemList) {
         this.itemList = itemList;
     }
 
@@ -71,8 +71,8 @@ public class BillsRecyclerAdapter extends RecyclerView.Adapter {
         mMenuClickListener = listener;
     }
 
-    public BillItem getItem(int position) {
-        BillItem item = null;
+    public IBill getItem(int position) {
+        IBill item = null;
         if(position < itemList.size()) {
             item = itemList.get(position);
         }

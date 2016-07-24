@@ -125,20 +125,20 @@ public class AccountsFragment extends Fragment {
 
         recyclerAdapter.setOnItemClickListener(new AccountsRecyclerAdapter.OnItemClickListener() {
             @Override
-            public void onEditAccountClicked(int position, AccountItem account) {
+            public void onEditAccountClicked(int position, IAccount account) {
                 Intent intent = new Intent(getActivity().getApplicationContext(), AddAccountActivity.class);
                 intent.putExtra("AddAccountActivityKeyAccountId", account.getId());
                 startActivityForResult(intent, 210);
             }
 
             @Override
-            public void onDeleteAccountClicked(final int position, final AccountItem account) {
+            public void onDeleteAccountClicked(final int position, final IAccount account) {
                 new AlertDialog.Builder(getContext())
                         .setTitle("Delete - " + account.getTitle() + "?")
                         .setMessage("This will clear all the transactions of this account, can't be undone!!")
                         .setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                AccountDataSource source = new AccountDataSource(getActivity());
+                                DataSourceAccount source = new DataSourceAccount(getActivity());
                                 source.deleteAccount(account.getId());
                                 recyclerAdapter.removeAt(position);
                             }
@@ -148,19 +148,19 @@ public class AccountsFragment extends Fragment {
             }
 
             @Override
-            public void onViewTransactionClicked(int position, AccountItem account) {
+            public void onViewTransactionClicked(int position, IAccount account) {
                 Intent intent = new Intent(getActivity().getApplicationContext(), AccountTransactionsActivity.class);
                 intent.putExtra("KEY_ACCOUNT_ID", account.getId());
                 startActivityForResult(intent, 220);
             }
 
             @Override
-            public void onViewTrendsClicked(int position, AccountItem account) {
+            public void onViewTrendsClicked(int position, IAccount account) {
 
             }
 
             @Override
-            public void onViewInfoClicked(int position, AccountItem account) {
+            public void onViewInfoClicked(int position, IAccount account) {
 
             }
         });
@@ -171,17 +171,17 @@ public class AccountsFragment extends Fragment {
         if( requestCode == 210 ) {
             long accountId = data.getExtras().getLong("AddAccountActivityKeyAccountId", -1);
             if(accountId != -1) {
-                AccountDataSource source = new AccountDataSource(getActivity());
+                DataSourceAccount source = new DataSourceAccount(getActivity());
                 source.getAccounts(recyclerAdapter.getItemList());
                 recyclerAdapter.notifyDataSetChanged();
             }
         }
     }
 
-    private ArrayList<AccountItem> createItemList() {
-        ArrayList<AccountItem> itemList = new ArrayList<>();
+    private ArrayList<IAccount> createItemList() {
+        ArrayList<IAccount> itemList = new ArrayList<>();
 
-        AccountDataSource source = new AccountDataSource(getActivity());
+        DataSourceAccount source = new DataSourceAccount(getActivity());
         source.getAccounts(itemList);
 
         return itemList;

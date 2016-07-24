@@ -1,5 +1,7 @@
 package com.sharad.epocket.bills;
 
+import com.sharad.epocket.utils.Item;
+
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -8,8 +10,7 @@ import java.util.Calendar;
  * Created by Sharad on 01-Jul-16.
  */
 
-public class BillItem {
-    private long id;
+public class IBill extends Item{
     private String title;
     private String account;
     private String currency;
@@ -20,9 +21,10 @@ public class BillItem {
     private int repeat;
     private int daysRemaining;
 
-    public BillItem(long id, String title, String account, String currency,
-                    float amount, long startDate, long endDate, int repeat) {
-        this.id = id;
+    public IBill(long id, String title, String account, String currency,
+                 float amount, long startDate, long endDate, int repeat) {
+        super(id);
+
         this.title = title;
         this.account = account;
         this.currency = currency;
@@ -41,7 +43,6 @@ public class BillItem {
         this.daysRemaining = (int)(diff / (24 * 60 * 60 * 1000));
     }
 
-    public long getId() {        return id;    }
     public String getTitle() {        return title;    }
     public float getAmount() {        return amount;    }
     public String getCurrency() {        return currency;    }

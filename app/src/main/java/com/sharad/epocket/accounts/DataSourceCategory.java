@@ -1,4 +1,4 @@
-package com.sharad.epocket.transaction;
+package com.sharad.epocket.accounts;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -13,12 +13,12 @@ import java.util.ArrayList;
  * Created by Sharad on 24-Jul-16.
  */
 
-public class CategoryDataSource extends DatabaseAdapter {
-    public CategoryDataSource(Context context) {
+public class DataSourceCategory extends DatabaseAdapter {
+    public DataSourceCategory(Context context) {
         super(context);
     }
 
-    private ContentValues getContentValues(Category category) {
+    private ContentValues getContentValues(ICategory category) {
         // Create row's data:
         ContentValues content = new ContentValues();
         content.put(KEY_CATEGORY_TITLE,       category.getTitle());
@@ -30,7 +30,7 @@ public class CategoryDataSource extends DatabaseAdapter {
         return content;
     }
 
-    public long insertCategory(Category category) {
+    public long insertCategory(ICategory category) {
         SQLiteDatabase db = openDb();
 
         ContentValues content = getContentValues(category);
@@ -41,7 +41,7 @@ public class CategoryDataSource extends DatabaseAdapter {
         return id;
     }
 
-    public boolean updateCategory(long rowId, Category category) {
+    public boolean updateCategory(long rowId, ICategory category) {
         SQLiteDatabase db = openDb();
         String where = KEY_CATEGORY_ROWID + "=" + rowId;
 
@@ -69,7 +69,7 @@ public class CategoryDataSource extends DatabaseAdapter {
         closeDb();
     }
 
-    private Category parseCategory(Cursor c) {
+    private ICategory parseCategory(Cursor c) {
         long id 	   = c.getLong(c.getColumnIndex(KEY_CATEGORY_ROWID));
         String title   = c.getString(c.getColumnIndex(KEY_CATEGORY_TITLE));
         int imageIndex = c.getInt(c.getColumnIndex(KEY_CATEGORY_IMAGE_IDX));
@@ -77,13 +77,13 @@ public class CategoryDataSource extends DatabaseAdapter {
         int type       = c.getInt(c.getColumnIndex(KEY_CATEGORY_TYPE));
         int usageCount = c.getInt(c.getColumnIndex(KEY_CATEGORY_COUNT));
 
-        Category category = new Category(id, imageIndex, color, title, type, usageCount);
+        ICategory category = new ICategory(id, imageIndex, color, title, type, usageCount);
         return category;
     }
 
-    public Category getCategory(long rowId) {
+    public ICategory getCategory(long rowId) {
         SQLiteDatabase db = openDb();
-        Category category = null;
+        ICategory category = null;
         String where = KEY_CATEGORY_ROWID + "=" + rowId;
         Cursor c = 	db.query(true, DATABASE_TABLE_CATEGORY, ALL_KEYS_CATEGORY,
                 where, null, null, null, null, null);
@@ -95,11 +95,11 @@ public class CategoryDataSource extends DatabaseAdapter {
         return category;
     }
 
-    public void getCategories(ArrayList<Category> categories) {
+    public void getCategories(ArrayList<ICategory> categories) {
         getCategories(categories, null);
     }
 
-    public void getCategories(ArrayList<Category> categories, String where) {
+    public void getCategories(ArrayList<ICategory> categories, String where) {
         SQLiteDatabase db = openDb();
         categories.clear();
         Cursor c = 	db.query(true, DATABASE_TABLE_CATEGORY, ALL_KEYS_CATEGORY,
