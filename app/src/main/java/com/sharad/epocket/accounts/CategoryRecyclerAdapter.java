@@ -16,10 +16,11 @@ import java.util.ArrayList;
  */
 
 public class CategoryRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private ArrayList<ICategory> mItemList;
+    public ArrayList<ICategory> itemList;
+    private OnItemClickListener itemClickListener;
 
     public CategoryRecyclerAdapter(ArrayList<ICategory> itemList) {
-        mItemList = itemList;
+        this.itemList = itemList;
     }
 
     @Override
@@ -32,12 +33,12 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         ViewHolder holder = (ViewHolder) viewHolder;
-        holder.button.setImageResource(mItemList.get(position).getImageResource());
+        holder.button.setImageResource(itemList.get(position).getImageResource());
     }
 
     @Override
     public int getItemCount() {
-        return mItemList == null ? 0 : mItemList.size();
+        return itemList == null ? 0 : itemList.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -45,6 +46,35 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
         public ViewHolder(final View parent) {
             super(parent);
             button = (ImageButton) parent.findViewById(R.id.image_button);
+
+            parent.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if(itemClickListener != null) {
+                        itemClickListener.onItemLongClick(v, getAdapterPosition());
+                        return true;
+                    }
+                    return false;
+                }
+            });
+
+            parent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(itemClickListener != null) {
+                        itemClickListener.onItemClick(v, getAdapterPosition());
+                    }
+                }
+            });
         }
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        itemClickListener = listener;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
+        void onItemLongClick(View view, int position);
     }
 }

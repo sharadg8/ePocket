@@ -92,6 +92,11 @@ public class CategoryImageList {
     /*081*/ R.drawable.c_local_offer_black_24dp,
     /*082*/ R.drawable.c_tram_black_24px,
     /*083*/ R.drawable.c_assignment_ind_black_24dp,
+            R.drawable.ic_help_outline_black_24dp,
             R.drawable.c_filter_tilt_shift_black_24px,
     };
+
+    public static final int RESOURCE_COUNT = imageResource.length - 2;
+    public static final int RESOURCE_UNKNOWN = imageResource.length - 2;
+    public static final int RESOURCE_ADD_NEW = imageResource.length - 1;
 }

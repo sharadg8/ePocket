@@ -23,6 +23,9 @@ public class ICategory extends Item{
     public static final int CATEGORY_TYPE_INCOME   = 1;
     public static final int CATEGORY_TYPE_TRANSFER = 2;
 
+    public ICategory(int imageIndex) {
+        this(0, imageIndex, 0, "", 0, 0);
+    }
     public ICategory(long id, int imageIndex, int color, String title, int type, int usageCount) {
         super(id);
         this.imageIndex = (imageIndex < CategoryImageList.imageResource.length) ? imageIndex : 0;
