@@ -58,6 +58,7 @@ public class ICategory extends Item{
         list.add(new ICategory(0,  69, color(c), "Shares & Equity", ICategory.CATEGORY_TYPE_INCOME, 0));
         list.add(new ICategory(0,   3, color(c), "Incentives & Allowances", ICategory.CATEGORY_TYPE_INCOME, 0));
         list.add(new ICategory(0,   1, color(c), "Savings", ICategory.CATEGORY_TYPE_INCOME, 0));
+        list.add(new ICategory(0,  84, color(c), "Business", ICategory.CATEGORY_TYPE_INCOME, 0));
         list.add(new ICategory(0,  79, color(c), "Others", ICategory.CATEGORY_TYPE_INCOME, 0));
     }
 

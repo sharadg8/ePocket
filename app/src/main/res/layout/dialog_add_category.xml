@@ -8,6 +8,7 @@
         android:layout_height="36dp"
         android:layout_marginTop="24dp">
         <View
+            android:id="@+id/accent"
             android:layout_width="5dp"
             android:layout_height="match_parent"
             android:background="@color/primary"
@@ -82,9 +83,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:backgroundTint="@color/primary"
-                android:text="SAVE"
-                android:textColor="@android:color/white"/>
+                android:text="SAVE"/>
             <ImageButton
                 android:id="@+id/category"
                 android:layout_width="48dp"

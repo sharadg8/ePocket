@@ -2,12 +2,14 @@ package com.sharad.epocket.accounts;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.sharad.epocket.R;
 import com.sharad.epocket.widget.AutofitRecyclerView;
@@ -137,6 +139,18 @@ public class AddCategoryDialogFragment extends DialogFragment {
             public void onItemLongClick(View view, int position) { }
         });
         recyclerView.setAdapter(rcAdapter);
+
+        int color = ContextCompat.getColor(getContext(), R.color.transaction_expense);
+        if(category.getType() == ICategory.CATEGORY_TYPE_INCOME) {
+            color = ContextCompat.getColor(getContext(), R.color.transaction_income);
+        }
+        View accent = rootView.findViewById(R.id.accent);
+        accent.setBackgroundColor(color);
+        TextView title = (TextView) rootView.findViewById(R.id.title_text);
+        title.setTextColor(color);
+        bClose.setColorFilter(color);
+        bDelete.setColorFilter(color);
+        bCategory.setColorFilter(color);
 
         return rootView;
     }
