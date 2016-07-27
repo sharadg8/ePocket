@@ -27,6 +27,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,6 +35,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sharad.epocket.R;
+import com.sharad.epocket.utils.ScrollHandler;
 
 import java.util.ArrayList;
 
@@ -43,13 +45,16 @@ import java.util.ArrayList;
  * This fragment inflates a layout with two Floating Action Buttons and acts as a listener to
  * changes on them.
  */
-public class AccountsFragment extends Fragment {
+public class AccountsFragment extends Fragment implements ScrollHandler {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
     AccountsRecyclerAdapter recyclerAdapter;
+    private LinearLayoutManager mLayoutManager;
+    private long mScrollToAccountId = IAccount.INVALID_ID;
+    private ItemTouchHelper mItemTouchHelper;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -119,8 +124,9 @@ public class AccountsFragment extends Fragment {
 
     private void setupRecyclerView(View rootView) {
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
-        recyclerAdapter = new AccountsRecyclerAdapter(createItemList());
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerAdapter = new AccountsRecyclerAdapter(getContext(), createItemList(), this);
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setAdapter(recyclerAdapter);
 
         recyclerAdapter.setOnItemClickListener(new AccountsRecyclerAdapter.OnItemClickListener() {
@@ -165,6 +171,7 @@ public class AccountsFragment extends Fragment {
             }
         });
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -224,5 +231,15 @@ public class AccountsFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    @Override
+    public void setSmoothScrollStableId(long stableId) {
+        mScrollToAccountId = stableId;
+    }
+
+    @Override
+    public void smoothScrollTo(int position) {
+        mLayoutManager.scrollToPositionWithOffset(position, 20);
     }
 }

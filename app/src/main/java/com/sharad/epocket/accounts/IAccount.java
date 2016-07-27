@@ -15,6 +15,8 @@ public class IAccount extends Item{
     public final static int ACCOUNT_TYPE_CARD_ONLY = 1;
     public final static int ACCOUNT_TYPE_CASH_ONLY = 2;
 
+    public static final long INVALID_ID = -1;
+
     String isoCurrency;
     String title;
     String note;

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:card_view="http://schemas.android.com/tools"
+    android:id="@+id/dt_background"
+    card_view:cardUseCompatPadding="true"
+    card_view:cardElevation="14dp"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/bookmark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_bookmark_black_24dp"
+            android:paddingRight="16dp"
+            android:tint="@color/accent"/>
+        <TextView
+            android:id="@+id/balance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="32dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="16dp"
+            android:text="$2600"
+            android:layout_alignParentRight="true"
+            android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="32dp"
+            android:paddingLeft="16dp"
+            android:text="Axis Bank"
+            android:lines="1"
+            android:ellipsize="end"
+            android:layout_toLeftOf="@id/balance"
+            android:textAppearance="@android:style/TextAppearance.Material.Medium"/>
+        <LinearLayout
+            android:id="@+id/layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/balance"
+            android:orientation="vertical"
+            android:background="@color/light_white"
+            android:padding="16dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Account Balance"
+                android:gravity="center"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/account_balance_cash"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_cash_black_24px"
+                    android:drawablePadding="8dp"
+                    android:drawableTint="@color/transaction_transfer"
+                    android:textColor="@color/transaction_transfer"
+                    android:text="$ 180.60"
+                    android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/account_balance_card"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_credit_card_black_24dp"
+                    android:drawablePadding="8dp"
+                    android:drawableTint="@color/transaction_transfer"
+                    android:textColor="@color/transaction_transfer"
+                    android:text="$ 4800.60"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:text="Flow This Month"
+                android:gravity="center"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/account_outflow"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/c_trending_down_black_24dp"
+                    android:drawablePadding="8dp"
+                    android:drawableTint="@color/transaction_expense"
+                    android:textColor="@color/transaction_expense"
+                    android:text="$ 180.60"
+                    android:textSize="20sp" />
+                <TextView
+                    android:id="@+id/account_inflow"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/c_trending_up_black_24dp"
+                    android:drawablePadding="8dp"
+                    android:drawableTint="@color/transaction_income"
+                    android:textColor="@color/transaction_income"
+                    android:text="$ 4800.60"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/account_last_update"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="16dp"
+                android:text="Last updated: Today 5:20 pm"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/layout"
+            android:padding="8dp"
+            android:orientation="horizontal">
+            <ImageButton
+                android:id="@+id/account_transactions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:src="@drawable/ic_swap_vertical_circle_black_24dp"
+                android:tint="@color/icons_dark"
+                android:background="?attr/selectableItemBackgroundBorderless"/>
+            <ImageButton
+                android:id="@+id/account_trends"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:src="@drawable/ic_insert_chart_black_24dp"
+                android:tint="@color/icons_dark"
+                android:background="?attr/selectableItemBackgroundBorderless"/>
+            <ImageButton
+                android:id="@+id/account_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:src="@drawable/ic_info_black_24dp"
+                android:tint="@color/icons_dark"
+                android:background="?attr/selectableItemBackgroundBorderless"/>
+            <ImageButton
+                android:id="@+id/account_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:src="@drawable/ic_mode_edit_black_24dp"
+                android:tint="@color/icons_dark"
+                android:background="?attr/selectableItemBackgroundBorderless"/>
+            <ImageButton
+                android:id="@+id/account_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:src="@drawable/ic_delete_black_24dp"
+                android:tint="@color/icons_dark"
+                android:background="?attr/selectableItemBackgroundBorderless"/>
+        </LinearLayout>
+        <ImageView
+            android:id="@+id/arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:layout_below="@id/layout"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_expand_less_black_24dp"
+            android:tint="@color/icons_dark"/>
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

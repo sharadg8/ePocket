@@ -28,9 +28,9 @@
     <color name="icons">#FFFFFF</color>
     <color name="divider">#B6B6B6</color>
     <color name="hint_text">#B2B2B2</color>
-    <color name="icons_dark">#455A64</color>
+    <color name="icons_dark">#607D8B</color>
     <color name="mask_background">#88000000</color>
-    <color name="light_white">#A0FFFFFF</color>
+    <color name="light_white">#F0F0F0</color>
     <color name="Error">#FF0000</color>
     <color name="toolbarTransparent">#00000000</color>
 

@@ -5,97 +5,81 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
-import android.widget.TextView;
 
 import com.sharad.epocket.R;
-import com.sharad.epocket.utils.Utils;
+import com.sharad.epocket.utils.ScrollHandler;
 
 import java.util.ArrayList;
 
 /**
  * Created by Sharad on 12-Sep-15.
  */
-public class AccountsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class AccountsRecyclerAdapter extends RecyclerView.Adapter<ViewHolderAccount> {
     private ArrayList<IAccount> itemList;
-    private OnItemClickListener itemClickListener;
+    public OnItemClickListener itemClickListener;
 
-    public AccountsRecyclerAdapter(ArrayList<IAccount> itemList) {
+    private static final int VIEW_TYPE_ACCOUNT_COLLAPSED = R.layout.item_account_list_collapsed;
+    private static final int VIEW_TYPE_ACCOUNT_EXPANDED = R.layout.item_account_list_expanded;
+
+    private final Context mContext;
+    private final LayoutInflater mInflater;
+    private final ScrollHandler mScrollHandler;
+    private int mExpandedPosition = -1;
+    private long mExpandedId = IAccount.INVALID_ID;
+
+    public AccountsRecyclerAdapter(Context context, ArrayList<IAccount> itemList,
+                                   ScrollHandler smoothScrollController) {
         this.itemList = itemList;
+
+        mContext = context;
+        mInflater = LayoutInflater.from(context);
+        mScrollHandler = smoothScrollController;
+
+        setHasStableIds(true);
+    }
+
+    @Override
+    public void onViewRecycled(ViewHolderAccount viewHolder) {
+        super.onViewRecycled(viewHolder);
+        viewHolder.clearData();
     }
 
     public ArrayList<IAccount> getItemList() { return itemList; }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
-        View view = LayoutInflater.from(context).inflate(R.layout.item_account_list, parent, false);
-        return new DetailViewHolder(view);
+    public ViewHolderAccount onCreateViewHolder(ViewGroup parent, int viewType) {
+        final View v = mInflater.inflate(viewType, parent, false /* attachToRoot */);
+        if (viewType == VIEW_TYPE_ACCOUNT_COLLAPSED) {
+            return new ViewHolderCollapsedAccount(v, this);
+        } else {
+            return new ViewHolderExpandedAccount(v, this);
+        }
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
-        DetailViewHolder holder = (DetailViewHolder) viewHolder;
+    public void onBindViewHolder(ViewHolderAccount viewHolder, final int position) {
         final IAccount account = itemList.get(position);
-
-        /* Set account item parameters */
-        holder.title.setText(account.getTitle());
-        holder.balance.setText(Utils.formatCurrency(account.getIsoCurrency(), account.getBalance()));
-        holder.balanceCard.setText(Utils.formatCurrency(account.getIsoCurrency(), account.getBalanceCard()));
-        holder.balanceCash.setText(Utils.formatCurrency(account.getIsoCurrency(), account.getBalanceCash()));
-        holder.inflow.setText(Utils.formatCurrency(account.getIsoCurrency(), account.getInflow()));
-        holder.outflow.setText(Utils.formatCurrency(account.getIsoCurrency(), account.getOutflow()));
-        holder.lastUpdate.setText(account.getLastUpdateString());
-
-        holder.balanceCard.setVisibility((account.hasCardAccount() ? View.VISIBLE : View.GONE));
-        holder.balanceCash.setVisibility((account.hasCashAccount() ? View.VISIBLE : View.GONE));
-
-        /* Create listener callbacks */
-        holder.editAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(itemClickListener != null) {
-                    itemClickListener.onEditAccountClicked(position, account);
-                }
-            }
-        });
-        holder.deleteAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(itemClickListener != null) {
-                    itemClickListener.onDeleteAccountClicked(position, account);
-                }
-            }
-        });
-        holder.viewTransaction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(itemClickListener != null) {
-                    itemClickListener.onViewTransactionClicked(position, account);
-                }
-            }
-        });
-        holder.viewTrends.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(itemClickListener != null) {
-                    itemClickListener.onViewTrendsClicked(position, account);
-                }
-            }
-        });
-        holder.viewInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(itemClickListener != null) {
-                    itemClickListener.onViewInfoClicked(position, account);
-                }
-            }
-        });
+        viewHolder.bindAccount(mContext, account);
     }
 
     @Override
     public int getItemCount() {
         return itemList == null ? 0 : itemList.size();
+    }
+
+    @Override
+    public long getItemId(int position) {
+        if (itemList == null) {
+            return RecyclerView.NO_ID;
+        }
+        return itemList.get(position).getId();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        final long stableId = getItemId(position);
+        return stableId != RecyclerView.NO_ID && stableId == mExpandedId
+                ? VIEW_TYPE_ACCOUNT_EXPANDED : VIEW_TYPE_ACCOUNT_COLLAPSED;
     }
 
     public void removeAt(int position) {
@@ -116,50 +100,26 @@ public class AccountsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
         void onViewInfoClicked(int position, IAccount account);
     }
 
-    class DetailViewHolder extends RecyclerView.ViewHolder {
-        public ImageButton viewTransaction;
-        public ImageButton viewTrends;
-        public ImageButton viewInfo;
-        public ImageButton editAccount;
-        public ImageButton deleteAccount;
-        public TextView title;
-        public TextView balance;
-        public TextView balanceCash;
-        public TextView balanceCard;
-        public TextView inflow;
-        public TextView outflow;
-        public TextView lastUpdate;
-
-        public DetailViewHolder(final View parent) {
-            super(parent);
-            final View expandedItems = parent.findViewById(R.id.account_expanded_items);
-            final ImageButton expandMore = (ImageButton) parent.findViewById(R.id.account_expand_more);
-            expandMore.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(expandedItems.getVisibility() == View.GONE) {
-                        expandedItems.setVisibility(View.VISIBLE);
-                        expandMore.setImageResource(R.drawable.ic_expand_less_black_24dp);
-                    } else {
-                        expandedItems.setVisibility(View.GONE);
-                        expandMore.setImageResource(R.drawable.ic_expand_more_black_24dp);
-                    }
-                }
-            });
-
-            viewTransaction = (ImageButton) parent.findViewById(R.id.account_transactions);
-            viewTrends = (ImageButton) parent.findViewById(R.id.account_trends);
-            viewInfo = (ImageButton) parent.findViewById(R.id.account_info);
-            editAccount = (ImageButton) parent.findViewById(R.id.account_edit);
-            deleteAccount = (ImageButton) parent.findViewById(R.id.account_delete);
-
-            title = (TextView) parent.findViewById(R.id.account_title);
-            balance = (TextView) parent.findViewById(R.id.account_balance);
-            balanceCash = (TextView) parent.findViewById(R.id.account_balance_cash);
-            balanceCard = (TextView) parent.findViewById(R.id.account_balance_card);
-            inflow = (TextView) parent.findViewById(R.id.account_inflow);
-            outflow = (TextView) parent.findViewById(R.id.account_outflow);
-            lastUpdate = (TextView) parent.findViewById(R.id.account_last_update);
+    /**
+     * Request the UI to expand the alarm at selected position and scroll it into view.
+     */
+    public void expand(int position) {
+        final long stableId = getItemId(position);
+        if (mExpandedId == stableId) {
+            return;
         }
+        mExpandedId = stableId;
+        mScrollHandler.smoothScrollTo(position);
+        if (mExpandedPosition >= 0) {
+            notifyItemChanged(mExpandedPosition);
+        }
+        mExpandedPosition = position;
+        notifyItemChanged(position);
+    }
+
+    public void collapse(int position) {
+        mExpandedId = IAccount.INVALID_ID;
+        mExpandedPosition = -1;
+        notifyItemChanged(position);
     }
 }
