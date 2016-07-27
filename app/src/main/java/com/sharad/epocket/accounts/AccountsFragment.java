@@ -22,8 +22,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -35,6 +33,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sharad.epocket.R;
+import com.sharad.epocket.utils.BaseFragment;
 import com.sharad.epocket.utils.ScrollHandler;
 
 import java.util.ArrayList;
@@ -45,7 +44,7 @@ import java.util.ArrayList;
  * This fragment inflates a layout with two Floating Action Buttons and acts as a listener to
  * changes on them.
  */
-public class AccountsFragment extends Fragment implements ScrollHandler {
+public class AccountsFragment extends BaseFragment implements ScrollHandler {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -91,17 +90,14 @@ public class AccountsFragment extends Fragment implements ScrollHandler {
 
         setupRecyclerView(rootView);
 
-        FloatingActionButton addTransaction = (FloatingActionButton) rootView.findViewById(R.id.fab_add);
-        addTransaction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity().getApplicationContext(), AddTransactionActivity.class);
-                intent.putExtra("KEY_ACCOUNT_ID", 0);
-                getActivity().startActivityForResult(intent, 0);
-            }
-        });
-
         return rootView;
+    }
+
+    @Override
+    public void onFabClick(View view) {
+        Intent intent = new Intent(getContext(), AddTransactionActivity.class);
+        intent.putExtra("KEY_ACCOUNT_ID", 0);
+        startActivityForResult(intent, 0);
     }
 
     @Override

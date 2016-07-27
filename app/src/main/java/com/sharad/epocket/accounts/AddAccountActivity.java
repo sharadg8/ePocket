@@ -220,15 +220,19 @@ public class AddAccountActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_save) {
-            saveAccount();
+        int id = item.getItemId();
+        if(id == R.id.action_save) {
+            save();
+            finish();
+            return true;
+        } else if(id == android.R.id.home) {
             finish();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void saveAccount() {
+    private void save() {
         EditText accountName = (EditText)findViewById(R.id.account_name);
         EditText accountCashBal = (EditText)findViewById(R.id.account_cash_balance);
         EditText accountCardBal = (EditText)findViewById(R.id.account_card_balance);

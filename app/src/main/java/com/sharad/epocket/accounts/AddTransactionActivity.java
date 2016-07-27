@@ -243,12 +243,20 @@ public class AddTransactionActivity extends AppCompatActivity implements
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_save) {
+        if(id == R.id.action_save) {
+            save();
+            finish();
+            return true;
+        } else if(id == android.R.id.home) {
             finish();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void save() {
+
     }
 
     @Override

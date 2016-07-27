@@ -1,6 +1,6 @@
 package com.sharad.epocket;
 
-import android.support.v4.app.Fragment;
+import com.sharad.epocket.utils.BaseFragment;
 
 /**
  * Created by Sharad on 16-Jun-16.
@@ -9,9 +9,9 @@ import android.support.v4.app.Fragment;
 public class NavigationDrawerItem {
     private String name;
     private int icon;
-    private Fragment fragment;
+    private BaseFragment fragment;
 
-    public NavigationDrawerItem(String name, int icon, Fragment fragment) {
+    public NavigationDrawerItem(String name, int icon, BaseFragment fragment) {
         this.name = name;
         this.icon = icon;
         this.fragment = fragment;
@@ -25,5 +25,5 @@ public class NavigationDrawerItem {
         return icon;
     }
 
-    public Fragment getFragment() { return fragment; }
+    public BaseFragment getFragment() { return fragment; }
 }

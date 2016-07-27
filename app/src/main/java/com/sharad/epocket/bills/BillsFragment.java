@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -16,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sharad.epocket.R;
+import com.sharad.epocket.utils.BaseFragment;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,7 +29,7 @@ import java.util.Comparator;
  * Use the {@link BillsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class BillsFragment extends Fragment {
+public class BillsFragment extends BaseFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -117,14 +117,12 @@ public class BillsFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
 
-        FloatingActionButton fabAdd = (FloatingActionButton) view.findViewById(R.id.fab_add);
-        fabAdd.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                showDialog(AddBillDialogFragment.INVALID_ID);
-            }
-        });
-
         return view;
+    }
+
+    @Override
+    public void onFabClick(View view) {
+        showDialog(AddBillDialogFragment.INVALID_ID);
     }
 
     // TODO: Rename method, update argument and hook method into UI event

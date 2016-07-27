@@ -2,7 +2,7 @@ package com.sharad.epocket;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -21,6 +21,7 @@ import com.sharad.epocket.budget.BudgetFragment;
 import com.sharad.epocket.cards.CardsFragment;
 import com.sharad.epocket.goals.GoalsFragment;
 import com.sharad.epocket.home.HomeFragment;
+import com.sharad.epocket.utils.BaseFragment;
 import com.sharad.epocket.widget.RecyclerItemClickListener;
 
 import java.util.ArrayList;
@@ -34,6 +35,10 @@ public class MainActivity extends AppCompatActivity implements
         CardsFragment.OnFragmentInteractionListener,
         GoalsFragment.OnFragmentInteractionListener {
 
+    private FloatingActionButton mFab;
+    private BaseFragment mSelectedFragment;
+    List<NavigationDrawerItem> featureItem;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +46,16 @@ public class MainActivity extends AppCompatActivity implements
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        mFab = (FloatingActionButton) findViewById(R.id.fab);
+        mFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(mSelectedFragment != null) {
+                    mSelectedFragment.onFabClick(view);
+                }
+            }
+        });
 
         initNavigationDrawer(toolbar);
     }
@@ -52,13 +67,15 @@ public class MainActivity extends AppCompatActivity implements
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        final List<NavigationDrawerItem> rowListItem = new ArrayList<>();
-        rowListItem.add(new NavigationDrawerItem("Timeline", R.drawable.ic_list_black_24dp, HomeFragment.newInstance("","")));
-        rowListItem.add(new NavigationDrawerItem("Accounts", R.drawable.ic_account_box_black_24dp, AccountsFragment.newInstance("","")));
-        rowListItem.add(new NavigationDrawerItem("Budget", R.drawable.ic_budget_black_24px, BudgetFragment.newInstance("","")));
-        rowListItem.add(new NavigationDrawerItem("Goals", R.drawable.ic_goal_black_24px, GoalsFragment.newInstance("","")));
-        rowListItem.add(new NavigationDrawerItem("Cards", R.drawable.ic_credit_card_black_24dp, CardsFragment.newInstance("","")));
-        rowListItem.add(new NavigationDrawerItem("Bills", R.drawable.ic_receipt_black_24dp, BillsFragment.newInstance("","")));
+        featureItem = new ArrayList<>();
+        //rowListItem.add(new NavigationDrawerItem("Timeline", R.drawable.ic_list_black_24dp, HomeFragment.newInstance("","")));
+        featureItem.add(new NavigationDrawerItem("Accounts", R.drawable.ic_account_box_black_24dp, AccountsFragment.newInstance("","")));
+        //rowListItem.add(new NavigationDrawerItem("Budget", R.drawable.ic_budget_black_24px, BudgetFragment.newInstance("","")));
+        //rowListItem.add(new NavigationDrawerItem("Goals", R.drawable.ic_goal_black_24px, GoalsFragment.newInstance("","")));
+        //rowListItem.add(new NavigationDrawerItem("Cards", R.drawable.ic_credit_card_black_24dp, CardsFragment.newInstance("","")));
+        featureItem.add(new NavigationDrawerItem("Bills", R.drawable.ic_receipt_black_24dp, BillsFragment.newInstance("","")));
+        switchFeature(0);
+
 
         GridLayoutManager gridLayout = new GridLayoutManager(MainActivity.this, 2);
 
@@ -66,27 +83,31 @@ public class MainActivity extends AppCompatActivity implements
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(gridLayout);
 
-        DrawerGridRecycler rcAdapter = new DrawerGridRecycler(MainActivity.this, rowListItem);
+        DrawerGridRecycler rcAdapter = new DrawerGridRecycler(MainActivity.this, featureItem);
         recyclerView.setAdapter(rcAdapter);
 
         recyclerView.addOnItemTouchListener(
             new RecyclerItemClickListener(this, new RecyclerItemClickListener.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
-                    Fragment nextFragment = rowListItem.get(position).getFragment();
-                    if(nextFragment != null) {
-                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                        // Replace whatever is in the fragment_container view with this fragment,
-                        // and add the transaction to the back stack so the user can navigate back
-                        transaction.replace(R.id.content_main, nextFragment);
-                        //transaction.addToBackStack(null);
-                        // Commit the transaction
-                        transaction.commit();
-                        drawer.closeDrawer(GravityCompat.START);
-                    }
+                    switchFeature(position);
+                    drawer.closeDrawer(GravityCompat.START);
                 }
             })
         );
+    }
+
+    private void switchFeature(int position) {
+        if(position < featureItem.size()) {
+            BaseFragment nextFragment = featureItem.get(position).getFragment();
+            if (nextFragment != null) {
+                mSelectedFragment = nextFragment;
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                mSelectedFragment.setFabAppearance();
+                transaction.replace(R.id.content_main, mSelectedFragment);
+                transaction.commit();
+            }
+        }
     }
 
     @Override
@@ -124,5 +145,9 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    public FloatingActionButton getFab() {
+        return mFab;
     }
 }
