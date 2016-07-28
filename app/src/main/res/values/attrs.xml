@@ -38,11 +38,6 @@
         <attr name="allCaps" format="boolean" />
     </declare-styleable>
 
-    <declare-styleable name="CircleButton">
-        <attr name="cb_color" format="color" />
-        <attr name="cb_pressedRingWidth" format="dimension" />
-    </declare-styleable>
-
     <declare-styleable name="Wallpaper">
         <attr name="color_array" format="reference" />
     </declare-styleable>

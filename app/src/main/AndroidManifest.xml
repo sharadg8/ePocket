@@ -26,9 +26,6 @@
             android:parentActivityName=".MainActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".accounts.AccountTransactionsActivity"
-            android:parentActivityName=".MainActivity" />
-        <activity
             android:name=".accounts.AddTransactionActivity"
             android:parentActivityName=".MainActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />
