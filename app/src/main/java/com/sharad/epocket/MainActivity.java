@@ -22,7 +22,7 @@ import com.sharad.epocket.cards.CardsFragment;
 import com.sharad.epocket.goals.GoalsFragment;
 import com.sharad.epocket.home.HomeFragment;
 import com.sharad.epocket.utils.BaseFragment;
-import com.sharad.epocket.widget.RecyclerItemClickListener;
+import com.sharad.epocket.widget.recyclerview.RecyclerItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;

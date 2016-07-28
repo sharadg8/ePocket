@@ -14,7 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.sharad.epocket.R;
-import com.sharad.epocket.widget.RecyclerItemClickListener;
+import com.sharad.epocket.widget.recyclerview.RecyclerItemClickListener;
 
 import java.util.ArrayList;
 import java.util.Currency;

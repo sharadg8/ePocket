@@ -8,7 +8,7 @@
     <android.support.percent.PercentRelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <com.sharad.epocket.widget.SnappyRecyclerView
+        <com.sharad.epocket.widget.recyclerview.SnappyRecyclerView
             android:id="@+id/recyclerView"
             app:layout_widthPercent="100%"
             app:layout_aspectRatio="148%"
