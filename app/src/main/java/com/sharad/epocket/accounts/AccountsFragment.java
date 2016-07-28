@@ -151,9 +151,9 @@ public class AccountsFragment extends BaseFragment implements ScrollHandler {
 
             @Override
             public void onViewTransactionClicked(int position, IAccount account) {
-                /*Intent intent = new Intent(getActivity().getApplicationContext(), Activity.class);
+                Intent intent = new Intent(getActivity().getApplicationContext(), AccountTransactionActivity.class);
                 intent.putExtra("KEY_ACCOUNT_ID", account.getId());
-                startActivityForResult(intent, 220);*/
+                startActivityForResult(intent, 220);
             }
 
             @Override

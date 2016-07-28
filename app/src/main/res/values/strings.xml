@@ -114,4 +114,5 @@
     <string name="op_sub">−</string>
     <!-- Equals operator (e.g. "1 + 2 = ?"). [CHAR_LIMIT=1] -->
     <string name="eq">=</string>
+    <string name="title_activity_account_transaction">AccountTransactionActivity</string>
 </resources>
