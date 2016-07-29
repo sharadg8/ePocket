@@ -2,25 +2,19 @@ package com.sharad.epocket.accounts;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.sharad.epocket.R;
-import com.sharad.epocket.widget.recyclerview.StickyHeaderDecoration;
+import com.sharad.epocket.widget.recyclerview.StickyRecyclerView;
 
 /**
  * Created by Sharad on 28-Jul-16.
  */
 
-public class AccountTransactionFragment extends Fragment implements RecyclerView.OnItemTouchListener {
-    private RecyclerView mRecyclerView;
-    private StickyHeaderDecoration decor;
+public class AccountTransactionFragment extends Fragment {
+    private StickyRecyclerView mRecyclerView;
 
     private static final String ARG_SECTION_NUMBER = "section_number";
 
@@ -43,48 +37,11 @@ public class AccountTransactionFragment extends Fragment implements RecyclerView
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_account_transaction, container, false);
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
-
         final TransactionRecyclerAdapter adapter = new TransactionRecyclerAdapter(this.getActivity());
-        decor = new StickyHeaderDecoration(adapter);
-
+        mRecyclerView = (StickyRecyclerView) view.findViewById(R.id.recyclerView);
         mRecyclerView.setAdapter(adapter);
-        mRecyclerView.addItemDecoration(decor);
-        mRecyclerView.addOnItemTouchListener(this);
+        mRecyclerView.setIndexer(adapter);
 
         return view;
-    }
-
-    @Override
-    public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-        // really bad click detection just for demonstration purposes
-        // it will not allow the list to scroll if the swipe motion starts
-        // on top of a header
-        View v = rv.findChildViewUnder(e.getX(), e.getY());
-        return v == null;
-//        return rv.findChildViewUnder(e.getX(), e.getY()) != null;
-    }
-
-    @Override
-    public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-        // only use the "UP" motion event, discard all others
-        if (e.getAction() != MotionEvent.ACTION_UP) {
-            return;
-        }
-
-        // find the header that was clicked
-        View view = decor.findHeaderViewUnder(e.getX(), e.getY());
-
-        if (view instanceof TextView) {
-            Toast.makeText(this.getActivity(), ((TextView) view).getText() + " clicked", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
-    public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-        // do nothing
     }
 }

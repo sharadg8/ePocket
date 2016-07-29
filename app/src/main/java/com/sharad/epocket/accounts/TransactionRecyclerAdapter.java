@@ -8,28 +8,44 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.sharad.epocket.R;
-import com.sharad.epocket.widget.recyclerview.StickyHeaderAdapter;
+import com.sharad.epocket.widget.recyclerview.StickyRecyclerView;
 
-public class TransactionRecyclerAdapter
-        extends RecyclerView.Adapter<TransactionRecyclerAdapter.ViewHolder>
-        implements StickyHeaderAdapter<TransactionRecyclerAdapter.HeaderHolder> {
+public class TransactionRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+        implements StickyRecyclerView.HeaderIndexer {
 
-    private LayoutInflater mInflater;
+    private LayoutInflater mInflater = null;
+    private View mHeader = null;
 
     public TransactionRecyclerAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
+        mHeader = mInflater.inflate(R.layout.item_account_transaction_header_list, null, false);
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        final View view = mInflater.inflate(R.layout.item_account_transaction_list, viewGroup, false);
-
-        return new ViewHolder(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+        if(viewType == 0) {
+            View view = mInflater.inflate(R.layout.item_account_transaction_header_list, viewGroup, false);
+            return new HeaderHolder(view);
+        } else {
+            View view = mInflater.inflate(R.layout.item_account_transaction_list, viewGroup, false);
+            return new ItemHolder(view);
+        }
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, int i) {
-        viewHolder.item.setText("Item " + i);
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+        if((position % 10) == 0) {
+            HeaderHolder holder = (HeaderHolder)viewHolder;
+            holder.header.setText("Header " + (position / 10));
+        } else {
+            ItemHolder holder = (ItemHolder)viewHolder;
+            holder.item.setText("Item " + position);
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return ((position % 10) == 0) ? 0 : 1;
     }
 
     @Override
@@ -38,37 +54,35 @@ public class TransactionRecyclerAdapter
     }
 
     @Override
-    public long getHeaderId(int position) {
-        return (long) position / 7;
+    public int getHeaderPositionFromItemPosition(int position) {
+        return (position / 10) * 10;
     }
 
     @Override
-    public HeaderHolder onCreateHeaderViewHolder(ViewGroup parent) {
-        final View view = mInflater.inflate(R.layout.item_account_transaction_header_list, parent, false);
-        return new HeaderHolder(view);
+    public int getHeaderItemsNumber(int headerPosition) {
+        return 9;
     }
 
     @Override
-    public void onBindHeaderViewHolder(HeaderHolder viewholder, int position) {
-        viewholder.header.setText("Header " + getHeaderId(position));
+    public View getHeaderView(int headerPosition) {
+        TextView title = (TextView) mHeader.findViewById(R.id.header_title);
+        title.setText("Header " + (headerPosition / 10));
+        return mHeader;
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    class ItemHolder extends RecyclerView.ViewHolder {
         public TextView item;
-
-        public ViewHolder(View itemView) {
+        public ItemHolder(View itemView) {
             super(itemView);
-
             item = (TextView) itemView.findViewById(R.id.text_item);
         }
     }
 
-    static class HeaderHolder extends RecyclerView.ViewHolder {
+    class HeaderHolder extends RecyclerView.ViewHolder {
         public TextView header;
-
         public HeaderHolder(View itemView) {
             super(itemView);
-            header = (TextView) itemView;
+            header = (TextView) itemView.findViewById(R.id.header_title);
         }
     }
 }
