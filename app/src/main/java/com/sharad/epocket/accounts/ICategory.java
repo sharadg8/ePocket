@@ -1,8 +1,11 @@
 package com.sharad.epocket.accounts;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 
 import com.sharad.epocket.R;
+import com.sharad.epocket.database.ContentConstant;
 import com.sharad.epocket.utils.Item;
 
 import java.util.ArrayList;
@@ -33,6 +36,36 @@ public class ICategory extends Item{
         this.title = title;
         this.type = type;
         this.usageCount = usageCount;
+    }
+
+    public ICategory(Cursor c) {
+        super(0);
+
+        long id 	   = c.getLong(c.getColumnIndex(ContentConstant.KEY_CATEGORY_ROWID));
+        String title   = c.getString(c.getColumnIndex(ContentConstant.KEY_CATEGORY_TITLE));
+        int imageIndex = c.getInt(c.getColumnIndex(ContentConstant.KEY_CATEGORY_IMAGE_IDX));
+        int color      = c.getInt(c.getColumnIndex(ContentConstant.KEY_CATEGORY_COLOR));
+        int type       = c.getInt(c.getColumnIndex(ContentConstant.KEY_CATEGORY_TYPE));
+        int usageCount = c.getInt(c.getColumnIndex(ContentConstant.KEY_CATEGORY_COUNT));
+
+        this.id = id;
+        this.imageIndex = (imageIndex < CategoryImageList.imageResource.length) ? imageIndex : 0;
+        this.color = color;
+        this.title = title;
+        this.type = type;
+        this.usageCount = usageCount;
+    }
+
+    public ContentValues getContentValues() {
+        // Create row's data:
+        ContentValues content = new ContentValues();
+        content.put(ContentConstant.KEY_CATEGORY_TITLE,     this.getTitle());
+        content.put(ContentConstant.KEY_CATEGORY_COUNT,     this.getUsageCount());
+        content.put(ContentConstant.KEY_CATEGORY_IMAGE_IDX, this.getImageIndex());
+        content.put(ContentConstant.KEY_CATEGORY_COLOR,     this.getColor());
+        content.put(ContentConstant.KEY_CATEGORY_TYPE,      this.getType());
+
+        return content;
     }
 
     public int getColor() {         return color;           }

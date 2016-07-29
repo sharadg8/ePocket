@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sharad.epocket.R;
+import com.sharad.epocket.database.ContentConstant;
 import com.sharad.epocket.widget.AutofitRecyclerView;
 
 import java.util.ArrayList;
@@ -57,7 +58,7 @@ public class AddTransactionFragment extends Fragment {
 
         switch (transactionType) {
             case ICategory.CATEGORY_TYPE_EXPENSE:
-                String where = DataSourceCategory.KEY_CATEGORY_TYPE + "=" + ICategory.CATEGORY_TYPE_EXPENSE;
+                String where = ContentConstant.KEY_CATEGORY_TYPE + "=" + ICategory.CATEGORY_TYPE_EXPENSE;
 
                 source.getCategories(itemList, where);
                 if(itemList.size() == 0) {
@@ -80,7 +81,7 @@ public class AddTransactionFragment extends Fragment {
                 itemList.add(new ICategory(CategoryImageList.imageResource.length-1));
                 break;
             case ICategory.CATEGORY_TYPE_INCOME:
-                where = DataSourceCategory.KEY_CATEGORY_TYPE + "=" + ICategory.CATEGORY_TYPE_INCOME;
+                where = ContentConstant.KEY_CATEGORY_TYPE + "=" + ICategory.CATEGORY_TYPE_INCOME;
 
                 source.getCategories(itemList, where);
                 if(itemList.size() == 0) {

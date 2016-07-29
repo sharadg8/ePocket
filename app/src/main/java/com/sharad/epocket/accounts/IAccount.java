@@ -1,7 +1,10 @@
 package com.sharad.epocket.accounts;
 
+import android.content.ContentValues;
+import android.database.Cursor;
 import android.text.format.DateUtils;
 
+import com.sharad.epocket.database.ContentConstant;
 import com.sharad.epocket.utils.Item;
 
 import java.text.SimpleDateFormat;
@@ -59,6 +62,61 @@ public class IAccount extends Item{
         this.outflow = outflow;
         this.accountType = accountType;
         this.lastUpdate = lastUpdate;
+    }
+
+    public IAccount(Cursor c) {
+        super(0);
+
+        long id 		    = c.getLong(c.getColumnIndex(ContentConstant.KEY_ACCOUNT_ROWID));
+        String title        = c.getString(c.getColumnIndex(ContentConstant.KEY_ACCOUNT_TITLE));
+        String isoCurrency  = c.getString(c.getColumnIndex(ContentConstant.KEY_ACCOUNT_CURRENCY));
+        String note         = c.getString(c.getColumnIndex(ContentConstant.KEY_ACCOUNT_NOTE));
+        String accountNumber = c.getString(c.getColumnIndex(ContentConstant.KEY_ACCOUNT_NUMBER));
+        String loginId      = c.getString(c.getColumnIndex(ContentConstant.KEY_ACCOUNT_LOGIN));
+        String password     = c.getString(c.getColumnIndex(ContentConstant.KEY_ACCOUNT_PASSWORD));
+        String contact      = c.getString(c.getColumnIndex(ContentConstant.KEY_ACCOUNT_CONTACT));
+        float balanceCard   = c.getFloat(c.getColumnIndex(ContentConstant.KEY_ACCOUNT_BAL_CARD));
+        float balanceCash   = c.getFloat(c.getColumnIndex(ContentConstant.KEY_ACCOUNT_BAL_CASH));
+        float inflow        = c.getFloat(c.getColumnIndex(ContentConstant.KEY_ACCOUNT_INFLOW));
+        float outflow       = c.getFloat(c.getColumnIndex(ContentConstant.KEY_ACCOUNT_OUTFLOW));
+        int accountType     = c.getInt(c.getColumnIndex(ContentConstant.KEY_ACCOUNT_TYPE));
+        long lastUpdateMSec = c.getLong(c.getColumnIndex(ContentConstant.KEY_ACCOUNT_LAST_UPDATE));
+
+        this.id = id;
+        this.isoCurrency = isoCurrency;
+        this.title = title;
+        this.note = note;
+        this.accountNumber = accountNumber;
+        this.loginId = loginId;
+        this.password = password;
+        this.contact = contact;
+        this.balanceCard = balanceCard;
+        this.balanceCash = balanceCash;
+        this.inflow = inflow;
+        this.outflow = outflow;
+        this.accountType = accountType;
+        this.lastUpdate = Calendar.getInstance();
+        this.lastUpdate.setTimeInMillis(lastUpdateMSec);
+    }
+
+    public ContentValues getContentValues() {
+        // Create row's data:
+        ContentValues content = new ContentValues();
+        content.put(ContentConstant.KEY_ACCOUNT_TITLE,       this.getTitle());
+        content.put(ContentConstant.KEY_ACCOUNT_CURRENCY,    this.getIsoCurrency());
+        content.put(ContentConstant.KEY_ACCOUNT_NOTE,        this.getNote());
+        content.put(ContentConstant.KEY_ACCOUNT_NUMBER,      this.getAccountNumber());
+        content.put(ContentConstant.KEY_ACCOUNT_LOGIN,       this.getLoginId());
+        content.put(ContentConstant.KEY_ACCOUNT_PASSWORD,    this.getPassword());
+        content.put(ContentConstant.KEY_ACCOUNT_CONTACT,     this.getContact());
+        content.put(ContentConstant.KEY_ACCOUNT_BAL_CARD,    this.getBalanceCard());
+        content.put(ContentConstant.KEY_ACCOUNT_BAL_CASH,    this.getBalanceCash());
+        content.put(ContentConstant.KEY_ACCOUNT_INFLOW,      this.getInflow());
+        content.put(ContentConstant.KEY_ACCOUNT_OUTFLOW,     this.getOutflow());
+        content.put(ContentConstant.KEY_ACCOUNT_TYPE,        this.getAccountType());
+        content.put(ContentConstant.KEY_ACCOUNT_LAST_UPDATE, this.getLastUpdateMSec());
+
+        return content;
     }
 
     public String getTitle() {         return title; }

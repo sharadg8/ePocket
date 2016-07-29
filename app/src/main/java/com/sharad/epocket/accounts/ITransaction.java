@@ -1,5 +1,9 @@
 package com.sharad.epocket.accounts;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+
+import com.sharad.epocket.database.ContentConstant;
 import com.sharad.epocket.utils.Item;
 
 /**
@@ -39,6 +43,45 @@ public class ITransaction extends Item {
         this.account = account;
         this.category = category;
         this.amount = amount;
+    }
+
+    public ITransaction(Cursor c) {
+        super(0);
+
+        long id 	    = c.getLong(c.getColumnIndex(ContentConstant.KEY_TRANSACTION_ROWID));
+        long date       = c.getLong(c.getColumnIndex(ContentConstant.KEY_TRANSACTION_DATE));
+        String comment  = c.getString(c.getColumnIndex(ContentConstant.KEY_TRANSACTION_COMMENT));
+        String repeat   = c.getString(c.getColumnIndex(ContentConstant.KEY_TRANSACTION_REPEAT));
+        int type        = c.getInt(c.getColumnIndex(ContentConstant.KEY_TRANSACTION_TYPE));
+        int subType     = c.getInt(c.getColumnIndex(ContentConstant.KEY_TRANSACTION_SUB_TYPE));
+        long account    = c.getLong(c.getColumnIndex(ContentConstant.KEY_TRANSACTION_ACCOUNT));
+        long category   = c.getLong(c.getColumnIndex(ContentConstant.KEY_TRANSACTION_CATEGORY));
+        float amount    = c.getFloat(c.getColumnIndex(ContentConstant.KEY_TRANSACTION_AMOUNT));
+
+        this.id = id;
+        this.date = date;
+        this.comment = comment;
+        this.repeat = repeat;
+        this.type = type;
+        this.subType = subType;
+        this.account = account;
+        this.category = category;
+        this.amount = amount;
+    }
+
+    public ContentValues getContentValues() {
+        // Create row's data:
+        ContentValues content = new ContentValues();
+        content.put(ContentConstant.KEY_TRANSACTION_DATE,     this.getDate());
+        content.put(ContentConstant.KEY_TRANSACTION_COMMENT,  this.getComment());
+        content.put(ContentConstant.KEY_TRANSACTION_REPEAT,   this.getRepeat());
+        content.put(ContentConstant.KEY_TRANSACTION_TYPE,     this.getType());
+        content.put(ContentConstant.KEY_TRANSACTION_SUB_TYPE, this.getSubType());
+        content.put(ContentConstant.KEY_TRANSACTION_ACCOUNT,  this.getAccount());
+        content.put(ContentConstant.KEY_TRANSACTION_CATEGORY, this.getCategory());
+        content.put(ContentConstant.KEY_TRANSACTION_AMOUNT,   this.getAmount());
+
+        return content;
     }
 
     public float getAmount() {   return amount;   }

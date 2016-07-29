@@ -1,5 +1,9 @@
 package com.sharad.epocket.bills;
 
+import android.content.ContentValues;
+import android.database.Cursor;
+
+import com.sharad.epocket.database.ContentConstant;
 import com.sharad.epocket.utils.Item;
 
 import java.text.DecimalFormat;
@@ -43,6 +47,50 @@ public class IBill extends Item{
         this.daysRemaining = (int)(diff / (24 * 60 * 60 * 1000));
     }
 
+    public IBill(Cursor c) {
+        super(0);
+
+        long id 		= c.getLong(c.getColumnIndex(ContentConstant.KEY_BILL_ROWID));
+        String title 	= c.getString(c.getColumnIndex(ContentConstant.KEY_BILL_TITLE));
+        String account  = c.getString(c.getColumnIndex(ContentConstant.KEY_BILL_ACCOUNT));
+        String currency	= c.getString(c.getColumnIndex(ContentConstant.KEY_BILL_CURRENCY));
+        float amount	= c.getFloat(c.getColumnIndex(ContentConstant.KEY_BILL_AMOUNT));
+        long startDate  = c.getLong(c.getColumnIndex(ContentConstant.KEY_BILL_DATE));
+        long endDate	= c.getLong(c.getColumnIndex(ContentConstant.KEY_BILL_END_DATE));
+        int repeat		= c.getInt(c.getColumnIndex(ContentConstant.KEY_BILL_REPEAT));
+
+        this.id = id;
+        this.title = title;
+        this.account = account;
+        this.currency = currency;
+        this.amount = amount;
+        this.repeat = repeat;
+        this.startDate = Calendar.getInstance();
+        this.startDate.setTimeInMillis(startDate);
+        this.endDate = Calendar.getInstance();
+        this.endDate.setTimeInMillis(endDate);
+
+        this.nextDate = Calendar.getInstance();
+        this.nextDate.setTimeInMillis(startDate);
+
+        Calendar today = Calendar.getInstance();
+        long diff = this.nextDate.getTimeInMillis() - today.getTimeInMillis();
+        this.daysRemaining = (int)(diff / (24 * 60 * 60 * 1000));
+    }
+
+    public ContentValues getContentValues() {
+        // Create row's data:
+        ContentValues content = new ContentValues();
+        content.put(ContentConstant.KEY_BILL_TITLE     , this.getTitle());
+        content.put(ContentConstant.KEY_BILL_ACCOUNT   , this.getAccount());
+        content.put(ContentConstant.KEY_BILL_CURRENCY  , this.getCurrency());
+        content.put(ContentConstant.KEY_BILL_AMOUNT    , this.getAmount());
+        content.put(ContentConstant.KEY_BILL_DATE      , this.getStartDateLong());
+        content.put(ContentConstant.KEY_BILL_END_DATE  , this.getEndDateLong());
+        content.put(ContentConstant.KEY_BILL_REPEAT    , this.getRepeat());
+
+        return content;
+    }
     public String getTitle() {        return title;    }
     public float getAmount() {        return amount;    }
     public String getCurrency() {        return currency;    }

@@ -13,6 +13,9 @@ import com.sharad.epocket.widget.recyclerview.StickyRecyclerView;
 public class TransactionRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         implements StickyRecyclerView.HeaderIndexer {
 
+    private static final int TYPE_HEADER = 1;
+    private static final int TYPE_TRANSACTION = 2;
+
     private LayoutInflater mInflater = null;
     private View mHeader = null;
 
@@ -23,29 +26,34 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<RecyclerVie
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        if(viewType == 0) {
-            View view = mInflater.inflate(R.layout.item_account_transaction_header_list, viewGroup, false);
-            return new HeaderHolder(view);
-        } else {
-            View view = mInflater.inflate(R.layout.item_account_transaction_list, viewGroup, false);
-            return new ItemHolder(view);
+        switch(viewType) {
+            case TYPE_HEADER:
+                View header = mInflater.inflate(R.layout.item_account_transaction_header_list, viewGroup, false);
+                return new HeaderHolder(header);
+            case TYPE_TRANSACTION:
+                View item = mInflater.inflate(R.layout.item_account_transaction_list, viewGroup, false);
+                return new ItemHolder(item);
         }
+        return null;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        if((position % 10) == 0) {
-            HeaderHolder holder = (HeaderHolder)viewHolder;
-            holder.header.setText("Header " + (position / 10));
-        } else {
-            ItemHolder holder = (ItemHolder)viewHolder;
-            holder.item.setText("Item " + position);
+        switch(viewHolder.getItemViewType()) {
+            case TYPE_HEADER:
+                HeaderHolder headerHolder = (HeaderHolder)viewHolder;
+                headerHolder.header.setText("Header " + (position / 10));
+                break;
+            case TYPE_TRANSACTION:
+                ItemHolder itemHolder = (ItemHolder)viewHolder;
+                itemHolder.item.setText("Item " + position);
+                break;
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-        return ((position % 10) == 0) ? 0 : 1;
+        return ((position % 10) == 0) ? TYPE_HEADER : TYPE_TRANSACTION;
     }
 
     @Override
@@ -74,7 +82,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<RecyclerVie
         public TextView item;
         public ItemHolder(View itemView) {
             super(itemView);
-            item = (TextView) itemView.findViewById(R.id.text_item);
+            item = (TextView) itemView.findViewById(R.id.category);
         }
     }
 
