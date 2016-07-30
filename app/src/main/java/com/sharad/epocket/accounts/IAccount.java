@@ -137,6 +137,9 @@ public class IAccount extends Item{
     public int getAccountType() {      return accountType; }
     public String getIsoCurrency() {   return isoCurrency; }
 
+    public void setInflow(float inflow) {        this.inflow = inflow;    }
+    public void setOutflow(float outflow) {      this.outflow = outflow;  }
+
     public boolean hasCardAccount() { return ((accountType == ACCOUNT_TYPE_CASH_CARD) || (accountType == ACCOUNT_TYPE_CARD_ONLY));  }
     public boolean hasCashAccount() { return ((accountType == ACCOUNT_TYPE_CASH_CARD) || (accountType == ACCOUNT_TYPE_CASH_ONLY));  }
 

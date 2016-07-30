@@ -33,12 +33,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sharad.epocket.R;
+import com.sharad.epocket.database.ContentConstant;
 import com.sharad.epocket.utils.BaseFragment;
 import com.sharad.epocket.utils.Constant;
 import com.sharad.epocket.utils.ScrollHandler;
+import com.sharad.epocket.utils.Utils;
 
 import java.util.ArrayList;
-
+import java.util.Calendar;
 
 
 /**
@@ -185,16 +187,43 @@ public class AccountsFragment extends BaseFragment implements ScrollHandler {
     }
 
     private ArrayList<IAccount> createItemList() {
-        ArrayList<IAccount> itemList = new ArrayList<>();
+        ArrayList<IAccount> iAccountArrayList = new ArrayList<>();
 
-        DataSourceAccount source = new DataSourceAccount(getActivity());
-        source.getAccounts(itemList);
+        DataSourceAccount dataSourceAccount = new DataSourceAccount(getContext());
+        dataSourceAccount.getAccounts(iAccountArrayList);
 
-        if(itemList.size() > 0) {
-            mDefaultAccountId = itemList.get(0).getId();
+        DataSourceTransaction dataSourceTransaction = new DataSourceTransaction(getContext());
+        Calendar now = Calendar.getInstance();
+        long start_ms = Utils.getMonthStart_ms(now.getTimeInMillis());
+        long end_ms = now.getTimeInMillis();
+        for (IAccount iAccount : iAccountArrayList) {
+            float inflow = 0;
+            float outflow = 0;
+            String where = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + iAccount.getId()
+                    + " AND " + ContentConstant.KEY_TRANSACTION_DATE + ">=" + start_ms
+                    + " AND " + ContentConstant.KEY_TRANSACTION_DATE + "<=" + end_ms;
+            ArrayList<ITransaction> iTransactionArrayList = new ArrayList<>();
+            dataSourceTransaction.getTransactions(iTransactionArrayList, where);
+            for (ITransaction iTransaction : iTransactionArrayList) {
+                switch (iTransaction.getType()) {
+                    case ITransaction.TRANSACTION_TYPE_ACCOUNT_INCOME:
+                        inflow += iTransaction.getAmount();
+                        break;
+                    case ITransaction.TRANSACTION_TYPE_ACCOUNT_EXPENSE:
+                    case ITransaction.TRANSACTION_TYPE_ACCOUNT_TRANSFER:
+                        outflow += iTransaction.getAmount();
+                        break;
+                }
+            }
+            iAccount.setInflow(inflow);
+            iAccount.setOutflow(outflow);
+        }
+
+        if(iAccountArrayList.size() > 0) {
+            mDefaultAccountId = iAccountArrayList.get(0).getId();
             mSelectedAccountId = mDefaultAccountId;
         }
-        return itemList;
+        return iAccountArrayList;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
