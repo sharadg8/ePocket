@@ -59,6 +59,7 @@ public class DatabaseAdapter {
             _db.execSQL(DATABASE_CREATE_SQL_ACCOUNT);
             _db.execSQL(DATABASE_CREATE_SQL_BILL);
             _db.execSQL(DATABASE_CREATE_SQL_CATEGORY);
+            _db.execSQL(DATABASE_CREATE_SQL_TRANSACTION);
         }
 
         @Override

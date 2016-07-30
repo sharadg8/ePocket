@@ -35,6 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 app:tabMode="scrollable"
+                app:tabIndicatorHeight="4dp"
                 app:tabIndicatorColor="@android:color/white"
                 app:tabContentStart="56dp"/>
         </android.support.design.widget.CollapsingToolbarLayout>

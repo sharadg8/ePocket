@@ -190,8 +190,10 @@ public class AccountsFragment extends BaseFragment implements ScrollHandler {
         DataSourceAccount source = new DataSourceAccount(getActivity());
         source.getAccounts(itemList);
 
-        mDefaultAccountId = itemList.get(0).getId();
-        mSelectedAccountId = mDefaultAccountId;
+        if(itemList.size() > 0) {
+            mDefaultAccountId = itemList.get(0).getId();
+            mSelectedAccountId = mDefaultAccountId;
+        }
         return itemList;
     }
 

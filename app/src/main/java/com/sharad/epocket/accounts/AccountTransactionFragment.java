@@ -69,7 +69,9 @@ public class AccountTransactionFragment extends Fragment {
                     + " AND " + ContentConstant.KEY_TRANSACTION_DATE    + "<=" + end_ms;
 
             dataSourceTransaction.getTransactions(itemList, where);
-            final TransactionRecyclerAdapter adapter = new TransactionRecyclerAdapter(this.getActivity(), itemList);
+            final TransactionRecyclerAdapter adapter = new TransactionRecyclerAdapter(this.getActivity());
+            adapter.setItemList(itemList);
+            adapter.setIsoCurrency(account.getIsoCurrency());
             mRecyclerView = (StickyRecyclerView) view.findViewById(R.id.recyclerView);
             mRecyclerView.setAdapter(adapter);
             mRecyclerView.setIndexer(adapter);

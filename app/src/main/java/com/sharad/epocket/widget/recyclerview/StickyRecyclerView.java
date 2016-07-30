@@ -58,7 +58,7 @@ public class StickyRecyclerView extends FrameLayout {
          * Album A, song 1, song 2, ...., song 10, Album B, song 1, ..., song 7. A call to
          * this method with the position of song 5 in Album B, should return  the position
          * of Album B.
-         * @param position - Position of the item in the ListView dataset
+         * @param position - Position of the item in the RecyclerView dataset
          * @return Position of header. -1 if the is no header
          */
 

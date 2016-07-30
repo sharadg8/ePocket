@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="right"
                 android:textColor="@color/transaction_transfer"
-                android:text="$2600.24"
+                tools:text="Amount"
                 android:textAppearance="@android:style/TextAppearance.Material.Medium" />
             <TextView
                 android:id="@+id/source"
@@ -50,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="right"
                 android:textColor="@color/hint_text"
-                android:text="Card" />
+                tools:text="Card"/>
         </LinearLayout>
         <LinearLayout
             android:id="@+id/layout_category"
@@ -69,14 +69,14 @@
                 android:layout_height="wrap_content"
                 android:lines="1"
                 android:ellipsize="end"
-                tools:text="Sample text"
+                tools:text="Category"
                 android:textAppearance="@android:style/TextAppearance.Material.Medium" />
             <TextView
                 android:id="@+id/comment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/hint_text"
-                android:text="Sample text" />
+                tools:text="Comment" />
         </LinearLayout>
         <View
             android:id="@+id/category_color"

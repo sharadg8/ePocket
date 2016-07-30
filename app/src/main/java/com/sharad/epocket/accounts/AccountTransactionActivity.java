@@ -97,7 +97,7 @@ public class AccountTransactionActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "CURRENT";
+                    return "THIS MONTH";
                 case 1:
                     return "JUN 16";
                 case 2:
