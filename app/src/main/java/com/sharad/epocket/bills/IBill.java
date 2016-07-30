@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 import com.sharad.epocket.database.ContentConstant;
+import com.sharad.epocket.utils.Constant;
 import com.sharad.epocket.utils.Item;
 
 import java.text.DecimalFormat;
@@ -48,7 +49,7 @@ public class IBill extends Item{
     }
 
     public IBill(Cursor c) {
-        super(0);
+        super(Constant.INVALID_ID);
 
         long id 		= c.getLong(c.getColumnIndex(ContentConstant.KEY_BILL_ROWID));
         String title 	= c.getString(c.getColumnIndex(ContentConstant.KEY_BILL_TITLE));
@@ -78,6 +79,7 @@ public class IBill extends Item{
         this.daysRemaining = (int)(diff / (24 * 60 * 60 * 1000));
     }
 
+    @Override
     public ContentValues getContentValues() {
         // Create row's data:
         ContentValues content = new ContentValues();

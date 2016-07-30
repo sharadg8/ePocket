@@ -48,6 +48,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sharad.epocket.R;
+import com.sharad.epocket.utils.Constant;
 import com.sharad.epocket.widget.recurrencepicker.EventRecurrence;
 import com.sharad.epocket.widget.recurrencepicker.RecurrencePickerDialog;
 import com.sharad.epocket.widget.transaction.CalculatorExpressionBuilder;
@@ -67,7 +68,9 @@ public class AddTransactionActivity extends AppCompatActivity implements
         RecurrencePickerDialog.OnRecurrenceSetListener {
     private static final String TAG = "AddTransactionActivity";
 
-    ITransaction transaction;
+    ITransaction iTransaction;
+    ICategory iCategory;
+    IAccount iAccount;
 
     private final int TAB_EXPENSE = 0;
     private final int TAB_INCOME = 1;
@@ -167,6 +170,10 @@ public class AddTransactionActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_transaction);
 
+        Bundle extras = getIntent().getExtras();
+        long accountId = extras.getLong(Constant.ARG_ACCOUNT_NUMBER_LONG, Constant.INVALID_ID);
+        long transactionId = extras.getLong(Constant.ARG_TRANSACTION_NUMBER_LONG, Constant.INVALID_ID);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -213,8 +220,69 @@ public class AddTransactionActivity extends AppCompatActivity implements
         Calendar today = Calendar.getInstance();
         mStartTime = new Time();
 
-        transaction = new ITransaction();
-        transaction.setDate(today.getTimeInMillis());
+        if(transactionId == Constant.INVALID_ID) {
+            iTransaction = new ITransaction();
+            iTransaction.setDate(today.getTimeInMillis());
+            DataSourceAccount dataSourceAccount = new DataSourceAccount(this);
+            iAccount = dataSourceAccount.getAccount(accountId);
+            iTransaction.setAccount(accountId);
+            iCategory = new ICategory(CategoryImageList.RESOURCE_UNKNOWN);
+        } else {
+            DataSourceTransaction dataSourceTransaction = new DataSourceTransaction(this);
+            iTransaction = dataSourceTransaction.getTransaction(transactionId);
+            DataSourceAccount dataSourceAccount = new DataSourceAccount(this);
+            iAccount = dataSourceAccount.getAccount(iTransaction.getAccount());
+            if(iTransaction.getCategory() != Constant.INVALID_ID) {
+                DataSourceCategory dataSourceCategory = new DataSourceCategory(this);
+                iCategory = dataSourceCategory.getCategory(iTransaction.getCategory());
+            } else {
+                iCategory = new ICategory(CategoryImageList.RESOURCE_UNKNOWN);
+            }
+        }
+
+        /**
+         * Configure the initial values
+         */
+        if(iTransaction.getAmount() > 0.01) {
+            mFormulaEditText.setText("" + iTransaction.getAmount());
+        }
+        mCategoryIcon.setImageResource(iCategory.getImageResource());
+        if(iTransaction.getCategory() != Constant.INVALID_ID) {
+            mCategoryText.setText(iCategory.getTitle());
+            switch(iCategory.getType()) {
+                case ICategory.CATEGORY_TYPE_INCOME:
+                    mTransactionType.setText("Income");
+                    break;
+                case ICategory.CATEGORY_TYPE_EXPENSE:
+                    mTransactionType.setText("Expense");
+                    break;
+                case ICategory.CATEGORY_TYPE_TRANSFER:
+                    mTransactionType.setText("Transfer");
+                    break;
+            }
+        }
+
+        Button accountButton = (Button) findViewById(R.id.account);
+        accountButton.setText(iAccount.getTitle());
+
+        today.setTimeInMillis(iTransaction.getDate());
+        Button dateButton = (Button) findViewById(R.id.date);
+        if(DateUtils.isToday(today.getTimeInMillis())) {
+            dateButton.setText("TODAY");
+        } else {
+            final SimpleDateFormat df = new SimpleDateFormat("dd MMM yyyy");
+            dateButton.setText(df.format(today.getTime()));
+        }
+        onAccountSource(findViewById(R.id.source));
+
+        ImageButton commentButton = (ImageButton) findViewById(R.id.comment);
+        if(iTransaction.getComment().length() > 0) {
+            commentButton.setColorFilter(ContextCompat.getColor(
+                    AddTransactionActivity.this,android.R.color.white));
+        } else {
+            commentButton.setColorFilter(ContextCompat.getColor(
+                    AddTransactionActivity.this, R.color.primary_light));
+        }
     }
 
     @Override
@@ -245,7 +313,6 @@ public class AddTransactionActivity extends AppCompatActivity implements
         //noinspection SimplifiableIfStatement
         if(id == R.id.action_save) {
             save();
-            finish();
             return true;
         } else if(id == android.R.id.home) {
             finish();
@@ -256,7 +323,42 @@ public class AddTransactionActivity extends AppCompatActivity implements
     }
 
     private void save() {
+        String amountString = "";
+        if(mResultEditText.getText().length() > 0) {
+            amountString = mResultEditText.getText().toString();
+        } else if(mFormulaEditText.getText().length() > 0) {
+            amountString = mFormulaEditText.getText().toString();
+            amountString = amountString.replace(getResources().getString(R.string.op_mul),"");
+            amountString = amountString.replace(getResources().getString(R.string.op_div),"");
+            amountString = amountString.replace(getResources().getString(R.string.op_add),"");
+            amountString = amountString.replace(getResources().getString(R.string.op_sub),"");
+        }
 
+        if(amountString.length() == 0) {
+            /* Nothing to do here, No money to deal with */
+            finish();
+            return;
+        }
+
+        float amount = Float.parseFloat(amountString);
+        if(amount > 0.01) {
+            iTransaction.setAmount(amount);
+            if(iCategory.getId() == Constant.INVALID_ID) {
+                View view = findViewById(R.id.show_category);
+                ObjectAnimator
+                        .ofFloat(view, "translationX", 0, 25, -25, 25, -25, 15, -15, 6, -6, 0)
+                        .setDuration(500)
+                        .start();
+                return;
+            }
+            DataSourceTransaction dataSourceTransaction = new DataSourceTransaction(this);
+            dataSourceTransaction.insertTransaction(iTransaction);
+            finish();
+        } else {
+            /* Nothing to do here, No money to deal with */
+            finish();
+            return;
+        }
     }
 
     @Override
@@ -352,7 +454,7 @@ public class AddTransactionActivity extends AppCompatActivity implements
         final Button button = (Button) view;
         final SimpleDateFormat df = new SimpleDateFormat("dd MMM yyyy");
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(transaction.getDate());
+        calendar.setTimeInMillis(iTransaction.getDate());
         DatePickerDialog datePicker = new DatePickerDialog(AddTransactionActivity.this, new DatePickerDialog.OnDateSetListener() {
             public void onDateSet(DatePicker datepicker, int year, int month, int day) {
                 Calendar cal = Calendar.getInstance();
@@ -362,7 +464,7 @@ public class AddTransactionActivity extends AppCompatActivity implements
                 } else {
                     button.setText(df.format(cal.getTime()));
                 }
-                transaction.setDate(cal.getTimeInMillis());
+                iTransaction.setDate(cal.getTimeInMillis());
             }
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE));
         datePicker.show();
@@ -370,12 +472,12 @@ public class AddTransactionActivity extends AppCompatActivity implements
 
     private void onAccountSource(View view) {
         ImageButton button = (ImageButton) view;
-        if(transaction.getSubType() == ITransaction.TRANSACTION_SUB_TYPE_ACCOUNT_CASH) {
+        if(iTransaction.getSubType() == ITransaction.TRANSACTION_SUB_TYPE_ACCOUNT_CASH) {
             button.setImageResource(R.drawable.ic_credit_card_black_24dp);
-            transaction.setSubType(ITransaction.TRANSACTION_SUB_TYPE_ACCOUNT_CARD);
+            iTransaction.setSubType(ITransaction.TRANSACTION_SUB_TYPE_ACCOUNT_CARD);
         } else {
             button.setImageResource(R.drawable.ic_cash_black_24px);
-            transaction.setSubType(ITransaction.TRANSACTION_SUB_TYPE_ACCOUNT_CASH);
+            iTransaction.setSubType(ITransaction.TRANSACTION_SUB_TYPE_ACCOUNT_CASH);
         }
     }
 
@@ -415,7 +517,7 @@ public class AddTransactionActivity extends AppCompatActivity implements
                 | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
                 | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
         commentField.setHorizontalScrollBarEnabled(false);
-        commentField.setText(transaction.getComment());
+        commentField.setText(iTransaction.getComment());
 
         new AlertDialog.Builder(this)
                 .setTitle("Comment")
@@ -429,7 +531,7 @@ public class AddTransactionActivity extends AppCompatActivity implements
                             button.setColorFilter(ContextCompat.getColor(
                                     AddTransactionActivity.this, R.color.primary_light));
                         }
-                        transaction.setComment(commentField.getText().toString());
+                        iTransaction.setComment(commentField.getText().toString());
                     }
                 })
                 .setNegativeButton(android.R.string.cancel, null)
@@ -445,7 +547,7 @@ public class AddTransactionActivity extends AppCompatActivity implements
         int selectedItem = 0;
         for(int i=0; i<accounts.size(); i++) {
             items[i] = accounts.get(i).getTitle();
-            selectedItem = (accounts.get(i).getId() == transaction.getAccount()) ? i : selectedItem;
+            selectedItem = (accounts.get(i).getId() == iTransaction.getAccount()) ? i : selectedItem;
         }
         new AlertDialog.Builder(this)
                 .setTitle("Select Account")
@@ -453,7 +555,7 @@ public class AddTransactionActivity extends AppCompatActivity implements
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         button.setText(items[which]);
-                        transaction.setAccount(accounts.get(which).getId());
+                        iTransaction.setAccount(accounts.get(which).getId());
                         dialog.dismiss();
                     }
                 })
@@ -699,24 +801,25 @@ public class AddTransactionActivity extends AppCompatActivity implements
             fragment.setOnItemSelectedListener(new AddTransactionFragment.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(int tabNum, ICategory category) {
-                    transaction.setCategory(category.getId());
+                    iTransaction.setCategory(category.getId());
+                    iCategory = category;
                     switch (tabNum) {
                         case TAB_EXPENSE:
                             mCategoryIcon.setImageResource(category.getImageResource());
                             mTransactionType.setText("Expense");
                             mCategoryText.setText(category.getTitle());
-                            transaction.setType(ITransaction.TRANSACTION_TYPE_ACCOUNT_EXPENSE);
+                            iTransaction.setType(ITransaction.TRANSACTION_TYPE_ACCOUNT_EXPENSE);
                             break;
                         case TAB_INCOME:
                             mCategoryIcon.setImageResource(category.getImageResource());
                             mTransactionType.setText("Income");
                             mCategoryText.setText(category.getTitle());
-                            transaction.setType(ITransaction.TRANSACTION_TYPE_ACCOUNT_INCOME);
+                            iTransaction.setType(ITransaction.TRANSACTION_TYPE_ACCOUNT_INCOME);
                             break;
                         case TAB_TRANSFER:
                             mTransactionType.setText("Transfer");
                             mCategoryIcon.setImageResource(category.getImageResource());
-                            transaction.setType(ITransaction.TRANSACTION_TYPE_ACCOUNT_TRANSFER);
+                            iTransaction.setType(ITransaction.TRANSACTION_TYPE_ACCOUNT_TRANSFER);
                             break;
                     }
 

@@ -140,14 +140,6 @@
                 android:tint="@color/icons_dark"
                 android:background="?attr/selectableItemBackgroundBorderless"/>
             <ImageButton
-                android:id="@+id/account_trends"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:src="@drawable/ic_insert_chart_black_24dp"
-                android:tint="@color/icons_dark"
-                android:background="?attr/selectableItemBackgroundBorderless"/>
-            <ImageButton
                 android:id="@+id/account_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sharad.epocket.R;
+import com.sharad.epocket.utils.Constant;
 import com.sharad.epocket.utils.ScrollHandler;
 
 import java.util.ArrayList;
@@ -96,8 +97,8 @@ public class AccountsRecyclerAdapter extends RecyclerView.Adapter<ViewHolderAcco
         void onEditAccountClicked(int position, IAccount account);
         void onDeleteAccountClicked(int position, IAccount account);
         void onViewTransactionClicked(int position, IAccount account);
-        void onViewTrendsClicked(int position, IAccount account);
         void onViewInfoClicked(int position, IAccount account);
+        void onAccountClicked(long accountId);
     }
 
     /**
@@ -115,11 +116,19 @@ public class AccountsRecyclerAdapter extends RecyclerView.Adapter<ViewHolderAcco
         }
         mExpandedPosition = position;
         notifyItemChanged(position);
+
+        if(itemClickListener != null) {
+            itemClickListener.onAccountClicked(itemList.get(position).getId());
+        }
     }
 
     public void collapse(int position) {
         mExpandedId = IAccount.INVALID_ID;
         mExpandedPosition = -1;
         notifyItemChanged(position);
+
+        if(itemClickListener != null) {
+            itemClickListener.onAccountClicked(Constant.INVALID_ID);
+        }
     }
 }

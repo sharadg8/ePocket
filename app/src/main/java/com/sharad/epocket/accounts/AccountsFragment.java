@@ -34,6 +34,7 @@ import android.view.ViewGroup;
 
 import com.sharad.epocket.R;
 import com.sharad.epocket.utils.BaseFragment;
+import com.sharad.epocket.utils.Constant;
 import com.sharad.epocket.utils.ScrollHandler;
 
 import java.util.ArrayList;
@@ -52,7 +53,8 @@ public class AccountsFragment extends BaseFragment implements ScrollHandler {
 
     AccountsRecyclerAdapter recyclerAdapter;
     private LinearLayoutManager mLayoutManager;
-    private long mScrollToAccountId = IAccount.INVALID_ID;
+    private long mSelectedAccountId = IAccount.INVALID_ID;
+    private long mDefaultAccountId = IAccount.INVALID_ID;
     private ItemTouchHelper mItemTouchHelper;
 
     // TODO: Rename and change types of parameters
@@ -63,6 +65,7 @@ public class AccountsFragment extends BaseFragment implements ScrollHandler {
 
     private final static String TAG = "AccountsFragment";
     public final static String ITEM_ID_KEY = "AccountsFragment$idKey";
+
 
     /**
      * Use this factory method to create a new instance of
@@ -96,7 +99,8 @@ public class AccountsFragment extends BaseFragment implements ScrollHandler {
     @Override
     public void onFabClick(View view) {
         Intent intent = new Intent(getContext(), AddTransactionActivity.class);
-        intent.putExtra("KEY_ACCOUNT_ID", 0);
+        intent.putExtra(Constant.ARG_ACCOUNT_NUMBER_LONG, mSelectedAccountId);
+        intent.putExtra(Constant.ARG_TRANSACTION_NUMBER_LONG, Constant.INVALID_ID);
         startActivityForResult(intent, 0);
     }
 
@@ -129,7 +133,7 @@ public class AccountsFragment extends BaseFragment implements ScrollHandler {
             @Override
             public void onEditAccountClicked(int position, IAccount account) {
                 Intent intent = new Intent(getActivity().getApplicationContext(), AddAccountActivity.class);
-                intent.putExtra("AddAccountActivityKeyAccountId", account.getId());
+                intent.putExtra(Constant.ARG_ACCOUNT_NUMBER_LONG, account.getId());
                 startActivityForResult(intent, 210);
             }
 
@@ -152,13 +156,13 @@ public class AccountsFragment extends BaseFragment implements ScrollHandler {
             @Override
             public void onViewTransactionClicked(int position, IAccount account) {
                 Intent intent = new Intent(getActivity().getApplicationContext(), AccountTransactionActivity.class);
-                intent.putExtra("KEY_ACCOUNT_ID", account.getId());
+                intent.putExtra(Constant.ARG_ACCOUNT_NUMBER_LONG, account.getId());
                 startActivityForResult(intent, 220);
             }
 
             @Override
-            public void onViewTrendsClicked(int position, IAccount account) {
-
+            public void onAccountClicked(long accountId) {
+                mSelectedAccountId = (accountId != Constant.INVALID_ID) ? accountId : mDefaultAccountId;
             }
 
             @Override
@@ -167,7 +171,6 @@ public class AccountsFragment extends BaseFragment implements ScrollHandler {
             }
         });
     }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -187,6 +190,8 @@ public class AccountsFragment extends BaseFragment implements ScrollHandler {
         DataSourceAccount source = new DataSourceAccount(getActivity());
         source.getAccounts(itemList);
 
+        mDefaultAccountId = itemList.get(0).getId();
+        mSelectedAccountId = mDefaultAccountId;
         return itemList;
     }
 
@@ -231,7 +236,7 @@ public class AccountsFragment extends BaseFragment implements ScrollHandler {
 
     @Override
     public void setSmoothScrollStableId(long stableId) {
-        mScrollToAccountId = stableId;
+
     }
 
     @Override

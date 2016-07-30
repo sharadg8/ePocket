@@ -6,6 +6,7 @@ import android.database.Cursor;
 
 import com.sharad.epocket.R;
 import com.sharad.epocket.database.ContentConstant;
+import com.sharad.epocket.utils.Constant;
 import com.sharad.epocket.utils.Item;
 
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class ICategory extends Item{
     public static final int CATEGORY_TYPE_TRANSFER = 2;
 
     public ICategory(int imageIndex) {
-        this(0, imageIndex, 0, "", 0, 0);
+        this(Constant.INVALID_ID, imageIndex, 0, "", 0, 0);
     }
     public ICategory(long id, int imageIndex, int color, String title, int type, int usageCount) {
         super(id);
@@ -39,7 +40,7 @@ public class ICategory extends Item{
     }
 
     public ICategory(Cursor c) {
-        super(0);
+        super(Constant.INVALID_ID);
 
         long id 	   = c.getLong(c.getColumnIndex(ContentConstant.KEY_CATEGORY_ROWID));
         String title   = c.getString(c.getColumnIndex(ContentConstant.KEY_CATEGORY_TITLE));
@@ -56,6 +57,7 @@ public class ICategory extends Item{
         this.usageCount = usageCount;
     }
 
+    @Override
     public ContentValues getContentValues() {
         // Create row's data:
         ContentValues content = new ContentValues();

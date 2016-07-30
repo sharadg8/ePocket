@@ -23,7 +23,6 @@ public class ViewHolderExpandedAccount extends ViewHolderAccount {
     public final ImageButton edit;
     public final ImageButton delete;
     public final ImageButton info;
-    public final ImageButton trends;
 
     public ViewHolderExpandedAccount(View itemView, final AccountsRecyclerAdapter adapter) {
         super(itemView);
@@ -38,7 +37,6 @@ public class ViewHolderExpandedAccount extends ViewHolderAccount {
         edit = (ImageButton) itemView.findViewById(R.id.account_edit);
         delete = (ImageButton) itemView.findViewById(R.id.account_delete);
         info = (ImageButton) itemView.findViewById(R.id.account_info);
-        trends = (ImageButton) itemView.findViewById(R.id.account_trends);
 
         // Collapse handler
         itemView.setOnClickListener(new View.OnClickListener() {
@@ -80,15 +78,6 @@ public class ViewHolderExpandedAccount extends ViewHolderAccount {
             public void onClick(View v) {
                 if(adapter.itemClickListener != null) {
                     adapter.itemClickListener.onViewInfoClicked(getAdapterPosition(), mAccount);
-                }
-            }
-        });
-
-        trends.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(adapter.itemClickListener != null) {
-                    adapter.itemClickListener.onViewTrendsClicked(getAdapterPosition(), mAccount);
                 }
             }
         });

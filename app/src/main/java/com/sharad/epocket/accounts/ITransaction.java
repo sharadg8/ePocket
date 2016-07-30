@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 
 import com.sharad.epocket.database.ContentConstant;
+import com.sharad.epocket.utils.Constant;
 import com.sharad.epocket.utils.Item;
 
 /**
@@ -28,7 +29,7 @@ public class ITransaction extends Item {
     public static final int TRANSACTION_SUB_TYPE_ACCOUNT_CASH = 2;
 
     public ITransaction() {
-            this(0, 0, "", "", 0, 0, 0, 0, 0);
+            this(Constant.INVALID_ID, 0, "", "", 0, 0, Constant.INVALID_ID, Constant.INVALID_ID, 0);
     }
 
     public ITransaction(long id, long date, String comment, String repeat, int type, int subType,
@@ -46,7 +47,7 @@ public class ITransaction extends Item {
     }
 
     public ITransaction(Cursor c) {
-        super(0);
+        super(Constant.INVALID_ID);
 
         long id 	    = c.getLong(c.getColumnIndex(ContentConstant.KEY_TRANSACTION_ROWID));
         long date       = c.getLong(c.getColumnIndex(ContentConstant.KEY_TRANSACTION_DATE));
@@ -69,6 +70,7 @@ public class ITransaction extends Item {
         this.amount = amount;
     }
 
+    @Override
     public ContentValues getContentValues() {
         // Create row's data:
         ContentValues content = new ContentValues();

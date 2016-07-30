@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.text.format.DateUtils;
 
 import com.sharad.epocket.database.ContentConstant;
+import com.sharad.epocket.utils.Constant;
 import com.sharad.epocket.utils.Item;
 
 import java.text.SimpleDateFormat;
@@ -65,7 +66,7 @@ public class IAccount extends Item{
     }
 
     public IAccount(Cursor c) {
-        super(0);
+        super(Constant.INVALID_ID);
 
         long id 		    = c.getLong(c.getColumnIndex(ContentConstant.KEY_ACCOUNT_ROWID));
         String title        = c.getString(c.getColumnIndex(ContentConstant.KEY_ACCOUNT_TITLE));
@@ -99,6 +100,7 @@ public class IAccount extends Item{
         this.lastUpdate.setTimeInMillis(lastUpdateMSec);
     }
 
+    @Override
     public ContentValues getContentValues() {
         // Create row's data:
         ContentValues content = new ContentValues();

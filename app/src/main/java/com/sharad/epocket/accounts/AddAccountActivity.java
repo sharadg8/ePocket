@@ -18,6 +18,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.sharad.epocket.R;
+import com.sharad.epocket.utils.Constant;
 import com.sharad.epocket.utils.Utils;
 
 import java.util.Calendar;
@@ -25,7 +26,6 @@ import java.util.Currency;
 import java.util.Locale;
 
 public class AddAccountActivity extends AppCompatActivity {
-    public static final String KEY_ACCOUNT_ID = "AddAccountActivityKeyAccountId";
     public static final int ACCOUNT_ADD_NEW = -1;
     EditText editTextCurrency;
     private long accountId = ACCOUNT_ADD_NEW;
@@ -37,7 +37,7 @@ public class AddAccountActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_account);
 
         Bundle extras = getIntent().getExtras();
-        accountId = extras.getLong(KEY_ACCOUNT_ID, ACCOUNT_ADD_NEW);
+        accountId = extras.getLong(Constant.ARG_ACCOUNT_NUMBER_LONG, ACCOUNT_ADD_NEW);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
