@@ -6,6 +6,10 @@ package com.sharad.epocket.utils;
 
 public interface Constant {
     int INVALID_ID = -1;
-    String ARG_ACCOUNT_NUMBER_LONG = "account_number";
-    String ARG_TRANSACTION_NUMBER_LONG = "transaction_number";
+
+    String ARG_ACCOUNT_NUMBER_LONG      = "account_number";
+
+    String ARG_TRANSACTION_NUMBER_LONG  = "transaction_number";
+
+    String ARG_TAB_NUMBER_INT           = "tab_number";
 }

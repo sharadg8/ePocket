@@ -9,9 +9,11 @@ import android.view.ViewGroup;
 import com.sharad.epocket.R;
 import com.sharad.epocket.database.ContentConstant;
 import com.sharad.epocket.utils.Constant;
+import com.sharad.epocket.utils.Utils;
 import com.sharad.epocket.widget.recyclerview.StickyRecyclerView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * Created by Sharad on 28-Jul-16.
@@ -19,8 +21,6 @@ import java.util.ArrayList;
 
 public class AccountTransactionFragment extends Fragment {
     private StickyRecyclerView mRecyclerView;
-
-    private static final String ARG_SECTION_NUMBER = "section_number";
 
     private long accountId;
 
@@ -35,7 +35,7 @@ public class AccountTransactionFragment extends Fragment {
         AccountTransactionFragment fragment = new AccountTransactionFragment();
         Bundle args = new Bundle();
         args.putLong(Constant.ARG_ACCOUNT_NUMBER_LONG, accountNumber);
-        args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+        args.putInt(Constant.ARG_TAB_NUMBER_INT, sectionNumber);
         fragment.setArguments(args);
         return fragment;
     }
@@ -46,6 +46,7 @@ public class AccountTransactionFragment extends Fragment {
 
         Bundle args = getArguments();
         accountId = args.getLong(Constant.ARG_ACCOUNT_NUMBER_LONG, -1);
+        int tabNum = args.getInt(Constant.ARG_TAB_NUMBER_INT, 0);
 
         DataSourceAccount dataSourceAccount = new DataSourceAccount(getContext());
         IAccount account = dataSourceAccount.getAccount(accountId);
@@ -54,14 +55,20 @@ public class AccountTransactionFragment extends Fragment {
             ArrayList<ITransaction> itemList = new ArrayList<>();
 
             DataSourceTransaction dataSourceTransaction = new DataSourceTransaction(getContext());
-            String where = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + account.getId();
-            dataSourceTransaction.getTransactions(itemList, where);
 
-            /*itemList.add(new ITransaction(0, 0, "This is sample comment", "", ITransaction.TRANSACTION_TYPE_ACCOUNT_EXPENSE, ITransaction.TRANSACTION_SUB_TYPE_ACCOUNT_CARD, 0, 0, 1234.34f));
-            itemList.add(new ITransaction(0, 0, "This is comment", "", ITransaction.TRANSACTION_TYPE_ACCOUNT_INCOME, ITransaction.TRANSACTION_SUB_TYPE_ACCOUNT_CARD, 0, 0, 134.34f));
-            itemList.add(new ITransaction(0, 0, "This is sample", "", ITransaction.TRANSACTION_TYPE_ACCOUNT_EXPENSE, ITransaction.TRANSACTION_SUB_TYPE_ACCOUNT_CASH, 0, 0, 124.34f));
-            itemList.add(new ITransaction(0, 0, "", "", ITransaction.TRANSACTION_TYPE_ACCOUNT_TRANSFER, ITransaction.TRANSACTION_SUB_TYPE_ACCOUNT_CASH, 0, 0, 234.34f));
-            itemList.add(new ITransaction(0, 0, "This is sample comment", "", ITransaction.TRANSACTION_TYPE_ACCOUNT_EXPENSE, ITransaction.TRANSACTION_SUB_TYPE_ACCOUNT_CARD, 0, 0, 134.34f));*/
+            Calendar now = Calendar.getInstance();
+            now.add(Calendar.MONTH, -tabNum);
+            long start_ms = Utils.getMonthStart_ms(now.getTimeInMillis());
+            long end_ms = Utils.getMonthEnd_ms(now.getTimeInMillis());
+            if(tabNum == 0) {
+                end_ms = now.getTimeInMillis();
+            }
+
+            String where =      ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + account.getId()
+                    + " AND " + ContentConstant.KEY_TRANSACTION_DATE    + ">=" + start_ms
+                    + " AND " + ContentConstant.KEY_TRANSACTION_DATE    + "<=" + end_ms;
+
+            dataSourceTransaction.getTransactions(itemList, where);
             final TransactionRecyclerAdapter adapter = new TransactionRecyclerAdapter(this.getActivity(), itemList);
             mRecyclerView = (StickyRecyclerView) view.findViewById(R.id.recyclerView);
             mRecyclerView.setAdapter(adapter);

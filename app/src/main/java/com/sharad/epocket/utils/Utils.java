@@ -9,6 +9,7 @@ import android.view.MenuItem;
 
 import java.math.RoundingMode;
 import java.text.NumberFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -61,5 +62,25 @@ public class Utils {
 
             item.setIcon(wrapDrawable);
         }
+    }
+
+    public static long getMonthStart_ms(long time_ms){
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(time_ms);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        return cal.getTimeInMillis();
+    }
+
+    public static long getMonthEnd_ms(long time_ms){
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(time_ms);
+        cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.SECOND, 59);
+        return cal.getTimeInMillis();
     }
 }

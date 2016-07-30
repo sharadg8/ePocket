@@ -7,6 +7,8 @@ import com.sharad.epocket.database.ContentConstant;
 import com.sharad.epocket.utils.Constant;
 import com.sharad.epocket.utils.Item;
 
+import java.util.Calendar;
+
 /**
  * Created by Sharad on 23-Jul-16.
  */
@@ -29,7 +31,9 @@ public class ITransaction extends Item {
     public static final int TRANSACTION_SUB_TYPE_ACCOUNT_CASH = 2;
 
     public ITransaction() {
-            this(Constant.INVALID_ID, 0, "", "", 0, 0, Constant.INVALID_ID, Constant.INVALID_ID, 0);
+        this(Constant.INVALID_ID, 0, "", "", 0, 0, Constant.INVALID_ID, Constant.INVALID_ID, 0);
+        Calendar cal = Calendar.getInstance();
+        this.date = cal.getTimeInMillis();
     }
 
     public ITransaction(long id, long date, String comment, String repeat, int type, int subType,
