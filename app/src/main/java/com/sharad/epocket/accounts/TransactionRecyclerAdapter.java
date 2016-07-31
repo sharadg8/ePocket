@@ -289,24 +289,40 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<RecyclerVie
             ImageView categoryIcon = (ImageView) itemView.findViewById(R.id.category_icon);
             View categoryColor = itemView.findViewById(R.id.category_color);
 
-            category.setText(iCategory.getTitle());
-            categoryIcon.setImageResource(iCategory.getImageResource());
-            categoryColor.setBackgroundColor(iCategory.getColor());
-
             amount.setText(Utils.formatCurrencyDec(mIsoCurrency, iTransaction.getAmount()));
             String type = "";
             switch (iTransaction.getType()) {
                 case ITransaction.TRANSACTION_TYPE_ACCOUNT_EXPENSE:
+                    category.setText(iCategory.getTitle());
+                    categoryIcon.setImageResource(iCategory.getImageResource());
+                    categoryColor.setBackgroundColor(iCategory.getColor());
                     amount.setTextColor(ContextCompat.getColor(mContext, R.color.transaction_expense));
                     type = "Expense";
                     break;
                 case ITransaction.TRANSACTION_TYPE_ACCOUNT_INCOME:
+                    category.setText(iCategory.getTitle());
+                    categoryIcon.setImageResource(iCategory.getImageResource());
+                    categoryColor.setBackgroundColor(iCategory.getColor());
                     amount.setTextColor(ContextCompat.getColor(mContext, R.color.transaction_income));
                     type = "Income";
                     break;
                 case ITransaction.TRANSACTION_TYPE_ACCOUNT_TRANSFER:
                     amount.setTextColor(ContextCompat.getColor(mContext, R.color.transaction_transfer));
                     type = "Transfer";
+                    break;
+                case ITransaction.TRANSACTION_TYPE_ACCOUNT_WITHDRAW:
+                    category.setText("Withdraw");
+                    categoryIcon.setImageResource(R.drawable.ic_local_atm_black_24px);
+                    categoryColor.setBackgroundColor(ContextCompat.getColor(mContext, R.color.primary));
+                    amount.setTextColor(ContextCompat.getColor(mContext, R.color.transaction_transfer));
+                    type = "";
+                    break;
+                case ITransaction.TRANSACTION_TYPE_ACCOUNT_DEPOSIT:
+                    category.setText("Deposit");
+                    categoryIcon.setImageResource(R.drawable.ic_local_atm_black_24px);
+                    categoryColor.setBackgroundColor(ContextCompat.getColor(mContext, R.color.primary));
+                    amount.setTextColor(ContextCompat.getColor(mContext, R.color.transaction_transfer));
+                    type = "";
                     break;
             }
 

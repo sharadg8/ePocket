@@ -12,6 +12,8 @@ public interface Constant {
     String ARG_TAB_NUMBER_INT           = "tab_number";
 
     String DLG_CURRENCY_PICKER          = "currency_picker";
+    String DLG_ACCOUNT_WITHDRAW         = "account_withdraw";
+    String DLG_CATEGORY_EDITOR          = "category_editor";
 
     int REQ_ADD_ACCOUNT                 = 1;
     int REQ_EDIT_ACCOUNT                = 2;

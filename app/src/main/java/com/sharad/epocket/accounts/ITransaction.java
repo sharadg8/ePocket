@@ -27,9 +27,12 @@ public class ITransaction extends Item {
     public static final int TRANSACTION_TYPE_ACCOUNT_EXPENSE  = 0;
     public static final int TRANSACTION_TYPE_ACCOUNT_INCOME   = 1;
     public static final int TRANSACTION_TYPE_ACCOUNT_TRANSFER = 2;
+    public static final int TRANSACTION_TYPE_ACCOUNT_WITHDRAW = 3;
+    public static final int TRANSACTION_TYPE_ACCOUNT_DEPOSIT  = 4;
 
     public static final int TRANSACTION_SUB_TYPE_ACCOUNT_CARD = 1;
     public static final int TRANSACTION_SUB_TYPE_ACCOUNT_CASH = 2;
+    public static final int TRANSACTION_SUB_TYPE_ACCOUNT_BOTH = 3;
 
     public ITransaction() {
         this(Constant.INVALID_ID, 0, "", "", 0, 0, Constant.INVALID_ID, Constant.INVALID_ID, 0);

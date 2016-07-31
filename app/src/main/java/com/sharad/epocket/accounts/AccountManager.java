@@ -81,12 +81,19 @@ public class AccountManager {
     public float getAccountBalanceCash(Context context, IAccount iAccount) {
         float balCash = 0;
         DataSourceTransaction dataSourceTransaction = new DataSourceTransaction(context);
-        String where = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + iAccount.getId();
+        String where = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + iAccount.getId()
+                + " AND ( " + ContentConstant.KEY_TRANSACTION_SUB_TYPE + "=" + ITransaction.TRANSACTION_SUB_TYPE_ACCOUNT_CASH
+                + " OR " + ContentConstant.KEY_TRANSACTION_SUB_TYPE + "=" + ITransaction.TRANSACTION_SUB_TYPE_ACCOUNT_BOTH + " )";
         ArrayList<ITransaction> iTransactionArrayList = new ArrayList<>();
         dataSourceTransaction.getTransactions(iTransactionArrayList, where);
         for (ITransaction iTransaction : iTransactionArrayList) {
-            switch (iTransaction.getSubType()) {
-                case ITransaction.TRANSACTION_SUB_TYPE_ACCOUNT_CASH:
+            switch (iTransaction.getType()) {
+                case ITransaction.TRANSACTION_TYPE_ACCOUNT_EXPENSE:
+                case ITransaction.TRANSACTION_TYPE_ACCOUNT_DEPOSIT:
+                    balCash -= iTransaction.getAmount();
+                    break;
+                case ITransaction.TRANSACTION_TYPE_ACCOUNT_INCOME:
+                case ITransaction.TRANSACTION_TYPE_ACCOUNT_WITHDRAW:
                     balCash += iTransaction.getAmount();
                     break;
             }
@@ -97,12 +104,19 @@ public class AccountManager {
     public float getAccountBalanceCard(Context context, IAccount iAccount) {
         float balCard = 0;
         DataSourceTransaction dataSourceTransaction = new DataSourceTransaction(context);
-        String where = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + iAccount.getId();
+        String where = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + iAccount.getId()
+                + " AND ( " + ContentConstant.KEY_TRANSACTION_SUB_TYPE + "=" + ITransaction.TRANSACTION_SUB_TYPE_ACCOUNT_CARD
+                + " OR " + ContentConstant.KEY_TRANSACTION_SUB_TYPE + "=" + ITransaction.TRANSACTION_SUB_TYPE_ACCOUNT_BOTH + " )";
         ArrayList<ITransaction> iTransactionArrayList = new ArrayList<>();
         dataSourceTransaction.getTransactions(iTransactionArrayList, where);
         for (ITransaction iTransaction : iTransactionArrayList) {
-            switch (iTransaction.getSubType()) {
-                case ITransaction.TRANSACTION_SUB_TYPE_ACCOUNT_CARD:
+            switch (iTransaction.getType()) {
+                case ITransaction.TRANSACTION_TYPE_ACCOUNT_EXPENSE:
+                case ITransaction.TRANSACTION_TYPE_ACCOUNT_WITHDRAW:
+                    balCard -= iTransaction.getAmount();
+                    break;
+                case ITransaction.TRANSACTION_TYPE_ACCOUNT_INCOME:
+                case ITransaction.TRANSACTION_TYPE_ACCOUNT_DEPOSIT:
                     balCard += iTransaction.getAmount();
                     break;
             }

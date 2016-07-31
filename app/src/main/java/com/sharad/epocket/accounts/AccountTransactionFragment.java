@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,7 +52,7 @@ public class AccountTransactionFragment extends Fragment implements ScrollHandle
         final View view = inflater.inflate(R.layout.fragment_account_transaction, container, false);
 
         Bundle args = getArguments();
-        accountId = args.getLong(Constant.ARG_ACCOUNT_NUMBER_LONG, -1);
+        accountId = args.getLong(Constant.ARG_ACCOUNT_NUMBER_LONG, Constant.INVALID_ID);
         int tabNum = args.getInt(Constant.ARG_TAB_NUMBER_INT, 0);
 
         DataSourceAccount dataSourceAccount = new DataSourceAccount(getContext());
@@ -85,10 +86,15 @@ public class AccountTransactionFragment extends Fragment implements ScrollHandle
             recyclerAdapter.setOnItemClickListener(new TransactionRecyclerAdapter.OnItemClickListener() {
                 @Override
                 public void onEditClicked(int position, ITransaction iTransaction) {
-                    Intent intent = new Intent(getContext(), AddTransactionActivity.class);
-                    intent.putExtra(Constant.ARG_ACCOUNT_NUMBER_LONG, iTransaction.getAccount());
-                    intent.putExtra(Constant.ARG_TRANSACTION_NUMBER_LONG, iTransaction.getId());
-                    startActivityForResult(intent, Constant.REQ_EDIT_TRANSACTION);
+                    if((iTransaction.getType() == ITransaction.TRANSACTION_TYPE_ACCOUNT_WITHDRAW)
+                    || (iTransaction.getType() == ITransaction.TRANSACTION_TYPE_ACCOUNT_DEPOSIT)) {
+                        showWithdrawDialog(iTransaction);
+                    } else {
+                        Intent intent = new Intent(getContext(), AddTransactionActivity.class);
+                        intent.putExtra(Constant.ARG_ACCOUNT_NUMBER_LONG, iTransaction.getAccount());
+                        intent.putExtra(Constant.ARG_TRANSACTION_NUMBER_LONG, iTransaction.getId());
+                        startActivityForResult(intent, Constant.REQ_EDIT_TRANSACTION);
+                    }
                 }
 
                 @Override
@@ -109,6 +115,33 @@ public class AccountTransactionFragment extends Fragment implements ScrollHandle
         }
 
         return view;
+    }
+
+    private void showWithdrawDialog(ITransaction iTransaction) {
+        // DialogFragment.show() will take care of adding the fragment
+        // in a transaction.  We also want to remove any currently showing
+        // dialog, so make our own transaction and take care of that here.
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment prev = getFragmentManager().findFragmentByTag(Constant.DLG_ACCOUNT_WITHDRAW);
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        // Create and show the dialog.
+        WithdrawDialogFragment newFragment = WithdrawDialogFragment.newInstance(iTransaction.getAccount(), iTransaction.getId());
+        newFragment.setOnWithdrawDialogListener(new WithdrawDialogFragment.OnWithdrawDialogListener() {
+            @Override
+            public void onTransactionUpdated(ITransaction iTransaction) {
+                //onActivityResult(Constant.REQ_ADD_TRANSACTION, Activity.RESULT_OK, null);
+            }
+
+            @Override
+            public void onTransactionDeleted(long id) {
+                //onActivityResult(Constant.REQ_ADD_TRANSACTION, Activity.RESULT_OK, null);
+            }
+        });
+        newFragment.show(ft, Constant.DLG_ACCOUNT_WITHDRAW);
     }
 
     @Override

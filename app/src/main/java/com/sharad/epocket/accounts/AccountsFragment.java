@@ -23,6 +23,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -171,9 +173,36 @@ public class AccountsFragment extends BaseFragment implements ScrollHandler {
 
             @Override
             public void onWithdrawClicked(int position, IAccount account) {
-
+                showWithdrawDialog(account);
             }
         });
+    }
+
+    private void showWithdrawDialog(IAccount account) {
+        // DialogFragment.show() will take care of adding the fragment
+        // in a transaction.  We also want to remove any currently showing
+        // dialog, so make our own transaction and take care of that here.
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment prev = getFragmentManager().findFragmentByTag(Constant.DLG_ACCOUNT_WITHDRAW);
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        // Create and show the dialog.
+        WithdrawDialogFragment newFragment = WithdrawDialogFragment.newInstance(account.getId(), Constant.INVALID_ID);
+        newFragment.setOnWithdrawDialogListener(new WithdrawDialogFragment.OnWithdrawDialogListener() {
+            @Override
+            public void onTransactionUpdated(ITransaction iTransaction) {
+                onActivityResult(Constant.REQ_ADD_TRANSACTION, Activity.RESULT_OK, null);
+            }
+
+            @Override
+            public void onTransactionDeleted(long id) {
+                onActivityResult(Constant.REQ_ADD_TRANSACTION, Activity.RESULT_OK, null);
+            }
+        });
+        newFragment.show(ft, Constant.DLG_ACCOUNT_WITHDRAW);
     }
 
     @Override
