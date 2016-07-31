@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.sharad.epocket.R;
+import com.sharad.epocket.utils.Constant;
 import com.sharad.epocket.widget.AutofitRecyclerView;
 
 import java.util.ArrayList;
@@ -24,10 +25,9 @@ import java.util.Random;
 public class AddCategoryDialogFragment extends DialogFragment {
     private static final String ARG_CATEGORY_ID   = "category_id";
     private static final String ARG_CATEGORY_TYPE = "category_type";
-    public static final long    INVALID_ID = -1;
     private DataSourceCategory db;
     private ICategory category;
-    private long id = INVALID_ID;
+    private long id = Constant.INVALID_ID;
 
     private OnCategoryDialogListener onCategoryDialogListener;
 
@@ -57,7 +57,7 @@ public class AddCategoryDialogFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        id = INVALID_ID;
+        id = Constant.INVALID_ID;
         int type = ICategory.CATEGORY_TYPE_EXPENSE;
         if (getArguments() != null) {
             id = getArguments().getLong(ARG_CATEGORY_ID);
@@ -65,7 +65,7 @@ public class AddCategoryDialogFragment extends DialogFragment {
         }
 
         db = new DataSourceCategory(getContext());
-        if(id != INVALID_ID) {
+        if(id != Constant.INVALID_ID) {
             category = db.getCategory(id);
         } else {
             int colorList[] = getContext().getResources().getIntArray(R.array.light_palette);
@@ -116,7 +116,7 @@ public class AddCategoryDialogFragment extends DialogFragment {
         });
 
         eTitle = (EditText) rootView.findViewById(R.id.title);
-        if(id != INVALID_ID) {
+        if(id != Constant.INVALID_ID) {
             bCategory.setImageResource(category.getImageResource());
             eTitle.setText(category.getTitle());
             bDelete.setVisibility(View.VISIBLE);
@@ -166,10 +166,10 @@ public class AddCategoryDialogFragment extends DialogFragment {
     private void onSave() {
         if(eTitle.getText().length() > 0) {
             category.setTitle(eTitle.getText().toString());
-            if(id != INVALID_ID) {
-                db.updateCategory(id, category);
-            } else {
+            if(id == Constant.INVALID_ID) {
                 category.setId(db.insertCategory(category));
+            } else {
+                db.updateCategory(category);
             }
             if(onCategoryDialogListener != null) {
                 onCategoryDialogListener.onCategoryDialogFinish(category);

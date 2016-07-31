@@ -26,9 +26,8 @@ import java.util.Currency;
 import java.util.Locale;
 
 public class AddAccountActivity extends AppCompatActivity {
-    public static final int ACCOUNT_ADD_NEW = -1;
     EditText editTextCurrency;
-    private long accountId = ACCOUNT_ADD_NEW;
+    private long accountId = Constant.INVALID_ID;
     private Currency selectedCurrency = Currency.getInstance(Locale.getDefault());
 
     @Override
@@ -37,7 +36,7 @@ public class AddAccountActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_account);
 
         Bundle extras = getIntent().getExtras();
-        accountId = extras.getLong(Constant.ARG_ACCOUNT_NUMBER_LONG, ACCOUNT_ADD_NEW);
+        accountId = extras.getLong(Constant.ARG_ACCOUNT_NUMBER_LONG, Constant.INVALID_ID);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -139,7 +138,7 @@ public class AddAccountActivity extends AppCompatActivity {
         EditText accountPassword = (EditText)findViewById(R.id.account_password);
         EditText accountNumber = (EditText)findViewById(R.id.account_number);
         EditText accountContact = (EditText)findViewById(R.id.account_contact);
-        if(accountId != ACCOUNT_ADD_NEW) {
+        if(accountId != Constant.INVALID_ID) {
             DataSourceAccount source = new DataSourceAccount(this);
             IAccount account = source.getAccount(accountId);
             if(account != null) {
@@ -271,11 +270,11 @@ public class AddAccountActivity extends AppCompatActivity {
                     cardBal, cashBal, 0, 0, accountType, Calendar.getInstance().getTimeInMillis());
 
             DataSourceAccount source = new DataSourceAccount(this);
-            if(accountId == ACCOUNT_ADD_NEW) {
+            if(accountId == Constant.INVALID_ID) {
                 accountId = source.insertAccount(account);
                 Toast.makeText(getApplicationContext(), "New Account Added", Toast.LENGTH_SHORT).show();
             } else {
-                source.updateAccount(accountId, account);
+                source.updateAccount(account);
                 Toast.makeText(getApplicationContext(), "Account Updated", Toast.LENGTH_SHORT).show();
             }
             Bundle activityResult = new Bundle();

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.sharad.epocket.R;
 import com.sharad.epocket.database.ContentConstant;
+import com.sharad.epocket.utils.Constant;
 import com.sharad.epocket.widget.AutofitRecyclerView;
 
 import java.util.ArrayList;
@@ -112,7 +113,7 @@ public class AddTransactionFragment extends Fragment {
             @Override
             public void onItemClick(View view, int position) {
                 if(position == (itemList.size() - 1)) {
-                    showCategoryDialog(AddCategoryDialogFragment.INVALID_ID);
+                    showCategoryDialog(Constant.INVALID_ID);
                 } else {
                     if (itemSelectedListener != null) {
                         itemSelectedListener.onItemSelected(transactionType, itemList.get(position));

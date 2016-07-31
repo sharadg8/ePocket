@@ -352,7 +352,11 @@ public class AddTransactionActivity extends AppCompatActivity implements
                 return;
             }
             DataSourceTransaction dataSourceTransaction = new DataSourceTransaction(this);
-            dataSourceTransaction.insertTransaction(iTransaction);
+            if(iTransaction.getId() == Constant.INVALID_ID) {
+                iTransaction.setId(dataSourceTransaction.insertTransaction(iTransaction));
+            } else {
+                dataSourceTransaction.updateTransaction(iTransaction);
+            }
             finish();
         } else {
             /* Nothing to do here, No money to deal with */

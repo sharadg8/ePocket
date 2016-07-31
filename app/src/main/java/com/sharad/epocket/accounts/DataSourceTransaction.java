@@ -30,9 +30,9 @@ public class DataSourceTransaction extends DatabaseAdapter {
         return id;
     }
 
-    public boolean updateTransaction(long rowId, ITransaction transaction) {
+    public boolean updateTransaction(ITransaction transaction) {
         SQLiteDatabase db = openDb();
-        String where = ContentConstant.KEY_TRANSACTION_ROWID + "=" + rowId;
+        String where = ContentConstant.KEY_TRANSACTION_ROWID + "=" + transaction.getId();
 
         // Create row's data:
         ContentValues content = transaction.getContentValues();

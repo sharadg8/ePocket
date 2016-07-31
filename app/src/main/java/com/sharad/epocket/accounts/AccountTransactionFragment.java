@@ -1,7 +1,10 @@
 package com.sharad.epocket.accounts;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +12,7 @@ import android.view.ViewGroup;
 import com.sharad.epocket.R;
 import com.sharad.epocket.database.ContentConstant;
 import com.sharad.epocket.utils.Constant;
+import com.sharad.epocket.utils.ScrollHandler;
 import com.sharad.epocket.utils.Utils;
 import com.sharad.epocket.widget.recyclerview.StickyRecyclerView;
 
@@ -19,7 +23,7 @@ import java.util.Calendar;
  * Created by Sharad on 28-Jul-16.
  */
 
-public class AccountTransactionFragment extends Fragment {
+public class AccountTransactionFragment extends Fragment implements ScrollHandler {
     private StickyRecyclerView mRecyclerView;
 
     private long accountId;
@@ -69,14 +73,49 @@ public class AccountTransactionFragment extends Fragment {
                     + " AND " + ContentConstant.KEY_TRANSACTION_DATE    + "<=" + end_ms;
 
             dataSourceTransaction.getTransactions(itemList, where);
-            final TransactionRecyclerAdapter adapter = new TransactionRecyclerAdapter(this.getActivity());
-            adapter.setItemList(itemList);
-            adapter.setIsoCurrency(account.getIsoCurrency());
+            final TransactionRecyclerAdapter recyclerAdapter = new TransactionRecyclerAdapter(this.getActivity(), this);
+            recyclerAdapter.setItemList(itemList);
+            recyclerAdapter.setIsoCurrency(account.getIsoCurrency());
             mRecyclerView = (StickyRecyclerView) view.findViewById(R.id.recyclerView);
-            mRecyclerView.setAdapter(adapter);
-            mRecyclerView.setIndexer(adapter);
+            mRecyclerView.setAdapter(recyclerAdapter);
+            mRecyclerView.setIndexer(recyclerAdapter);
+
+            recyclerAdapter.setOnItemClickListener(new TransactionRecyclerAdapter.OnItemClickListener() {
+                @Override
+                public void onEditClicked(int position, ITransaction iTransaction) {
+                    Intent intent = new Intent(getActivity().getApplicationContext(), AddTransactionActivity.class);
+                    intent.putExtra(Constant.ARG_ACCOUNT_NUMBER_LONG, iTransaction.getAccount());
+                    intent.putExtra(Constant.ARG_TRANSACTION_NUMBER_LONG, iTransaction.getId());
+                    startActivityForResult(intent, 230);
+                }
+
+                @Override
+                public void onDeleteClicked(final int position, final ITransaction iTransaction) {
+                    new AlertDialog.Builder(getContext())
+                            .setMessage("Delete this transaction?")
+                            .setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    DataSourceTransaction source = new DataSourceTransaction(getContext());
+                                    source.deleteTransaction(iTransaction.getId());
+                                    recyclerAdapter.removeAt(position);
+                                }
+                            })
+                            .setNegativeButton(android.R.string.cancel, null)
+                            .show();
+                }
+            });
         }
 
         return view;
+    }
+
+    @Override
+    public void setSmoothScrollStableId(long stableId) {
+
+    }
+
+    @Override
+    public void smoothScrollTo(int position) {
+        mRecyclerView.getLayoutManager().scrollToPosition(position);
     }
 }

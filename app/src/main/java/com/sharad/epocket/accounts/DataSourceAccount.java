@@ -30,12 +30,12 @@ public class DataSourceAccount extends DatabaseAdapter {
         return id;
     }
 
-    public boolean updateAccount(long rowId, IAccount account) {
+    public boolean updateAccount(IAccount iAccount) {
         SQLiteDatabase db = openDb();
-        String where = ContentConstant.KEY_ACCOUNT_ROWID + "=" + rowId;
+        String where = ContentConstant.KEY_ACCOUNT_ROWID + "=" + iAccount.getId();
 
         // Create row's data:
-        ContentValues content = account.getContentValues();
+        ContentValues content = iAccount.getContentValues();
 
         // Update it into the database.
         boolean status = db.update(DATABASE_TABLE_ACCOUNT, content, where, null) != 0;

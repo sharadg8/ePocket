@@ -166,6 +166,10 @@ public class StickyRecyclerView extends FrameLayout {
         mContext = context;
      }
 
+    public LinearLayoutManager getLayoutManager() {
+        return mLayoutManager;
+    }
+
     protected void updateStickyHeader(int firstVisibleItem) {
         // Try to make sure we have an adapter to work with (may not succeed).
         if (mAdapter == null && mRecyclerView != null) {

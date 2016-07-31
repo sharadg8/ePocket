@@ -182,11 +182,13 @@ public class AccountsFragment extends BaseFragment implements ScrollHandler {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if( requestCode == 210 ) {
-            long accountId = data.getExtras().getLong("AddAccountActivityKeyAccountId", -1);
-            if(accountId != -1) {
-                DataSourceAccount source = new DataSourceAccount(getActivity());
-                source.getAccounts(recyclerAdapter.getItemList());
-                recyclerAdapter.notifyDataSetChanged();
+            if(data.getExtras() != null) {
+                long accountId = data.getExtras().getLong("AddAccountActivityKeyAccountId", -1);
+                if (accountId != Constant.INVALID_ID) {
+                    DataSourceAccount source = new DataSourceAccount(getActivity());
+                    source.getAccounts(recyclerAdapter.getItemList());
+                    recyclerAdapter.notifyDataSetChanged();
+                }
             }
         }
     }

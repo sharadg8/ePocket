@@ -30,9 +30,9 @@ public class DataSourceCategory extends DatabaseAdapter {
         return id;
     }
 
-    public boolean updateCategory(long rowId, ICategory category) {
+    public boolean updateCategory(ICategory category) {
         SQLiteDatabase db = openDb();
-        String where = ContentConstant.KEY_CATEGORY_ROWID + "=" + rowId;
+        String where = ContentConstant.KEY_CATEGORY_ROWID + "=" + category.getId();
 
         // Create row's data:
         ContentValues content = category.getContentValues();
