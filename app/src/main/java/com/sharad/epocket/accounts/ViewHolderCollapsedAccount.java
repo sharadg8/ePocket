@@ -32,6 +32,6 @@ public class ViewHolderCollapsedAccount extends ViewHolderAccount {
     public void bindAccount(Context context, IAccount account) {
         setData(account);
         title.setText(mAccount.getTitle());
-        balance.setText(Utils.formatCurrency(mAccount.getIsoCurrency(), mAccount.getBalance()));
+        balance.setText(Utils.formatCurrencyDec(mAccount.getIsoCurrency(), mAccount.getBalance()));
     }
 }

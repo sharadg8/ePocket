@@ -171,6 +171,11 @@ public class AccountsFragment extends BaseFragment implements ScrollHandler {
             public void onViewInfoClicked(int position, IAccount account) {
 
             }
+
+            @Override
+            public void onWithdrawClicked(int position, IAccount account) {
+
+            }
         });
     }
 

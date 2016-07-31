@@ -38,8 +38,13 @@ public class AccountTransactionActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         accountId = extras.getLong(Constant.ARG_ACCOUNT_NUMBER_LONG, Constant.INVALID_ID);
 
+        DataSourceAccount dataSourceAccount = new DataSourceAccount(this);
+        IAccount iAccount = dataSourceAccount.getAccount(accountId);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Title");
+        if(iAccount != null) {
+            toolbar.setTitle(iAccount.getTitle());
+        }
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // Create the adapter that will return a fragment for each of the three

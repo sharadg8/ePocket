@@ -98,6 +98,7 @@ public class AccountsRecyclerAdapter extends RecyclerView.Adapter<ViewHolderAcco
         void onDeleteAccountClicked(int position, IAccount account);
         void onViewTransactionClicked(int position, IAccount account);
         void onViewInfoClicked(int position, IAccount account);
+        void onWithdrawClicked(int position, IAccount account);
         void onAccountClicked(long accountId);
     }
 

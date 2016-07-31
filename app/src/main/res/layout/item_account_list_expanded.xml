@@ -148,6 +148,14 @@
                 android:tint="@color/icons_dark"
                 android:background="?attr/selectableItemBackgroundBorderless"/>
             <ImageButton
+                android:id="@+id/account_withdraw"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:src="@drawable/ic_local_atm_black_24px"
+                android:tint="@color/icons_dark"
+                android:background="?attr/selectableItemBackgroundBorderless"/>
+            <ImageButton
                 android:id="@+id/account_edit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

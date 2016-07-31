@@ -5,9 +5,13 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.RelativeSizeSpan;
 import android.view.MenuItem;
 
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -27,11 +31,22 @@ public class Utils {
         return nf.format(value);
     }
 
-    public static String formatCurrencyDec(String isoCurrency, float value) {
+    public static SpannableString formatCurrencyDec(String isoCurrency, float value) {
         NumberFormat nf = NumberFormat.getCurrencyInstance(getLocale(isoCurrency));
         nf.setMinimumFractionDigits(2);
         nf.setMaximumFractionDigits(2);
-        return nf.format(value);
+
+        float decValue = value - (float)Math.floor(value);
+        DecimalFormat df = new DecimalFormat(".##");
+        df.setMaximumIntegerDigits(0);
+        df.setMinimumFractionDigits(2);
+        df.setMaximumFractionDigits(2);
+        String decString = df.format(decValue);
+
+        SpannableString span = new SpannableString(nf.format(value));
+        int decPos = span.toString().lastIndexOf(decString);
+        span.setSpan(new RelativeSizeSpan(0.6f), decPos, decPos+3, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return span;
     }
 
     private static Locale getLocale(String isoCurrency) {

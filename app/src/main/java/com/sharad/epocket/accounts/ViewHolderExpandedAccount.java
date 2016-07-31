@@ -23,6 +23,7 @@ public class ViewHolderExpandedAccount extends ViewHolderAccount {
     public final ImageButton edit;
     public final ImageButton delete;
     public final ImageButton info;
+    public final ImageButton withdraw;
 
     public ViewHolderExpandedAccount(View itemView, final AccountsRecyclerAdapter adapter) {
         super(itemView);
@@ -37,6 +38,7 @@ public class ViewHolderExpandedAccount extends ViewHolderAccount {
         edit = (ImageButton) itemView.findViewById(R.id.account_edit);
         delete = (ImageButton) itemView.findViewById(R.id.account_delete);
         info = (ImageButton) itemView.findViewById(R.id.account_info);
+        withdraw = (ImageButton) itemView.findViewById(R.id.account_withdraw);
 
         // Collapse handler
         itemView.setOnClickListener(new View.OnClickListener() {
@@ -81,6 +83,15 @@ public class ViewHolderExpandedAccount extends ViewHolderAccount {
                 }
             }
         });
+
+        withdraw.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(adapter.itemClickListener != null) {
+                    adapter.itemClickListener.onWithdrawClicked(getAdapterPosition(), mAccount);
+                }
+            }
+        });
     }
 
     @Override
@@ -89,13 +100,14 @@ public class ViewHolderExpandedAccount extends ViewHolderAccount {
         title.setText(mAccount.getTitle());
         balance.setText(Utils.formatCurrencyDec(mAccount.getIsoCurrency(), mAccount.getBalance()));
 
-        cardBalance.setText(Utils.formatCurrency(mAccount.getIsoCurrency(), mAccount.getBalanceCard()));
-        cashBalance.setText(Utils.formatCurrency(mAccount.getIsoCurrency(), mAccount.getBalanceCash()));
-        inflow.setText(Utils.formatCurrency(mAccount.getIsoCurrency(), mAccount.getInflow()));
-        outflow.setText(Utils.formatCurrency(mAccount.getIsoCurrency(), mAccount.getOutflow()));
+        cardBalance.setText(Utils.formatCurrencyDec(mAccount.getIsoCurrency(), mAccount.getBalanceCard()));
+        cashBalance.setText(Utils.formatCurrencyDec(mAccount.getIsoCurrency(), mAccount.getBalanceCash()));
+        inflow.setText(Utils.formatCurrencyDec(mAccount.getIsoCurrency(), mAccount.getInflow()));
+        outflow.setText(Utils.formatCurrencyDec(mAccount.getIsoCurrency(), mAccount.getOutflow()));
         lastUpdate.setText(mAccount.getLastUpdateString());
 
         cardBalance.setVisibility(mAccount.hasCardAccount() ? View.VISIBLE : View.GONE);
         cashBalance.setVisibility(mAccount.hasCashAccount() ? View.VISIBLE : View.GONE);
+        withdraw.setVisibility((mAccount.getAccountType() == IAccount.ACCOUNT_TYPE_CASH_CARD) ? View.VISIBLE : View.GONE);
     }
 }
