@@ -116,6 +116,7 @@ public class IAccount extends Item{
         content.put(ContentConstant.KEY_ACCOUNT_LOGIN, this.getLoginId());
         content.put(ContentConstant.KEY_ACCOUNT_PASSWORD, this.getPassword());
         content.put(ContentConstant.KEY_ACCOUNT_CONTACT, this.getContact());
+        content.put(ContentConstant.KEY_ACCOUNT_LOGO, this.getImageIndex());
         content.put(ContentConstant.KEY_ACCOUNT_TYPE, this.getAccountType());
         content.put(ContentConstant.KEY_ACCOUNT_LIST_INDEX, this.getListIndex());
         content.put(ContentConstant.KEY_ACCOUNT_BAL_CARD, this.getBalanceCard());
