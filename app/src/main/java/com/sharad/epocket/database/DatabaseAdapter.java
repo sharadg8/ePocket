@@ -14,7 +14,7 @@ public class DatabaseAdapter {
 
     public static final String DATABASE_NAME = "finance";
 
-    public static final int DATABASE_VERSION = 4;
+    public static final int DATABASE_VERSION = 1;
 
     private final Context mContext;
 
@@ -67,6 +67,7 @@ public class DatabaseAdapter {
             Log.w(TAG, "Upgrading application's database from version " + oldVersion
                     + " to " + newVersion + ", which will destroy all old data!");
 
+            /*
             switch (oldVersion) {
                 case 1:
                 case 2:
@@ -74,6 +75,7 @@ public class DatabaseAdapter {
                 case 3:
                     _db.execSQL(DATABASE_CREATE_SQL_TRANSACTION);
             }
+            */
         }
     }
 
@@ -101,20 +103,20 @@ public class DatabaseAdapter {
 
     protected static final String DATABASE_CREATE_SQL_ACCOUNT = "create table " + DATABASE_TABLE_ACCOUNT
             + " ("
-            + ContentConstant.KEY_ACCOUNT_ROWID       + " integer primary key autoincrement, "
-            + ContentConstant.KEY_ACCOUNT_TITLE       + " text not null, "
-            + ContentConstant.KEY_ACCOUNT_CURRENCY    + " text not null, "
-            + ContentConstant.KEY_ACCOUNT_NOTE        + " text not null, "
-            + ContentConstant.KEY_ACCOUNT_NUMBER      + " text not null, "
-            + ContentConstant.KEY_ACCOUNT_LOGIN       + " text not null, "
-            + ContentConstant.KEY_ACCOUNT_PASSWORD    + " text not null, "
-            + ContentConstant.KEY_ACCOUNT_CONTACT     + " text not null, "
-            + ContentConstant.KEY_ACCOUNT_BAL_CARD    + " float not null, "
-            + ContentConstant.KEY_ACCOUNT_BAL_CASH    + " float not null, "
-            + ContentConstant.KEY_ACCOUNT_INFLOW      + " float not null, "
-            + ContentConstant.KEY_ACCOUNT_OUTFLOW     + " float not null, "
-            + ContentConstant.KEY_ACCOUNT_TYPE        + " integer not null, "
-            + ContentConstant.KEY_ACCOUNT_LAST_UPDATE + " integer not null"
+            + ContentConstant.KEY_ACCOUNT_ROWID        + " integer primary key autoincrement, "
+            + ContentConstant.KEY_ACCOUNT_TITLE        + " text not null, "
+            + ContentConstant.KEY_ACCOUNT_CURRENCY     + " text not null, "
+            + ContentConstant.KEY_ACCOUNT_NOTE         + " text not null, "
+            + ContentConstant.KEY_ACCOUNT_NUMBER       + " text not null, "
+            + ContentConstant.KEY_ACCOUNT_LOGIN        + " text not null, "
+            + ContentConstant.KEY_ACCOUNT_PASSWORD     + " text not null, "
+            + ContentConstant.KEY_ACCOUNT_CONTACT      + " text not null, "
+            + ContentConstant.KEY_ACCOUNT_LOGO         + " integer not null, "
+            + ContentConstant.KEY_ACCOUNT_TYPE         + " integer not null, "
+            + ContentConstant.KEY_ACCOUNT_LIST_INDEX   + " integer not null, "
+            + ContentConstant.KEY_ACCOUNT_BAL_CARD     + " float not null, "
+            + ContentConstant.KEY_ACCOUNT_BAL_CASH     + " float not null, "
+            + ContentConstant.KEY_ACCOUNT_LAST_UPDATE  + " integer not null"
             + ");";
 
     /**

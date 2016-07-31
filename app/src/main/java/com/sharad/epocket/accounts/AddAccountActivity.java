@@ -29,6 +29,7 @@ public class AddAccountActivity extends AppCompatActivity {
     EditText editTextCurrency;
     private long accountId = Constant.INVALID_ID;
     private Currency selectedCurrency = Currency.getInstance(Locale.getDefault());
+    private IAccount iAccount = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,20 +48,11 @@ public class AddAccountActivity extends AppCompatActivity {
         final ToggleButton btnCash = (ToggleButton) findViewById(R.id.account_button_cash);
         final ToggleButton btnCard = (ToggleButton) findViewById(R.id.account_button_card);
 
-        final View layoutCash = findViewById(R.id.layout_account_cash);
-        final View layoutCard = findViewById(R.id.layout_account_card);
-
         btnCash.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, final boolean isChecked) {
                 if(!isChecked && !btnCard.isChecked()) {
                     buttonView.setChecked(true);
-                } else {
-                    if (isChecked) {
-                        layoutCash.setVisibility(View.VISIBLE);
-                    } else {
-                        layoutCash.setVisibility(View.GONE);
-                    }
                 }
             }
         });
@@ -70,12 +62,6 @@ public class AddAccountActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(!isChecked && !btnCash.isChecked()) {
                     buttonView.setChecked(true);
-                } else {
-                    if (isChecked) {
-                        layoutCard.setVisibility(View.VISIBLE);
-                    } else {
-                        layoutCard.setVisibility(View.GONE);
-                    }
                 }
             }
         });
@@ -131,8 +117,6 @@ public class AddAccountActivity extends AppCompatActivity {
         });
 
         EditText accountName = (EditText)findViewById(R.id.account_name);
-        EditText accountCashBal = (EditText)findViewById(R.id.account_cash_balance);
-        EditText accountCardBal = (EditText)findViewById(R.id.account_card_balance);
         EditText accountNote = (EditText)findViewById(R.id.account_note);
         EditText accountLogin = (EditText)findViewById(R.id.account_login);
         EditText accountPassword = (EditText)findViewById(R.id.account_password);
@@ -140,47 +124,44 @@ public class AddAccountActivity extends AppCompatActivity {
         EditText accountContact = (EditText)findViewById(R.id.account_contact);
         if(accountId != Constant.INVALID_ID) {
             DataSourceAccount source = new DataSourceAccount(this);
-            IAccount account = source.getAccount(accountId);
-            if(account != null) {
-                btnCash.setChecked(account.hasCashAccount());
-                layoutCash.setVisibility(account.hasCashAccount() ? View.VISIBLE : View.GONE);
-                btnCard.setChecked(account.hasCardAccount());
-                layoutCard.setVisibility(account.hasCardAccount() ? View.VISIBLE : View.GONE);
+            iAccount = source.getAccount(accountId);
+            if(iAccount != null) {
+                btnCash.setChecked(iAccount.hasCashAccount());
+                btnCard.setChecked(iAccount.hasCardAccount());
 
-                accountName.setText(account.getTitle());
-                accountCashBal.setText("" + account.getBalanceCash());
-                accountCardBal.setText("" + account.getBalanceCard());
-                if(account.getNote().length() > 0) {
-                    accountNote.setText(account.getNote());
+                accountName.setText(iAccount.getTitle());
+                if(iAccount.getNote().length() > 0) {
+                    accountNote.setText(iAccount.getNote());
                     layoutDescription.setVisibility(View.VISIBLE);
                     checkedFields[0] = true;
                 }
-                if(account.getAccountNumber().length() > 0) {
-                    accountNumber.setText(account.getAccountNumber());
+                if(iAccount.getAccountNumber().length() > 0) {
+                    accountNumber.setText(iAccount.getAccountNumber());
                     layoutAccountNumber.setVisibility(View.VISIBLE);
                     checkedFields[1] = true;
                 }
-                if(account.getLoginId().length() > 0) {
-                    accountLogin.setText(account.getLoginId());
+                if(iAccount.getLoginId().length() > 0) {
+                    accountLogin.setText(iAccount.getLoginId());
                     layoutLogin.setVisibility(View.VISIBLE);
                     checkedFields[2] = true;
                 }
-                if(account.getPassword().length() > 0) {
-                    accountPassword.setText(account.getPassword());
+                if(iAccount.getPassword().length() > 0) {
+                    accountPassword.setText(iAccount.getPassword());
                     layoutPassword.setVisibility(View.VISIBLE);
                     checkedFields[3] = true;
                 }
-                if(account.getContact().length() > 0) {
-                    accountContact.setText(account.getContact());
+                if(iAccount.getContact().length() > 0) {
+                    accountContact.setText(iAccount.getContact());
                     layoutContact.setVisibility(View.VISIBLE);
                     checkedFields[4] = true;
                 }
-                selectedCurrency = Currency.getInstance(account.getIsoCurrency());
+                selectedCurrency = Currency.getInstance(iAccount.getIsoCurrency());
+            } else {
+                iAccount = new IAccount();
             }
         } else {
+            iAccount = new IAccount();
             accountName.setText("");
-            accountCashBal.setText("");
-            accountCardBal.setText("");
             accountNote.setText("");
             accountLogin.setText("");
             accountPassword.setText("");
@@ -192,7 +173,7 @@ public class AddAccountActivity extends AppCompatActivity {
 
     private void showCurrencyPicker(){
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        Fragment prev = getSupportFragmentManager().findFragmentByTag("CurrencyPickerDialog");
+        Fragment prev = getSupportFragmentManager().findFragmentByTag(Constant.DLG_CURRENCY_PICKER);
         if (prev != null) {
             ft.remove(prev);
         }
@@ -200,7 +181,7 @@ public class AddAccountActivity extends AppCompatActivity {
 
         // Create and show the dialog.
         CurrencyPickerDialog newFragment = CurrencyPickerDialog.newInstance();
-        newFragment.show(ft, "CurrencyPickerDialog");
+        newFragment.show(ft, Constant.DLG_CURRENCY_PICKER);
         newFragment.setOnCurrencySelectedListener(new CurrencyPickerDialog.OnCurrencySelectedListener() {
             @Override
             public void onCurrencySelected(Currency currency) {
@@ -233,8 +214,6 @@ public class AddAccountActivity extends AppCompatActivity {
 
     private void save() {
         EditText accountName = (EditText)findViewById(R.id.account_name);
-        EditText accountCashBal = (EditText)findViewById(R.id.account_cash_balance);
-        EditText accountCardBal = (EditText)findViewById(R.id.account_card_balance);
         EditText accountNote = (EditText)findViewById(R.id.account_note);
         EditText accountLogin = (EditText)findViewById(R.id.account_login);
         EditText accountPassword = (EditText)findViewById(R.id.account_password);
@@ -254,27 +233,22 @@ public class AddAccountActivity extends AppCompatActivity {
                 accountType = IAccount.ACCOUNT_TYPE_CASH_ONLY;
             }
 
-            float cardBal = 0;
-            if(accountCardBal.getText().length() > 0) {
-                cardBal = Float.parseFloat(accountCardBal.getText().toString());
-            }
-            float cashBal = 0;
-            if(accountCashBal.getText().length() > 0) {
-                cashBal = Float.parseFloat(accountCashBal.getText().toString());
-            }
-
-            IAccount account = new IAccount(accountId, selectedCurrency.getCurrencyCode(),
-                    accountName.getText().toString(), accountNote.getText().toString(),
-                    accountNumber.getText().toString(), accountLogin.getText().toString(),
-                    accountPassword.getText().toString(), accountContact.getText().toString(),
-                    cardBal, cashBal, 0, 0, accountType, Calendar.getInstance().getTimeInMillis());
+            iAccount.setIsoCurrency(selectedCurrency.getCurrencyCode());
+            iAccount.setTitle(accountName.getText().toString());
+            iAccount.setNote(accountNote.getText().toString());
+            iAccount.setAccountNumber(accountNumber.getText().toString());
+            iAccount.setLoginId(accountLogin.getText().toString());
+            iAccount.setPassword(accountPassword.getText().toString());
+            iAccount.setPassword(accountContact.getText().toString());
+            iAccount.setLastUpdate(Calendar.getInstance().getTimeInMillis());
+            iAccount.setAccountType(accountType);
 
             DataSourceAccount source = new DataSourceAccount(this);
             if(accountId == Constant.INVALID_ID) {
-                accountId = source.insertAccount(account);
+                accountId = source.insertAccount(iAccount);
                 Toast.makeText(getApplicationContext(), "New Account Added", Toast.LENGTH_SHORT).show();
             } else {
-                source.updateAccount(account);
+                source.updateAccount(iAccount);
                 Toast.makeText(getApplicationContext(), "Account Updated", Toast.LENGTH_SHORT).show();
             }
 

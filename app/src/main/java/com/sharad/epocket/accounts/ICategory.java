@@ -10,6 +10,7 @@ import com.sharad.epocket.utils.Constant;
 import com.sharad.epocket.utils.Item;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Random;
 
 /**
@@ -83,6 +84,15 @@ public class ICategory extends Item{
     public void setUsageCount(int usageCount) { this.usageCount = usageCount;  }
     public void setImageIndex(int imageIndex) {
         this.imageIndex = (imageIndex < CategoryImageList.imageResource.length) ? imageIndex : 0;
+    }
+
+    public static class iComparator implements Comparator<ICategory> {
+        @Override
+        public int compare(ICategory o, ICategory o1) {
+            return (o.getUsageCount() == o1.getUsageCount())
+                    ? 0
+                    : ((o.getUsageCount() < o1.getUsageCount()) ? 1 : -1);
+        }
     }
 
     public static void getDefaultIncomeCategories(Context c, ArrayList<ICategory> list) {

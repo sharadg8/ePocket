@@ -98,46 +98,6 @@
                     android:textOff="CARD"/>
             </LinearLayout>
             <LinearLayout
-                android:id="@+id/layout_account_cash"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="48dp"
-                android:layout_gravity="center_vertical"
-                android:orientation="horizontal">
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/ic_cash_black_24px"
-                    android:tint="@color/secondary_text"/>
-                <EditText
-                    android:id="@+id/account_cash_balance"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:inputType="numberDecimal"
-                    android:hint="Initial Cash Balance"/>
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/layout_account_card"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="48dp"
-                android:layout_gravity="center_vertical"
-                android:orientation="horizontal">
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/ic_credit_card_black_24dp"
-                    android:tint="@color/secondary_text"/>
-                <EditText
-                    android:id="@+id/account_card_balance"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:inputType="numberDecimal"
-                    android:hint="Initial Card Balance"/>
-            </LinearLayout>
-            <LinearLayout
                 android:id="@+id/layout_account_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

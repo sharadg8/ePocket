@@ -33,14 +33,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sharad.epocket.R;
-import com.sharad.epocket.database.ContentConstant;
 import com.sharad.epocket.utils.BaseFragment;
 import com.sharad.epocket.utils.Constant;
 import com.sharad.epocket.utils.ScrollHandler;
-import com.sharad.epocket.utils.Utils;
 
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Collections;
 
 
 /**
@@ -55,8 +53,8 @@ public class AccountsFragment extends BaseFragment implements ScrollHandler {
 
     AccountsRecyclerAdapter recyclerAdapter;
     private LinearLayoutManager mLayoutManager;
-    private long mSelectedAccountId = IAccount.INVALID_ID;
-    private long mDefaultAccountId = IAccount.INVALID_ID;
+    private long mSelectedAccountId = Constant.INVALID_ID;
+    private long mDefaultAccountId = Constant.INVALID_ID;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -146,6 +144,8 @@ public class AccountsFragment extends BaseFragment implements ScrollHandler {
                                 DataSourceAccount source = new DataSourceAccount(getActivity());
                                 source.deleteAccount(account.getId());
                                 recyclerAdapter.removeAt(position);
+                                AccountManager.getInstance().updateAccountListOrder(getContext(),
+                                        recyclerAdapter.getItemList());
                             }
                         })
                         .setNegativeButton(android.R.string.cancel, null)
@@ -182,7 +182,7 @@ public class AccountsFragment extends BaseFragment implements ScrollHandler {
             return;
         }
 
-        long accountId = Constant.INVALID_ID;
+        long accountId;
         switch (requestCode) {
             case Constant.REQ_ADD_ACCOUNT:
                 accountId = data.getExtras().getLong(Constant.ARG_ACCOUNT_NUMBER_LONG, Constant.INVALID_ID);
@@ -193,6 +193,7 @@ public class AccountsFragment extends BaseFragment implements ScrollHandler {
                     recyclerAdapter.getItemList().add(iAccount);
                     recyclerAdapter.notifyItemInserted(position);
                     smoothScrollTo(position);
+                    AccountManager.getInstance().updateAccountListOrder(getContext(), recyclerAdapter.getItemList());
                 }
                 break;
             case Constant.REQ_EDIT_ACCOUNT:
@@ -212,7 +213,27 @@ public class AccountsFragment extends BaseFragment implements ScrollHandler {
                     }
                 }
                 break;
+            case Constant.REQ_ADD_TRANSACTION:
             case Constant.REQ_LIST_TRANSACTION:
+                DataSourceAccount source = new DataSourceAccount(getContext());
+                IAccount iAccount = source.getAccount(mSelectedAccountId);
+                if(iAccount != null) {
+                    int position = 0;
+                    for (IAccount account : recyclerAdapter.getItemList()) {
+                        if (account.getId() == iAccount.getId()) {
+                            AccountManager manager = AccountManager.getInstance();
+                            iAccount.setBalanceCash(manager.getAccountBalanceCash(getContext(), iAccount));
+                            iAccount.setBalanceCard(manager.getAccountBalanceCard(getContext(), iAccount));
+                            iAccount.setInflow(manager.getAccountInflow(getContext(), iAccount));
+                            iAccount.setOutflow(manager.getAccountOutflow(getContext(), iAccount));
+                            recyclerAdapter.getItemList().set(position, iAccount);
+                            recyclerAdapter.notifyItemChanged(position);
+                            smoothScrollTo(position);
+                            break;
+                        }
+                        position++;
+                    }
+                }
                 break;
         }
     }
@@ -223,31 +244,14 @@ public class AccountsFragment extends BaseFragment implements ScrollHandler {
         DataSourceAccount dataSourceAccount = new DataSourceAccount(getContext());
         dataSourceAccount.getAccounts(iAccountArrayList);
 
-        DataSourceTransaction dataSourceTransaction = new DataSourceTransaction(getContext());
-        Calendar now = Calendar.getInstance();
-        long start_ms = Utils.getMonthStart_ms(now.getTimeInMillis());
-        long end_ms = now.getTimeInMillis();
+        Collections.sort(iAccountArrayList, new IAccount.iComparator());
+
         for (IAccount iAccount : iAccountArrayList) {
-            float inflow = 0;
-            float outflow = 0;
-            String where = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + iAccount.getId()
-                    + " AND " + ContentConstant.KEY_TRANSACTION_DATE + ">=" + start_ms
-                    + " AND " + ContentConstant.KEY_TRANSACTION_DATE + "<=" + end_ms;
-            ArrayList<ITransaction> iTransactionArrayList = new ArrayList<>();
-            dataSourceTransaction.getTransactions(iTransactionArrayList, where);
-            for (ITransaction iTransaction : iTransactionArrayList) {
-                switch (iTransaction.getType()) {
-                    case ITransaction.TRANSACTION_TYPE_ACCOUNT_INCOME:
-                        inflow += iTransaction.getAmount();
-                        break;
-                    case ITransaction.TRANSACTION_TYPE_ACCOUNT_EXPENSE:
-                    case ITransaction.TRANSACTION_TYPE_ACCOUNT_TRANSFER:
-                        outflow += iTransaction.getAmount();
-                        break;
-                }
-            }
-            iAccount.setInflow(inflow);
-            iAccount.setOutflow(outflow);
+            AccountManager manager = AccountManager.getInstance();
+            iAccount.setBalanceCash(manager.getAccountBalanceCash(getContext(), iAccount));
+            iAccount.setBalanceCard(manager.getAccountBalanceCard(getContext(), iAccount));
+            iAccount.setInflow(manager.getAccountInflow(getContext(), iAccount));
+            iAccount.setOutflow(manager.getAccountOutflow(getContext(), iAccount));
         }
 
         if(iAccountArrayList.size() > 0) {

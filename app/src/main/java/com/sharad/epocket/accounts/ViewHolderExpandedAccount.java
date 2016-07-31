@@ -108,6 +108,6 @@ public class ViewHolderExpandedAccount extends ViewHolderAccount {
 
         cardBalance.setVisibility(mAccount.hasCardAccount() ? View.VISIBLE : View.GONE);
         cashBalance.setVisibility(mAccount.hasCashAccount() ? View.VISIBLE : View.GONE);
-        withdraw.setVisibility((mAccount.getAccountType() == IAccount.ACCOUNT_TYPE_CASH_CARD) ? View.VISIBLE : View.GONE);
+        withdraw.setVisibility(mAccount.hasBothAccount() ? View.VISIBLE : View.GONE);
     }
 }

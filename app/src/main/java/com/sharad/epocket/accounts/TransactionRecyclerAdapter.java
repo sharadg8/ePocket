@@ -21,7 +21,6 @@ import com.sharad.epocket.widget.recyclerview.StickyRecyclerView;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Currency;
 import java.util.Locale;
 
@@ -84,7 +83,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<RecyclerVie
     public void setItemList(ArrayList<ITransaction> itemList) {
         this.itemList.clear();
 
-        Collections.sort(itemList, new TransactionComparator());
+        Collections.sort(itemList, new ITransaction.iComparator());
 
         this.itemList.addAll(itemList);
 
@@ -257,7 +256,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<RecyclerVie
     }
 
     public void collapse(int position) {
-        mExpandedId = IAccount.INVALID_ID;
+        mExpandedId = Constant.INVALID_ID;
         mExpandedPosition = -1;
         notifyItemChanged(position);
     }
@@ -376,15 +375,6 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<RecyclerVie
         public void bind(Section item) {
             TextView title = (TextView) this.itemView.findViewById(R.id.header_title);
             title.setText(item.getTitle());
-        }
-    }
-
-    private class TransactionComparator implements Comparator<ITransaction> {
-        @Override
-        public int compare(ITransaction o, ITransaction o1) {
-            return (o.getDate() == o1.getDate())
-                    ? 0
-                    : ((o.getDate() < o1.getDate()) ? 1 : -1);
         }
     }
 }

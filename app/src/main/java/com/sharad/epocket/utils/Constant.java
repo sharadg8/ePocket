@@ -11,6 +11,8 @@ public interface Constant {
     String ARG_TRANSACTION_NUMBER_LONG  = "transaction_number";
     String ARG_TAB_NUMBER_INT           = "tab_number";
 
+    String DLG_CURRENCY_PICKER          = "currency_picker";
+
     int REQ_ADD_ACCOUNT                 = 1;
     int REQ_EDIT_ACCOUNT                = 2;
     int REQ_ADD_TRANSACTION             = 3;

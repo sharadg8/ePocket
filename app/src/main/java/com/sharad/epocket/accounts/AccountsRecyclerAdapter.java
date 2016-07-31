@@ -26,7 +26,7 @@ public class AccountsRecyclerAdapter extends RecyclerView.Adapter<ViewHolderAcco
     private final LayoutInflater mInflater;
     private final ScrollHandler mScrollHandler;
     private int mExpandedPosition = -1;
-    private long mExpandedId = IAccount.INVALID_ID;
+    private long mExpandedId = Constant.INVALID_ID;
 
     public AccountsRecyclerAdapter(Context context, ArrayList<IAccount> itemList,
                                    ScrollHandler smoothScrollController) {
@@ -124,7 +124,7 @@ public class AccountsRecyclerAdapter extends RecyclerView.Adapter<ViewHolderAcco
     }
 
     public void collapse(int position) {
-        mExpandedId = IAccount.INVALID_ID;
+        mExpandedId = Constant.INVALID_ID;
         mExpandedPosition = -1;
         notifyItemChanged(position);
 

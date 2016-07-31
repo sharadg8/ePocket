@@ -24,25 +24,25 @@ public interface ContentConstant {
     /**
      * Data table for accounts
      */
-    String KEY_ACCOUNT_ROWID      = "_id";
-    String KEY_ACCOUNT_TITLE      = "title";
-    String KEY_ACCOUNT_CURRENCY   = "currency";
-    String KEY_ACCOUNT_NOTE       = "note";
-    String KEY_ACCOUNT_NUMBER     = "acc_num";
-    String KEY_ACCOUNT_LOGIN      = "login";
-    String KEY_ACCOUNT_PASSWORD   = "password";
-    String KEY_ACCOUNT_CONTACT    = "contact";
-    String KEY_ACCOUNT_BAL_CARD   = "bal_card";
-    String KEY_ACCOUNT_BAL_CASH   = "bal_cash";
-    String KEY_ACCOUNT_INFLOW     = "inflow";
-    String KEY_ACCOUNT_OUTFLOW    = "outflow";
-    String KEY_ACCOUNT_TYPE       = "type";
-    String KEY_ACCOUNT_LAST_UPDATE= "last_update";
+    String KEY_ACCOUNT_ROWID        = "_id";
+    String KEY_ACCOUNT_TITLE        = "title";
+    String KEY_ACCOUNT_CURRENCY     = "currency";
+    String KEY_ACCOUNT_NOTE         = "note";
+    String KEY_ACCOUNT_NUMBER       = "acc_num";
+    String KEY_ACCOUNT_LOGIN        = "login";
+    String KEY_ACCOUNT_PASSWORD     = "password";
+    String KEY_ACCOUNT_CONTACT      = "contact";
+    String KEY_ACCOUNT_LOGO         = "logo";
+    String KEY_ACCOUNT_TYPE         = "type";
+    String KEY_ACCOUNT_LIST_INDEX   = "list_index";
+    String KEY_ACCOUNT_BAL_CARD     = "bal_card";
+    String KEY_ACCOUNT_BAL_CASH     = "bal_cash";
+    String KEY_ACCOUNT_LAST_UPDATE  = "last_update";
 
-    String[] ALL_KEYS_ACCOUNT = new String[] {KEY_ACCOUNT_ROWID,
-            KEY_ACCOUNT_TITLE, KEY_ACCOUNT_CURRENCY, KEY_ACCOUNT_NOTE, KEY_ACCOUNT_NUMBER,
-            KEY_ACCOUNT_LOGIN, KEY_ACCOUNT_PASSWORD, KEY_ACCOUNT_CONTACT, KEY_ACCOUNT_BAL_CARD,
-            KEY_ACCOUNT_BAL_CASH, KEY_ACCOUNT_INFLOW, KEY_ACCOUNT_OUTFLOW, KEY_ACCOUNT_TYPE,
+    String[] ALL_KEYS_ACCOUNT = new String[] {KEY_ACCOUNT_ROWID, KEY_ACCOUNT_TITLE,
+            KEY_ACCOUNT_CURRENCY, KEY_ACCOUNT_NOTE, KEY_ACCOUNT_NUMBER, KEY_ACCOUNT_LOGIN,
+            KEY_ACCOUNT_PASSWORD, KEY_ACCOUNT_CONTACT, KEY_ACCOUNT_LOGO, KEY_ACCOUNT_TYPE,
+            KEY_ACCOUNT_LIST_INDEX, KEY_ACCOUNT_BAL_CARD, KEY_ACCOUNT_BAL_CASH,
             KEY_ACCOUNT_LAST_UPDATE };
 
     /**

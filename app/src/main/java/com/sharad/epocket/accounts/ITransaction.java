@@ -8,6 +8,7 @@ import com.sharad.epocket.utils.Constant;
 import com.sharad.epocket.utils.Item;
 
 import java.util.Calendar;
+import java.util.Comparator;
 
 /**
  * Created by Sharad on 23-Jul-16.
@@ -107,4 +108,13 @@ public class ITransaction extends Item {
     public void setSubType(int subType) {    this.subType = subType;   }
     public void setAmount(float amount) {    this.amount = amount;     }
     public void setCategory(long category) { this.category = category; }
+
+    public static class iComparator implements Comparator<ITransaction> {
+        @Override
+        public int compare(ITransaction o, ITransaction o1) {
+            return (o.getDate() == o1.getDate())
+                    ? 0
+                    : ((o.getDate() < o1.getDate()) ? 1 : -1);
+        }
+    }
 }
