@@ -222,9 +222,9 @@ public class AddAccountActivity extends AppCompatActivity {
         int id = item.getItemId();
         if(id == R.id.action_save) {
             save();
-            finish();
             return true;
         } else if(id == android.R.id.home) {
+            setResult(RESULT_CANCELED);
             finish();
             return true;
         }
@@ -277,11 +277,15 @@ public class AddAccountActivity extends AppCompatActivity {
                 source.updateAccount(account);
                 Toast.makeText(getApplicationContext(), "Account Updated", Toast.LENGTH_SHORT).show();
             }
+
             Bundle activityResult = new Bundle();
-            activityResult.putLong("AddAccountActivityKeyAccountId", accountId);
+            activityResult.putLong(Constant.ARG_ACCOUNT_NUMBER_LONG, accountId);
             Intent intent = new Intent();
             intent.putExtras(activityResult);
             setResult(RESULT_OK, intent);
+            finish();
         }
+        setResult(RESULT_CANCELED);
+        finish();
     }
 }

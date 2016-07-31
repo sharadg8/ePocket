@@ -1,5 +1,6 @@
 package com.sharad.epocket.accounts;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ public class AccountTransactionFragment extends Fragment implements ScrollHandle
     private StickyRecyclerView mRecyclerView;
 
     private long accountId;
+    private TransactionRecyclerAdapter recyclerAdapter = null;
 
     public AccountTransactionFragment() {
     }
@@ -73,7 +75,7 @@ public class AccountTransactionFragment extends Fragment implements ScrollHandle
                     + " AND " + ContentConstant.KEY_TRANSACTION_DATE    + "<=" + end_ms;
 
             dataSourceTransaction.getTransactions(itemList, where);
-            final TransactionRecyclerAdapter recyclerAdapter = new TransactionRecyclerAdapter(this.getActivity(), this);
+            recyclerAdapter = new TransactionRecyclerAdapter(this.getActivity(), this);
             recyclerAdapter.setItemList(itemList);
             recyclerAdapter.setIsoCurrency(account.getIsoCurrency());
             mRecyclerView = (StickyRecyclerView) view.findViewById(R.id.recyclerView);
@@ -83,10 +85,10 @@ public class AccountTransactionFragment extends Fragment implements ScrollHandle
             recyclerAdapter.setOnItemClickListener(new TransactionRecyclerAdapter.OnItemClickListener() {
                 @Override
                 public void onEditClicked(int position, ITransaction iTransaction) {
-                    Intent intent = new Intent(getActivity().getApplicationContext(), AddTransactionActivity.class);
+                    Intent intent = new Intent(getContext(), AddTransactionActivity.class);
                     intent.putExtra(Constant.ARG_ACCOUNT_NUMBER_LONG, iTransaction.getAccount());
                     intent.putExtra(Constant.ARG_TRANSACTION_NUMBER_LONG, iTransaction.getId());
-                    startActivityForResult(intent, 230);
+                    startActivityForResult(intent, Constant.REQ_EDIT_TRANSACTION);
                 }
 
                 @Override
@@ -107,6 +109,33 @@ public class AccountTransactionFragment extends Fragment implements ScrollHandle
         }
 
         return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_CANCELED) {
+            return;
+        }
+
+        switch (requestCode) {
+            case Constant.REQ_EDIT_TRANSACTION:
+                long transactionId = data.getExtras().getLong(Constant.ARG_TRANSACTION_NUMBER_LONG, Constant.INVALID_ID);
+                if (transactionId != Constant.INVALID_ID) {
+                    DataSourceTransaction source = new DataSourceTransaction(getContext());
+                    ITransaction iTransaction = source.getTransaction(transactionId);
+                    int position = 0;
+                    for(ITransaction transaction : recyclerAdapter.getItemList()) {
+                        if(transaction.getId() == iTransaction.getId()) {
+                            recyclerAdapter.getItemList().set(position, iTransaction);
+                            recyclerAdapter.updateSections();
+                            recyclerAdapter.notifyDataSetChanged();
+                            break;
+                        }
+                        position++;
+                    }
+                }
+                break;
+        }
     }
 
     @Override

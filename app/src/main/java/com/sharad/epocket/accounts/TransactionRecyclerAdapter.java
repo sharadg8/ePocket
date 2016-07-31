@@ -77,6 +77,10 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<RecyclerVie
         setHasStableIds(true);
     }
 
+    public ArrayList<ITransaction> getItemList() {
+        return itemList;
+    }
+
     public void setItemList(ArrayList<ITransaction> itemList) {
         this.itemList.clear();
 
@@ -88,7 +92,7 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<RecyclerVie
         notifyDataSetChanged();
     }
 
-    private void updateSections() {
+    public void updateSections() {
         int position = 0;
         int size = 0;
         long date = 0;

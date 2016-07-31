@@ -16,6 +16,7 @@
 
 package com.sharad.epocket.accounts;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,7 +26,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -57,7 +57,6 @@ public class AccountsFragment extends BaseFragment implements ScrollHandler {
     private LinearLayoutManager mLayoutManager;
     private long mSelectedAccountId = IAccount.INVALID_ID;
     private long mDefaultAccountId = IAccount.INVALID_ID;
-    private ItemTouchHelper mItemTouchHelper;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -66,8 +65,6 @@ public class AccountsFragment extends BaseFragment implements ScrollHandler {
     private AccountsFragment.OnFragmentInteractionListener mListener;
 
     private final static String TAG = "AccountsFragment";
-    public final static String ITEM_ID_KEY = "AccountsFragment$idKey";
-
 
     /**
      * Use this factory method to create a new instance of
@@ -103,7 +100,7 @@ public class AccountsFragment extends BaseFragment implements ScrollHandler {
         Intent intent = new Intent(getContext(), AddTransactionActivity.class);
         intent.putExtra(Constant.ARG_ACCOUNT_NUMBER_LONG, mSelectedAccountId);
         intent.putExtra(Constant.ARG_TRANSACTION_NUMBER_LONG, Constant.INVALID_ID);
-        startActivityForResult(intent, 0);
+        startActivityForResult(intent, Constant.REQ_ADD_TRANSACTION);
     }
 
     @Override
@@ -117,8 +114,8 @@ public class AccountsFragment extends BaseFragment implements ScrollHandler {
         switch (item.getItemId()) {
             case R.id.action_new_account:
                 Intent intent = new Intent(getActivity().getApplicationContext(), AddAccountActivity.class);
-                intent.putExtra("AddAccountActivityKeyAccountId", -1);
-                startActivityForResult(intent, 210);
+                intent.putExtra(Constant.ARG_ACCOUNT_NUMBER_LONG, Constant.INVALID_ID);
+                startActivityForResult(intent, Constant.REQ_ADD_ACCOUNT);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -136,7 +133,7 @@ public class AccountsFragment extends BaseFragment implements ScrollHandler {
             public void onEditAccountClicked(int position, IAccount account) {
                 Intent intent = new Intent(getActivity().getApplicationContext(), AddAccountActivity.class);
                 intent.putExtra(Constant.ARG_ACCOUNT_NUMBER_LONG, account.getId());
-                startActivityForResult(intent, 210);
+                startActivityForResult(intent, Constant.REQ_EDIT_ACCOUNT);
             }
 
             @Override
@@ -159,7 +156,7 @@ public class AccountsFragment extends BaseFragment implements ScrollHandler {
             public void onViewTransactionClicked(int position, IAccount account) {
                 Intent intent = new Intent(getActivity().getApplicationContext(), AccountTransactionActivity.class);
                 intent.putExtra(Constant.ARG_ACCOUNT_NUMBER_LONG, account.getId());
-                startActivityForResult(intent, 220);
+                startActivityForResult(intent, Constant.REQ_LIST_TRANSACTION);
             }
 
             @Override
@@ -181,15 +178,42 @@ public class AccountsFragment extends BaseFragment implements ScrollHandler {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if( requestCode == 210 ) {
-            if(data.getExtras() != null) {
-                long accountId = data.getExtras().getLong("AddAccountActivityKeyAccountId", -1);
+        if(resultCode == Activity.RESULT_CANCELED) {
+            return;
+        }
+
+        long accountId = Constant.INVALID_ID;
+        switch (requestCode) {
+            case Constant.REQ_ADD_ACCOUNT:
+                accountId = data.getExtras().getLong(Constant.ARG_ACCOUNT_NUMBER_LONG, Constant.INVALID_ID);
                 if (accountId != Constant.INVALID_ID) {
-                    DataSourceAccount source = new DataSourceAccount(getActivity());
-                    source.getAccounts(recyclerAdapter.getItemList());
-                    recyclerAdapter.notifyDataSetChanged();
+                    DataSourceAccount source = new DataSourceAccount(getContext());
+                    IAccount iAccount = source.getAccount(accountId);
+                    int position = recyclerAdapter.getItemCount();
+                    recyclerAdapter.getItemList().add(iAccount);
+                    recyclerAdapter.notifyItemInserted(position);
+                    smoothScrollTo(position);
                 }
-            }
+                break;
+            case Constant.REQ_EDIT_ACCOUNT:
+                accountId = data.getExtras().getLong(Constant.ARG_ACCOUNT_NUMBER_LONG, Constant.INVALID_ID);
+                if (accountId != Constant.INVALID_ID) {
+                    DataSourceAccount source = new DataSourceAccount(getContext());
+                    IAccount iAccount = source.getAccount(accountId);
+                    int position = 0;
+                    for(IAccount account : recyclerAdapter.getItemList()) {
+                        if(account.getId() == iAccount.getId()) {
+                            recyclerAdapter.getItemList().set(position, iAccount);
+                            recyclerAdapter.notifyItemChanged(position);
+                            smoothScrollTo(position);
+                            break;
+                        }
+                        position++;
+                    }
+                }
+                break;
+            case Constant.REQ_LIST_TRANSACTION:
+                break;
         }
     }
 

@@ -9,6 +9,7 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -315,6 +316,7 @@ public class AddTransactionActivity extends AppCompatActivity implements
             save();
             return true;
         } else if(id == android.R.id.home) {
+            setResult(RESULT_CANCELED);
             finish();
             return true;
         }
@@ -336,6 +338,7 @@ public class AddTransactionActivity extends AppCompatActivity implements
 
         if(amountString.length() == 0) {
             /* Nothing to do here, No money to deal with */
+            setResult(RESULT_CANCELED);
             finish();
             return;
         }
@@ -357,9 +360,16 @@ public class AddTransactionActivity extends AppCompatActivity implements
             } else {
                 dataSourceTransaction.updateTransaction(iTransaction);
             }
+
+            Bundle activityResult = new Bundle();
+            activityResult.putLong(Constant.ARG_TRANSACTION_NUMBER_LONG, iTransaction.getId());
+            Intent intent = new Intent();
+            intent.putExtras(activityResult);
+            setResult(RESULT_OK, intent);
             finish();
         } else {
             /* Nothing to do here, No money to deal with */
+            setResult(RESULT_CANCELED);
             finish();
             return;
         }
