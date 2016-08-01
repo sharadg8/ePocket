@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.sharad.epocket.R;
 import com.sharad.epocket.utils.BaseFragment;
+import com.sharad.epocket.widget.CircularProgress;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -84,7 +85,15 @@ public class BudgetFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_budget, container, false);
+        View view = inflater.inflate(R.layout.fragment_budget, container, false);
+        CircularProgress progress = (CircularProgress) view.findViewById(R.id.progress);
+        progress.setProgress(80);
+        return view;
+    }
+
+    @Override
+    public void setFabAppearance() {
+        //mFab.setVisibility(View.GONE);
     }
 
     // TODO: Rename method, update argument and hook method into UI event

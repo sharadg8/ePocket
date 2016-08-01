@@ -130,29 +130,19 @@ public class StickyRecyclerView extends FrameLayout {
         mLayoutManager = new LinearLayoutManager(mContext.getApplicationContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        if(android.os.Build.VERSION.SDK_INT >= 23) {
-            mRecyclerView.setOnScrollChangeListener(new OnScrollChangeListener() {
-                @Override
-                public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                    int firstVisibleItem = mLayoutManager.findFirstVisibleItemPosition();
-                    updateStickyHeader(firstVisibleItem);
-                }
-            });
-        } else {
-            mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
-                @Override
-                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                    int firstVisibleItem = mLayoutManager.findFirstVisibleItemPosition();
-                    updateStickyHeader(firstVisibleItem);
-                    super.onScrolled(recyclerView, dx, dy);
-                }
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                int firstVisibleItem = mLayoutManager.findFirstVisibleItemPosition();
+                updateStickyHeader(firstVisibleItem);
+                super.onScrolled(recyclerView, dx, dy);
+            }
 
-                @Override
-                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                    super.onScrollStateChanged(recyclerView, newState);
-                }
-            });
-        }
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+        });
     }
 
     /**

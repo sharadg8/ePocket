@@ -2,27 +2,86 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".budget.BudgetFragment">
 
-    <com.sharad.epocket.widget.PeekingViewPager
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="192dp"
-        android:clipToPadding="false">
-        <View
+        android:layout_margin="32dp"
+        app:cardCornerRadius="12dp"
+        android:backgroundTint="@color/light_palette07">
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="192dp"
-            android:background="@color/light_palette00"
-            android:scaleType="fitCenter"/>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="192dp"
-            android:background="@color/light_palette02"
-            android:scaleType="fitCenter"/>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="192dp"
-            android:background="@color/light_palette05"
-            android:scaleType="fitCenter"/>
-    </com.sharad.epocket.widget.PeekingViewPager>
+            android:layout_height="match_parent"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.3"
+                android:text="Budget Name"
+                android:textColor="@android:color/white"
+                android:textAppearance="@android:style/TextAppearance.Material.Large" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.7"
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="0.55"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="$2600.23"
+                            android:textColor="@android:color/white"
+                            android:textAppearance="@android:style/TextAppearance.Material.Large"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Budgeted"
+                            android:alpha="0.7"
+                            android:textColor="@android:color/white"
+                            android:textAppearance="@android:style/TextAppearance.Material.Small"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="$2400.23"
+                            android:textColor="@android:color/white"
+                            android:textAppearance="@android:style/TextAppearance.Material.Large"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Spent"
+                            android:alpha="0.7"
+                            android:textColor="@android:color/white"
+                            android:textAppearance="@android:style/TextAppearance.Material.Small"/>
+                    </LinearLayout>
+                </LinearLayout>
+                <com.sharad.epocket.widget.CircularProgress
+                    android:id="@+id/progress"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.45"
+                    android:layout_height="match_parent"/>
+            </LinearLayout>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
 
 </RelativeLayout>

@@ -1,4 +1,4 @@
-package com.sharad.epocket.widget;
+package com.sharad.epocket.widget.viewpager;
 
 import android.annotation.TargetApi;
 import android.content.Context;
