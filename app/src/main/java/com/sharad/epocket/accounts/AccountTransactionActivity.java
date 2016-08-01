@@ -13,6 +13,9 @@ import android.view.MenuItem;
 import com.sharad.epocket.R;
 import com.sharad.epocket.utils.Constant;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 public class AccountTransactionActivity extends AppCompatActivity {
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -100,19 +103,29 @@ public class AccountTransactionActivity extends AppCompatActivity {
 
         @Override
         public CharSequence getPageTitle(int position) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MMM yy");
+            Calendar cal = Calendar.getInstance();
             switch (position) {
-                case 0:
+                case Constant.TAB_ACCOUNT_TRANSACTION_THIS_MONTH:
                     return "THIS MONTH";
-                case 1:
-                    return "JUN 16";
-                case 2:
-                    return "MAY 16";
-                case 3:
-                    return "APR 16";
-                case 4:
-                    return "MAR 16";
-                case 5:
-                    return "FEB 16";
+                case Constant.TAB_ACCOUNT_TRANSACTION_MONTH_M1:
+                    cal.setTimeInMillis(Calendar.getInstance().getTimeInMillis());
+                    cal.add(Calendar.MONTH, -position);
+                    return dateFormat.format(cal.getTime());
+                case Constant.TAB_ACCOUNT_TRANSACTION_MONTH_M2:
+                    cal.setTimeInMillis(Calendar.getInstance().getTimeInMillis());
+                    cal.add(Calendar.MONTH, -position);
+                    return dateFormat.format(cal.getTime());
+                case Constant.TAB_ACCOUNT_TRANSACTION_MONTH_M3:
+                    cal.setTimeInMillis(Calendar.getInstance().getTimeInMillis());
+                    cal.add(Calendar.MONTH, -position);
+                    return dateFormat.format(cal.getTime());
+                case Constant.TAB_ACCOUNT_TRANSACTION_MONTH_M4:
+                    cal.setTimeInMillis(Calendar.getInstance().getTimeInMillis());
+                    cal.add(Calendar.MONTH, -position);
+                    return dateFormat.format(cal.getTime());
+                case Constant.TAB_ACCOUNT_TRANSACTION_OLDER:
+                    return "OLDER";
             }
             return null;
         }

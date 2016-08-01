@@ -103,6 +103,7 @@ public class ICategory extends Item{
         list.add(new ICategory(0,  69, color(c), "Shares & Equity", ICategory.CATEGORY_TYPE_INCOME, 0));
         list.add(new ICategory(0,   3, color(c), "Incentives & Allowances", ICategory.CATEGORY_TYPE_INCOME, 0));
         list.add(new ICategory(0,   1, color(c), "Savings", ICategory.CATEGORY_TYPE_INCOME, 0));
+        list.add(new ICategory(0,  86, color(c), "Interests", ICategory.CATEGORY_TYPE_INCOME, 0));
         list.add(new ICategory(0,  84, color(c), "Business", ICategory.CATEGORY_TYPE_INCOME, 0));
         list.add(new ICategory(0,  79, color(c), "Others", ICategory.CATEGORY_TYPE_INCOME, 0));
     }
@@ -163,6 +164,7 @@ public class ICategory extends Item{
         list.add(new ICategory(0,  57, color(c), "Child Care", ICategory.CATEGORY_TYPE_EXPENSE, 0));
         list.add(new ICategory(0,  58, color(c), "Pets", ICategory.CATEGORY_TYPE_EXPENSE, 0));
         list.add(new ICategory(0,  68, color(c), "Education", ICategory.CATEGORY_TYPE_EXPENSE, 0));
+        list.add(new ICategory(0,  85, color(c), "Books", ICategory.CATEGORY_TYPE_EXPENSE, 0));
         list.add(new ICategory(0,  73, color(c), "Insurance & Security", ICategory.CATEGORY_TYPE_EXPENSE, 0));
         list.add(new ICategory(0,  75, color(c), "Waste & Sewage", ICategory.CATEGORY_TYPE_EXPENSE, 0));
         list.add(new ICategory(0,  79, color(c), "Others", ICategory.CATEGORY_TYPE_EXPENSE, 0));

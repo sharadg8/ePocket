@@ -32,16 +32,6 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:tint="@color/primary"
             android:layout_alignParentRight="true" />
-        <ImageButton
-            android:id="@+id/delete"
-            android:visibility="gone"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginRight="16dp"
-            android:src="@drawable/ic_delete_black_24dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:tint="@color/primary"
-            android:layout_toLeftOf="@id/close" />
     </RelativeLayout>
     <LinearLayout
         android:layout_width="match_parent"

@@ -93,6 +93,8 @@ public class CategoryImageList {
     /*082*/ R.drawable.c_tram_black_24px,
     /*083*/ R.drawable.c_assignment_ind_black_24dp,
     /*084*/ R.drawable.c_store_mall_directory_black_24dp,
+    /*085*/ R.drawable.c_class_black_24dp,
+    /*086*/ R.drawable.c_interest_black_24px,
             R.drawable.ic_help_outline_black_24dp,
             R.drawable.c_filter_tilt_shift_black_24px,
     };

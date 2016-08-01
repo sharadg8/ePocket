@@ -196,11 +196,6 @@ public class AccountsFragment extends BaseFragment implements ScrollHandler {
             public void onTransactionUpdated(ITransaction iTransaction) {
                 onActivityResult(Constant.REQ_ADD_TRANSACTION, Activity.RESULT_OK, null);
             }
-
-            @Override
-            public void onTransactionDeleted(long id) {
-                onActivityResult(Constant.REQ_ADD_TRANSACTION, Activity.RESULT_OK, null);
-            }
         });
         newFragment.show(ft, Constant.DLG_ACCOUNT_WITHDRAW);
     }

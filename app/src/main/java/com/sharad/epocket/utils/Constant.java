@@ -20,4 +20,12 @@ public interface Constant {
     int REQ_ADD_TRANSACTION             = 3;
     int REQ_EDIT_TRANSACTION            = 4;
     int REQ_LIST_TRANSACTION            = 5;
+
+
+    int TAB_ACCOUNT_TRANSACTION_THIS_MONTH  = 0;
+    int TAB_ACCOUNT_TRANSACTION_MONTH_M1    = 1;
+    int TAB_ACCOUNT_TRANSACTION_MONTH_M2    = 2;
+    int TAB_ACCOUNT_TRANSACTION_MONTH_M3    = 3;
+    int TAB_ACCOUNT_TRANSACTION_MONTH_M4    = 4;
+    int TAB_ACCOUNT_TRANSACTION_OLDER       = 5;
 }

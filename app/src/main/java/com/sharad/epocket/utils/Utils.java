@@ -99,6 +99,15 @@ public class Utils {
         return cal.getTimeInMillis();
     }
 
+    public static long getDayEnd_ms(long time_ms){
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(time_ms);
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.SECOND, 59);
+        return cal.getTimeInMillis();
+    }
+
     public static boolean isSameDay(long ms1, long ms2) {
         Calendar cal1 = Calendar.getInstance();
         cal1.setTimeInMillis(ms1);

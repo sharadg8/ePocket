@@ -284,6 +284,20 @@ public class AddTransactionActivity extends AppCompatActivity implements
             commentButton.setColorFilter(ContextCompat.getColor(
                     AddTransactionActivity.this, R.color.primary_light));
         }
+
+        ImageButton sourceButton = (ImageButton) findViewById(R.id.source);
+        if(iAccount.hasBothAccount()) {
+            if (iTransaction.getSubType() == ITransaction.TRANSACTION_SUB_TYPE_ACCOUNT_CARD) {
+                sourceButton.setImageResource(R.drawable.ic_credit_card_black_24dp);
+            } else {
+                sourceButton.setImageResource(R.drawable.ic_cash_black_24px);
+            }
+        } else {
+            sourceButton.setVisibility(View.GONE);
+            iTransaction.setSubType(iAccount.hasCashAccount()
+                    ? ITransaction.TRANSACTION_SUB_TYPE_ACCOUNT_CASH
+                    : ITransaction.TRANSACTION_SUB_TYPE_ACCOUNT_CARD);
+        }
     }
 
     @Override

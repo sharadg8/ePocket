@@ -98,12 +98,6 @@ public class WithdrawDialogFragment extends DialogFragment {
             public void onClick(View v) { dismiss(); }
         });
 
-        ImageButton bDelete = (ImageButton) rootView.findViewById(R.id.delete);
-        bDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) { onDelete(); }
-        });
-
         eAmount = (EditText) rootView.findViewById(R.id.amount);
         if(iTransaction.getAmount() > 0.01) {
             eAmount.setText("" + iTransaction.getAmount());
@@ -135,15 +129,6 @@ public class WithdrawDialogFragment extends DialogFragment {
         return rootView;
     }
 
-    private void onDelete() {
-        DataSourceTransaction dataSourceTransaction = new DataSourceTransaction(getContext());
-        dataSourceTransaction.deleteTransaction(id);
-        if(onWithdrawDialogListener != null) {
-            onWithdrawDialogListener.onTransactionDeleted(id);
-        }
-        dismiss();
-    }
-
     private void onSave() {
         if(eAmount.getText().length() > 0) {
             float amount = Float.parseFloat(eAmount.getText().toString());
@@ -169,6 +154,5 @@ public class WithdrawDialogFragment extends DialogFragment {
 
     public interface OnWithdrawDialogListener {
         void onTransactionUpdated(ITransaction iTransaction);
-        void onTransactionDeleted(long id);
     }
 }

@@ -67,8 +67,11 @@ public class AccountTransactionFragment extends Fragment implements ScrollHandle
             now.add(Calendar.MONTH, -tabNum);
             long start_ms = Utils.getMonthStart_ms(now.getTimeInMillis());
             long end_ms = Utils.getMonthEnd_ms(now.getTimeInMillis());
-            if(tabNum == 0) {
-                end_ms = now.getTimeInMillis();
+            if(tabNum == Constant.TAB_ACCOUNT_TRANSACTION_THIS_MONTH) {
+                end_ms = Utils.getDayEnd_ms(now.getTimeInMillis());
+            }
+            if(tabNum == Constant.TAB_ACCOUNT_TRANSACTION_OLDER) {
+                start_ms = 0;
             }
 
             String where =      ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + account.getId()
@@ -118,9 +121,6 @@ public class AccountTransactionFragment extends Fragment implements ScrollHandle
     }
 
     private void showWithdrawDialog(ITransaction iTransaction) {
-        // DialogFragment.show() will take care of adding the fragment
-        // in a transaction.  We also want to remove any currently showing
-        // dialog, so make our own transaction and take care of that here.
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         Fragment prev = getFragmentManager().findFragmentByTag(Constant.DLG_ACCOUNT_WITHDRAW);
         if (prev != null) {
@@ -133,11 +133,7 @@ public class AccountTransactionFragment extends Fragment implements ScrollHandle
         newFragment.setOnWithdrawDialogListener(new WithdrawDialogFragment.OnWithdrawDialogListener() {
             @Override
             public void onTransactionUpdated(ITransaction iTransaction) {
-                //onActivityResult(Constant.REQ_ADD_TRANSACTION, Activity.RESULT_OK, null);
-            }
-
-            @Override
-            public void onTransactionDeleted(long id) {
+                /* TODO handle this */
                 //onActivityResult(Constant.REQ_ADD_TRANSACTION, Activity.RESULT_OK, null);
             }
         });
