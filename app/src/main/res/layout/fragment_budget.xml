@@ -1,24 +1,28 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".budget.BudgetFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <LinearLayout
+    <com.sharad.epocket.widget.PeekingViewPager
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center_vertical|center_horizontal">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:tint="@android:color/darker_gray"
-            android:src="@drawable/ic_broken_image_black_24dp"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="No budget to show right now!" />
-    </LinearLayout>
+        android:layout_height="192dp"
+        android:clipToPadding="false">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="192dp"
+            android:background="@color/light_palette00"
+            android:scaleType="fitCenter"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="192dp"
+            android:background="@color/light_palette02"
+            android:scaleType="fitCenter"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="192dp"
+            android:background="@color/light_palette05"
+            android:scaleType="fitCenter"/>
+    </com.sharad.epocket.widget.PeekingViewPager>
 
-</FrameLayout>
+</RelativeLayout>

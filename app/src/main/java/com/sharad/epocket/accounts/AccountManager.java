@@ -123,4 +123,12 @@ public class AccountManager {
         }
         return balCard;
     }
+
+    public void deleteAccount(Context context, long id) {
+        DataSourceTransaction sourceTransaction = new DataSourceTransaction(context);
+        String where = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + id;
+        sourceTransaction.deleteTransactions(where);
+        DataSourceAccount source = new DataSourceAccount(context);
+        source.deleteAccount(id);
+    }
 }

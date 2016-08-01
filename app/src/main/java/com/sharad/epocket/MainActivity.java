@@ -68,11 +68,11 @@ public class MainActivity extends AppCompatActivity implements
         toggle.syncState();
 
         featureItem = new ArrayList<>();
-        //rowListItem.add(new NavigationDrawerItem("Timeline", R.drawable.ic_list_black_24dp, HomeFragment.newInstance("","")));
+        //featureItem.add(new NavigationDrawerItem("Timeline", R.drawable.ic_list_black_24dp, HomeFragment.newInstance("","")));
         featureItem.add(new NavigationDrawerItem("Accounts", R.drawable.ic_account_box_black_24dp, AccountsFragment.newInstance("","")));
-        //rowListItem.add(new NavigationDrawerItem("Budget", R.drawable.ic_budget_black_24px, BudgetFragment.newInstance("","")));
-        //rowListItem.add(new NavigationDrawerItem("Goals", R.drawable.ic_goal_black_24px, GoalsFragment.newInstance("","")));
-        //rowListItem.add(new NavigationDrawerItem("Cards", R.drawable.ic_credit_card_black_24dp, CardsFragment.newInstance("","")));
+        featureItem.add(new NavigationDrawerItem("Budget", R.drawable.ic_budget_black_24px, BudgetFragment.newInstance("","")));
+        //featureItem.add(new NavigationDrawerItem("Goals", R.drawable.ic_goal_black_24px, GoalsFragment.newInstance("","")));
+        //featureItem.add(new NavigationDrawerItem("Cards", R.drawable.ic_credit_card_black_24dp, CardsFragment.newInstance("","")));
         featureItem.add(new NavigationDrawerItem("Bills", R.drawable.ic_receipt_black_24dp, BillsFragment.newInstance("","")));
         switchFeature(0);
 

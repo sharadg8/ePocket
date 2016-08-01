@@ -90,4 +90,14 @@ public class DataSourceTransaction extends DatabaseAdapter {
         }
         closeDb();
     }
+
+    public boolean deleteTransactions(String where) {
+        if(where != "") {
+            SQLiteDatabase db = openDb();
+            boolean status = db.delete(DATABASE_TABLE_TRANSACTION, where, null) != 0;
+            closeDb();
+            return status;
+        }
+        return false;
+    }
 }

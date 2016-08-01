@@ -143,8 +143,8 @@ public class AccountsFragment extends BaseFragment implements ScrollHandler {
                         .setMessage("This will clear all the transactions of this account, can't be undone!!")
                         .setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                DataSourceAccount source = new DataSourceAccount(getActivity());
-                                source.deleteAccount(account.getId());
+                                AccountManager manager = AccountManager.getInstance();
+                                manager.deleteAccount(getContext(), account.getId());
                                 recyclerAdapter.removeAt(position);
                                 AccountManager.getInstance().updateAccountListOrder(getContext(),
                                         recyclerAdapter.getItemList());

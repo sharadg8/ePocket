@@ -151,7 +151,6 @@ public class DatabaseAdapter {
             + ContentConstant.KEY_TRANSACTION_CATEGORY  + " integer not null, "
             + ContentConstant.KEY_TRANSACTION_AMOUNT    + " float not null, "
 
-            + "FOREIGN KEY (" + ContentConstant.KEY_TRANSACTION_ACCOUNT + ") REFERENCES " + DATABASE_TABLE_ACCOUNT + " (" + ContentConstant.KEY_ACCOUNT_ROWID + "), "
-            + "FOREIGN KEY (" + ContentConstant.KEY_TRANSACTION_CATEGORY + ") REFERENCES " + DATABASE_TABLE_CATEGORY + " (" + ContentConstant.KEY_CATEGORY_ROWID + ")"
+            + "FOREIGN KEY (" + ContentConstant.KEY_TRANSACTION_ACCOUNT + ") REFERENCES " + DATABASE_TABLE_ACCOUNT + " (" + ContentConstant.KEY_ACCOUNT_ROWID + ")"
             + ");";
 }
