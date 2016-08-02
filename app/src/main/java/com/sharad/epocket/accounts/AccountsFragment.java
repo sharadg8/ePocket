@@ -331,6 +331,6 @@ public class AccountsFragment extends BaseFragment implements ScrollHandler {
 
     @Override
     public void smoothScrollTo(int position) {
-        mLayoutManager.scrollToPositionWithOffset(position, 20);
+        mLayoutManager.scrollToPositionWithOffset(position, 12);
     }
 }

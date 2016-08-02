@@ -4,15 +4,19 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SeekBar;
 
 import com.sharad.epocket.R;
 import com.sharad.epocket.utils.BaseFragment;
 import com.sharad.epocket.widget.CircularProgress;
+
+import java.util.Random;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -86,8 +90,42 @@ public class BudgetFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_budget, container, false);
-        CircularProgress progress = (CircularProgress) view.findViewById(R.id.progress);
-        progress.setProgress(80);
+        final CircularProgress progressBar = (CircularProgress) view.findViewById(R.id.progress);
+
+        SeekBar bar = (SeekBar) view.findViewById(R.id.bar);
+        bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                progressBar.setProgress(progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) { }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) { }
+        });
+
+        final SeekBar day = (SeekBar) view.findViewById(R.id.day);
+        day.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                progressBar.setIndicator(progress, day.getMax());
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) { }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) { }
+        });
+
+        int colorList[] = getContext().getResources().getIntArray(R.array.light_palette);
+        Random r = new Random();
+        int index = r.nextInt(colorList.length - 1);
+        CardView cardView = (CardView) view.findViewById(R.id.cardView);
+        cardView.setCardBackgroundColor(colorList[index]);
+
         return view;
     }
 
