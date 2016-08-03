@@ -112,6 +112,7 @@ public class ICategory extends Item{
         list.clear();
 
         list.add(new ICategory(0,   0, color(c), "Home", ICategory.CATEGORY_TYPE_EXPENSE, 0));
+        list.add(new ICategory(0,  87, color(c), "House Rent", ICategory.CATEGORY_TYPE_EXPENSE, 0));
         list.add(new ICategory(0,   3, color(c), "Personal", ICategory.CATEGORY_TYPE_EXPENSE, 0));
         list.add(new ICategory(0,   5, color(c), "Electricity", ICategory.CATEGORY_TYPE_EXPENSE, 0));
         list.add(new ICategory(0,   6, color(c), "Water", ICategory.CATEGORY_TYPE_EXPENSE, 0));
