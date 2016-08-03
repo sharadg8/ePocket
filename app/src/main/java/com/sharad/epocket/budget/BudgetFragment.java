@@ -14,7 +14,7 @@ import android.widget.SeekBar;
 
 import com.sharad.epocket.R;
 import com.sharad.epocket.utils.BaseFragment;
-import com.sharad.epocket.widget.CircularProgress;
+import com.sharad.epocket.widget.chart.CircularProgress;
 
 import java.util.Random;
 

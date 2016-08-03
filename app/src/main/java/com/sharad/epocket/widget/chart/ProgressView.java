@@ -1,4 +1,4 @@
-package com.sharad.epocket.widget;
+package com.sharad.epocket.widget.chart;
 
 import android.content.Context;
 import android.graphics.Canvas;

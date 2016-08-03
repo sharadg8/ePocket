@@ -42,13 +42,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
+                        android:gravity="center"
                         android:orientation="vertical">
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="$2600.23"
                             android:textColor="@android:color/white"
-                            android:textAppearance="@android:style/TextAppearance.Material.Large"/>
+                            android:textAppearance="@android:style/TextAppearance.Material.Medium"/>
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -61,13 +62,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
+                        android:gravity="center"
                         android:orientation="vertical">
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="$2400.23"
                             android:textColor="@android:color/white"
-                            android:textAppearance="@android:style/TextAppearance.Material.Large"/>
+                            android:textAppearance="@android:style/TextAppearance.Material.Medium"/>
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -77,7 +79,7 @@
                             android:textAppearance="@android:style/TextAppearance.Material.Small"/>
                     </LinearLayout>
                 </LinearLayout>
-                <com.sharad.epocket.widget.CircularProgress
+                <com.sharad.epocket.widget.chart.CircularProgress
                     android:id="@+id/progress"
                     android:layout_width="0dp"
                     android:layout_weight="0.45"
