@@ -29,7 +29,9 @@ public class AccountTransactionFragment extends Fragment implements ScrollHandle
     private StickyRecyclerView mRecyclerView;
 
     private long accountId;
+    private int tabNum;
     private TransactionRecyclerAdapter recyclerAdapter = null;
+    ArrayList<ITransaction> iTransactionArrayList = null;
 
     public AccountTransactionFragment() {
     }
@@ -53,14 +55,13 @@ public class AccountTransactionFragment extends Fragment implements ScrollHandle
 
         Bundle args = getArguments();
         accountId = args.getLong(Constant.ARG_ACCOUNT_NUMBER_LONG, Constant.INVALID_ID);
-        int tabNum = args.getInt(Constant.ARG_TAB_NUMBER_INT, 0);
+        tabNum = args.getInt(Constant.ARG_TAB_NUMBER_INT, 0);
 
         DataSourceAccount dataSourceAccount = new DataSourceAccount(getContext());
         IAccount account = dataSourceAccount.getAccount(accountId);
 
+        iTransactionArrayList = new ArrayList<>();
         if(account != null) {
-            ArrayList<ITransaction> itemList = new ArrayList<>();
-
             DataSourceTransaction dataSourceTransaction = new DataSourceTransaction(getContext());
 
             Calendar now = Calendar.getInstance();
@@ -78,9 +79,9 @@ public class AccountTransactionFragment extends Fragment implements ScrollHandle
                     + " AND " + ContentConstant.KEY_TRANSACTION_DATE    + ">=" + start_ms
                     + " AND " + ContentConstant.KEY_TRANSACTION_DATE    + "<=" + end_ms;
 
-            dataSourceTransaction.getTransactions(itemList, where);
+            dataSourceTransaction.getTransactions(iTransactionArrayList, where);
             recyclerAdapter = new TransactionRecyclerAdapter(this.getActivity(), this);
-            recyclerAdapter.setItemList(itemList);
+            recyclerAdapter.setItemList(iTransactionArrayList);
             recyclerAdapter.setIsoCurrency(account.getIsoCurrency());
             mRecyclerView = (StickyRecyclerView) view.findViewById(R.id.recyclerView);
             mRecyclerView.setAdapter(recyclerAdapter);
@@ -164,6 +165,17 @@ public class AccountTransactionFragment extends Fragment implements ScrollHandle
                     }
                 }
                 break;
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            BlockGraph blockGraph = (BlockGraph) getActivity().findViewById(R.id.block_graph);
+            if(blockGraph != null) {
+                blockGraph.setValues(iTransactionArrayList);
+            }
         }
     }
 

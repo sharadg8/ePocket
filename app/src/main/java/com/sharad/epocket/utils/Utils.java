@@ -129,4 +129,13 @@ public class Utils {
                 && (cal1.get(Calendar.DAY_OF_MONTH) == cal2.get(Calendar.DAY_OF_MONTH));
         return isYesterday;
     }
+
+    public static boolean isThisMonth(long date) {
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        cal2.setTimeInMillis(date);
+        boolean isThisMonth = (cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR))
+                && (cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH));
+        return isThisMonth;
+    }
 }
