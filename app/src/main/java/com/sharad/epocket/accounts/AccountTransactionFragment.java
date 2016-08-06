@@ -30,6 +30,7 @@ public class AccountTransactionFragment extends Fragment implements ScrollHandle
 
     private long accountId;
     private int tabNum;
+    private IAccount iAccount = null;
     private TransactionRecyclerAdapter recyclerAdapter = null;
     ArrayList<ITransaction> iTransactionArrayList = null;
 
@@ -50,39 +51,47 @@ public class AccountTransactionFragment extends Fragment implements ScrollHandle
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_account_transaction, container, false);
-
-        Bundle args = getArguments();
-        accountId = args.getLong(Constant.ARG_ACCOUNT_NUMBER_LONG, Constant.INVALID_ID);
-        tabNum = args.getInt(Constant.ARG_TAB_NUMBER_INT, 0);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            accountId = getArguments().getLong(Constant.ARG_ACCOUNT_NUMBER_LONG, Constant.INVALID_ID);
+            tabNum = getArguments().getInt(Constant.ARG_TAB_NUMBER_INT, 0);
+        }
 
         DataSourceAccount dataSourceAccount = new DataSourceAccount(getContext());
-        IAccount account = dataSourceAccount.getAccount(accountId);
+        iAccount = dataSourceAccount.getAccount(accountId);
 
         iTransactionArrayList = new ArrayList<>();
-        if(account != null) {
+        if(iAccount != null) {
             DataSourceTransaction dataSourceTransaction = new DataSourceTransaction(getContext());
 
             Calendar now = Calendar.getInstance();
             now.add(Calendar.MONTH, -tabNum);
             long start_ms = Utils.getMonthStart_ms(now.getTimeInMillis());
             long end_ms = Utils.getMonthEnd_ms(now.getTimeInMillis());
-            if(tabNum == Constant.TAB_ACCOUNT_TRANSACTION_THIS_MONTH) {
+            if (tabNum == Constant.TAB_ACCOUNT_TRANSACTION_THIS_MONTH) {
                 end_ms = Utils.getDayEnd_ms(now.getTimeInMillis());
             }
-            if(tabNum == Constant.TAB_ACCOUNT_TRANSACTION_OLDER) {
+            if (tabNum == Constant.TAB_ACCOUNT_TRANSACTION_OLDER) {
                 start_ms = 0;
             }
 
-            String where =      ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + account.getId()
-                    + " AND " + ContentConstant.KEY_TRANSACTION_DATE    + ">=" + start_ms
-                    + " AND " + ContentConstant.KEY_TRANSACTION_DATE    + "<=" + end_ms;
+            String where = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + iAccount.getId()
+                    + " AND " + ContentConstant.KEY_TRANSACTION_DATE + ">=" + start_ms
+                    + " AND " + ContentConstant.KEY_TRANSACTION_DATE + "<=" + end_ms;
 
             dataSourceTransaction.getTransactions(iTransactionArrayList, where);
+        }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        final View view = inflater.inflate(R.layout.fragment_account_transaction, container, false);
+
+        if(iAccount != null) {
             recyclerAdapter = new TransactionRecyclerAdapter(this.getActivity(), this);
             recyclerAdapter.setItemList(iTransactionArrayList);
-            recyclerAdapter.setIsoCurrency(account.getIsoCurrency());
+            recyclerAdapter.setIsoCurrency(iAccount.getIsoCurrency());
             mRecyclerView = (StickyRecyclerView) view.findViewById(R.id.recyclerView);
             mRecyclerView.setAdapter(recyclerAdapter);
             mRecyclerView.setIndexer(recyclerAdapter);

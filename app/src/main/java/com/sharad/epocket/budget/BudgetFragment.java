@@ -1,6 +1,7 @@
 package com.sharad.epocket.budget;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,7 @@ import android.widget.SeekBar;
 
 import com.sharad.epocket.R;
 import com.sharad.epocket.utils.BaseFragment;
+import com.sharad.epocket.utils.Constant;
 import com.sharad.epocket.widget.chart.CircularProgress;
 
 import java.util.Random;
@@ -80,6 +82,9 @@ public class BudgetFragment extends BaseFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_new_budget:
+                Intent intent = new Intent(getActivity().getApplicationContext(), AddBudgetActivity.class);
+                intent.putExtra(Constant.ARG_ACCOUNT_NUMBER_LONG, Constant.INVALID_ID);
+                startActivityForResult(intent, Constant.REQ_ADD_ACCOUNT);
                 return true;
         }
         return super.onOptionsItemSelected(item);

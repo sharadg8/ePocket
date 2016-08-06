@@ -4,7 +4,6 @@
     android:id="@+id/activity_splash"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/primary"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context="com.sharad.epocket.SplashActivity">
@@ -12,9 +11,8 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.7"
+        android:layout_weight="0.75"
         android:src="@drawable/ic_splash"
-        android:tint="@android:color/white"
         android:scaleType="fitCenter"
         android:padding="120dp"/>
 
@@ -22,9 +20,11 @@
         android:id="@+id/splash_text"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.3"
+        android:layout_weight="0.25"
         android:gravity="center"
-        android:text="Just a moment!"
-        android:textColor="@android:color/white" />
+        android:text="Sharad"
+        android:textAppearance="@android:style/TextAppearance.Material.Display1"
+        android:fontFamily="sans-serif-smallcaps"
+        android:textStyle="normal|bold" />
 
 </LinearLayout>

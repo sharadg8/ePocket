@@ -33,7 +33,9 @@
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".accounts.AccountTransactionActivity"
-            android:parentActivityName=".MainActivity"/>
+            android:parentActivityName=".MainActivity" />
+        <activity android:name=".budget.AddBudgetActivity"
+            android:parentActivityName=".MainActivity" />
     </application>
 
 </manifest>
