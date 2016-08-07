@@ -131,4 +131,28 @@ public class AccountManager {
         DataSourceAccount source = new DataSourceAccount(context);
         source.deleteAccount(id);
     }
+
+    public boolean hasAnyTransactionBeforeMonth(Context context, IAccount iAccount, long timeInMillis) {
+        long end_ms = Utils.getMonthStart_ms(timeInMillis);
+
+        DataSourceTransaction dataSourceTransaction = new DataSourceTransaction(context);
+        String where = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + iAccount.getId()
+                + " AND " + ContentConstant.KEY_TRANSACTION_DATE + "<=" + end_ms;
+        ArrayList<ITransaction> iTransactionArrayList = new ArrayList<>();
+        dataSourceTransaction.getTransactions(iTransactionArrayList, where);
+
+        return (iTransactionArrayList.size() > 0);
+    }
+
+    public boolean hasAnyTransactionAfterMonth(Context context, IAccount iAccount, long timeInMillis) {
+        long start_ms = Utils.getMonthEnd_ms(timeInMillis);
+
+        DataSourceTransaction dataSourceTransaction = new DataSourceTransaction(context);
+        String where = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + iAccount.getId()
+                + " AND " + ContentConstant.KEY_TRANSACTION_DATE + ">=" + start_ms;
+        ArrayList<ITransaction> iTransactionArrayList = new ArrayList<>();
+        dataSourceTransaction.getTransactions(iTransactionArrayList, where);
+
+        return (iTransactionArrayList.size() > 0);
+    }
 }

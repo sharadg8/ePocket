@@ -16,7 +16,6 @@ import com.sharad.epocket.R;
 import com.sharad.epocket.utils.Constant;
 import com.sharad.epocket.utils.ScrollHandler;
 import com.sharad.epocket.utils.Utils;
-import com.sharad.epocket.widget.recyclerview.StickyRecyclerView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -24,24 +23,24 @@ import java.util.Collections;
 import java.util.Currency;
 import java.util.Locale;
 
-public class TransactionRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
-        implements StickyRecyclerView.HeaderIndexer {
-
+public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<ITransaction> itemList;
     private SparseArray<Section> mSections = new SparseArray<>();
     private OnItemClickListener itemClickListener = null;
 
+    private static final int VIEW_TYPE_SUMMARY = R.layout.item_account_transaction_list_summary;
+    private static final int VIEW_TYPE_PIE_CHART = R.layout.item_account_transaction_list_pie_chart;
     private static final int VIEW_TYPE_HEADER = R.layout.item_account_transaction_list_header;
     private static final int VIEW_TYPE_TRANSACTION_COLLAPSED = R.layout.item_account_transaction_list;
     private static final int VIEW_TYPE_TRANSACTION_EXPANDED = R.layout.item_account_transaction_list_expanded;
 
+    private int summaryItemCount = 0;
     private int mExpandedPosition = -1;
     private long mExpandedId = Constant.INVALID_ID;
     private final ScrollHandler mScrollHandler;
     private String mIsoCurrency;
     private Context mContext = null;
     private LayoutInflater mInflater = null;
-    private View mHeader = null;
 
     public static class Section {
         int firstPosition;
@@ -65,11 +64,10 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<RecyclerVie
         }
     }
 
-    public TransactionRecyclerAdapter(Context context, ScrollHandler smoothScrollController) {
+    public OverviewRecyclerAdapter(Context context, ScrollHandler smoothScrollController) {
         this.itemList = new ArrayList<>();
         mContext = context;
         mInflater = LayoutInflater.from(context);
-        mHeader = mInflater.inflate(R.layout.item_account_transaction_list_header, null, false);
         mIsoCurrency = Currency.getInstance(Locale.getDefault()).getCurrencyCode();
         mScrollHandler = smoothScrollController;
 
@@ -165,30 +163,6 @@ public class TransactionRecyclerAdapter extends RecyclerView.Adapter<RecyclerVie
     @Override
     public int getItemCount() {
         return (itemList.size() + mSections.size());
-    }
-
-    @Override
-    public int getHeaderPositionFromItemPosition(int position) {
-        int headerPosition = 0;
-        for (int i = 0; i < mSections.size(); i++) {
-            if (mSections.valueAt(i).sectionedPosition > position) {
-                break;
-            }
-            headerPosition = mSections.valueAt(i).sectionedPosition;
-        }
-        return headerPosition;
-    }
-
-    @Override
-    public int getHeaderItemsNumber(int headerPosition) {
-        return mSections.get(headerPosition).sectionSize;
-    }
-
-    @Override
-    public View getHeaderView(int headerPosition) {
-        TextView title = (TextView) mHeader.findViewById(R.id.header_title);
-        title.setText(mSections.get(headerPosition).getTitle());
-        return mHeader;
     }
 
     public boolean isSectionHeaderPosition(int position) {
