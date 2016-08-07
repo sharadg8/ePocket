@@ -127,6 +127,7 @@ public class AddCategoryDialogFragment extends DialogFragment {
             itemList.add(new ICategory(i));
         }
         CategoryRecyclerAdapter rcAdapter = new CategoryRecyclerAdapter(itemList);
+        rcAdapter.setIconTint(ContextCompat.getColor(getContext(), R.color.secondary_text));
         rcAdapter.setOnItemClickListener(new CategoryRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {

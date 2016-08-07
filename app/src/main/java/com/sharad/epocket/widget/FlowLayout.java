@@ -32,6 +32,8 @@ public class FlowLayout extends ViewGroup {
     private void init() {
         paddingHorizontal = getResources().getDimensionPixelSize(R.dimen.flowlayout_horizontal_padding);
         paddingVertical = getResources().getDimensionPixelSize(R.dimen.flowlayout_vertical_padding);
+
+        setVerticalScrollBarEnabled(true);
     }
 
     @Override

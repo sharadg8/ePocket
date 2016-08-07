@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sharad.epocket.R;
+import com.sharad.epocket.utils.BaseFragment;
 import com.sharad.epocket.widget.recyclerview.RecyclerItemClickListener;
 import com.sharad.epocket.widget.recyclerview.SnappyRecyclerView;
 
@@ -28,7 +29,7 @@ import java.util.List;
  * Use the {@link CardsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CardsFragment extends Fragment {
+public class CardsFragment extends BaseFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";

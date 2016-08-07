@@ -1,30 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_splash"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:orientation="vertical"
     tools:context="com.sharad.epocket.SplashActivity">
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.75"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_centerInParent="true"
         android:src="@drawable/ic_splash"
-        android:scaleType="fitCenter"
-        android:padding="120dp"/>
+        android:scaleType="fitCenter" />
 
     <TextView
         android:id="@+id/splash_text"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.25"
-        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="32dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
         android:text="Sharad"
+        android:textColor="@color/hint_text"
         android:textAppearance="@android:style/TextAppearance.Material.Display1"
         android:fontFamily="sans-serif-smallcaps"
         android:textStyle="normal|bold" />
 
-</LinearLayout>
+</RelativeLayout>

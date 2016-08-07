@@ -50,6 +50,7 @@ import android.widget.TextView;
 
 import com.sharad.epocket.R;
 import com.sharad.epocket.utils.Constant;
+import com.sharad.epocket.utils.Utils;
 import com.sharad.epocket.widget.recurrencepicker.EventRecurrence;
 import com.sharad.epocket.widget.recurrencepicker.RecurrencePickerDialog;
 import com.sharad.epocket.widget.transaction.CalculatorExpressionBuilder;
@@ -170,6 +171,7 @@ public class AddTransactionActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_transaction);
+        Utils.setTaskDescription(this);
 
         Bundle extras = getIntent().getExtras();
         long accountId = extras.getLong(Constant.ARG_ACCOUNT_NUMBER_LONG, Constant.INVALID_ID);

@@ -3,13 +3,12 @@ package com.sharad.epocket;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentTransaction;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,12 +21,10 @@ import com.sharad.epocket.cards.CardsFragment;
 import com.sharad.epocket.goals.GoalsFragment;
 import com.sharad.epocket.home.HomeFragment;
 import com.sharad.epocket.utils.BaseFragment;
-import com.sharad.epocket.widget.recyclerview.RecyclerItemClickListener;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.sharad.epocket.utils.Utils;
 
 public class MainActivity extends AppCompatActivity implements
+        NavigationView.OnNavigationItemSelectedListener,
         HomeFragment.OnFragmentInteractionListener,
         AccountsFragment.OnFragmentInteractionListener,
         BillsFragment.OnFragmentInteractionListener,
@@ -37,12 +34,12 @@ public class MainActivity extends AppCompatActivity implements
 
     private FloatingActionButton mFab;
     private BaseFragment mSelectedFragment;
-    List<NavigationDrawerItem> featureItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Utils.setTaskDescription(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -57,57 +54,61 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-        initNavigationDrawer(toolbar);
-    }
-
-    private void initNavigationDrawer(Toolbar toolbar) {
-        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        featureItem = new ArrayList<>();
-        //featureItem.add(new NavigationDrawerItem("Timeline", R.drawable.ic_list_black_24dp, HomeFragment.newInstance("","")));
-        featureItem.add(new NavigationDrawerItem("Accounts", R.drawable.ic_account_box_black_24dp, AccountsFragment.newInstance("","")));
-        featureItem.add(new NavigationDrawerItem("Budget", R.drawable.ic_budget_black_24px, BudgetFragment.newInstance("","")));
-        //featureItem.add(new NavigationDrawerItem("Goals", R.drawable.ic_goal_black_24px, GoalsFragment.newInstance("","")));
-        //featureItem.add(new NavigationDrawerItem("Cards", R.drawable.ic_credit_card_black_24dp, CardsFragment.newInstance("","")));
-        featureItem.add(new NavigationDrawerItem("Bills", R.drawable.ic_receipt_black_24dp, BillsFragment.newInstance("","")));
-        switchFeature(0);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
-
-        GridLayoutManager gridLayout = new GridLayoutManager(MainActivity.this, 2);
-
-        RecyclerView recyclerView = (RecyclerView)findViewById(R.id.lst_drawer_items);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(gridLayout);
-
-        DrawerGridRecycler rcAdapter = new DrawerGridRecycler(MainActivity.this, featureItem);
-        recyclerView.setAdapter(rcAdapter);
-
-        recyclerView.addOnItemTouchListener(
-            new RecyclerItemClickListener(this, new RecyclerItemClickListener.OnItemClickListener() {
-                @Override
-                public void onItemClick(View view, int position) {
-                    switchFeature(position);
-                    drawer.closeDrawer(GravityCompat.START);
-                }
-            })
-        );
+        mSelectedFragment = AccountsFragment.newInstance("","");
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        mSelectedFragment.setFabAppearance();
+        fragmentManager.beginTransaction().replace(R.id.content_main, mSelectedFragment).commit();
     }
 
-    private void switchFeature(int position) {
-        if(position < featureItem.size()) {
-            BaseFragment nextFragment = featureItem.get(position).getFragment();
-            if (nextFragment != null) {
-                mSelectedFragment = nextFragment;
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+        Class fragmentClass = null;
+        switch(id) {
+            case R.id.nav_accounts:
+                fragmentClass = AccountsFragment.class;
+                break;
+            case R.id.nav_budgets:
+                fragmentClass = BudgetFragment.class;
+                break;
+            case R.id.nav_goals:
+                fragmentClass = GoalsFragment.class;
+                break;
+            case R.id.nav_cards:
+                fragmentClass = CardsFragment.class;
+                break;
+            case R.id.nav_bills:
+                fragmentClass = BillsFragment.class;
+                break;
+            case R.id.nav_categories:
+                break;
+        }
+
+        if (fragmentClass != null) {
+            try {
+                mSelectedFragment = (BaseFragment) fragmentClass.newInstance();
+                FragmentManager fragmentManager = getSupportFragmentManager();
                 mSelectedFragment.setFabAppearance();
-                transaction.replace(R.id.content_main, mSelectedFragment);
-                transaction.commit();
+                fragmentManager.beginTransaction().replace(R.id.content_main, mSelectedFragment).commit();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 
     @Override

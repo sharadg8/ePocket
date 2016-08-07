@@ -10,6 +10,7 @@ import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 
 import com.sharad.epocket.R;
+import com.sharad.epocket.utils.Utils;
 import com.sharad.epocket.widget.FlipAnimation;
 
 public class AddCardActivity extends AppCompatActivity {
@@ -18,6 +19,7 @@ public class AddCardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_card);
+        Utils.setTaskDescription(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Add Card");

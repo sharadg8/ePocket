@@ -1,6 +1,11 @@
 package com.sharad.epocket.utils;
 
+import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorRes;
 import android.support.v4.content.ContextCompat;
@@ -9,6 +14,8 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
 import android.view.MenuItem;
+
+import com.sharad.epocket.R;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -67,6 +74,14 @@ public class Utils {
             localeMap.put(isoCurrency, selectedLocale);
         }
         return selectedLocale;
+    }
+
+    public static void setTaskDescription(Context context) {
+        if(context instanceof Activity) {
+            Bitmap bm = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_splash);
+            ((Activity)context).setTaskDescription(new ActivityManager.TaskDescription(
+                    context.getResources().getString(R.string.app_name), bm, Color.WHITE));
+        }
     }
 
     public static void tintMenuIcon(Context context, MenuItem item, @ColorRes int color) {

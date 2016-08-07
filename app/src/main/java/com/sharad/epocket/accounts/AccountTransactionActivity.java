@@ -12,6 +12,7 @@ import android.view.MenuItem;
 
 import com.sharad.epocket.R;
 import com.sharad.epocket.utils.Constant;
+import com.sharad.epocket.utils.Utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -37,6 +38,7 @@ public class AccountTransactionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_transaction);
+        Utils.setTaskDescription(this);
 
         Bundle extras = getIntent().getExtras();
         accountId = extras.getLong(Constant.ARG_ACCOUNT_NUMBER_LONG, Constant.INVALID_ID);

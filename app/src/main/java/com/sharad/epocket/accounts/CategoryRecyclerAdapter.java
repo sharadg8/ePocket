@@ -18,6 +18,7 @@ import java.util.ArrayList;
 public class CategoryRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public ArrayList<ICategory> itemList;
     private OnItemClickListener itemClickListener;
+    private int iconTint = -1;
 
     public CategoryRecyclerAdapter(ArrayList<ICategory> itemList) {
         this.itemList = itemList;
@@ -34,11 +35,18 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         ViewHolder holder = (ViewHolder) viewHolder;
         holder.button.setImageResource(itemList.get(position).getImageResource());
+        if(iconTint != -1) {
+            holder.button.setColorFilter(iconTint);
+        }
     }
 
     @Override
     public int getItemCount() {
         return itemList == null ? 0 : itemList.size();
+    }
+
+    public void setIconTint(int iconTint) {
+        this.iconTint = iconTint;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
