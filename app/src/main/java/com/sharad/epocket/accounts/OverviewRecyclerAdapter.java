@@ -36,7 +36,7 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
     private static final int VIEW_TYPE_TRANSACTION_COLLAPSED = R.layout.item_account_transaction_list;
     private static final int VIEW_TYPE_TRANSACTION_EXPANDED = R.layout.item_account_transaction_list_expanded;
 
-    private int summaryItemCount = 0;
+    private int summaryItemCount = 1;
     private int mExpandedPosition = -1;
     private long mExpandedId = Constant.INVALID_ID;
     private final ScrollHandler mScrollHandler;
@@ -128,6 +128,8 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         final View v = mInflater.inflate(viewType, viewGroup, false /* attachToRoot */);
         switch(viewType) {
+            case VIEW_TYPE_SUMMARY:
+                return  new SummaryHolder(v);
             case VIEW_TYPE_HEADER:
                 return new HeaderHolder(v);
             case VIEW_TYPE_TRANSACTION_COLLAPSED:
@@ -140,15 +142,26 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        if(viewHolder.getItemViewType() == VIEW_TYPE_HEADER) {
-            ((HeaderHolder) viewHolder).bind(mSections.get(position));
-        } else {
-            ((ItemHolder)viewHolder).bind(this.itemList.get(sectionedPositionToPosition(position)));
+        switch (viewHolder.getItemViewType()) {
+            case VIEW_TYPE_SUMMARY:
+                ((SummaryHolder) viewHolder).bind(mSections.get(position));
+                break;
+            case VIEW_TYPE_HEADER:
+                position -= summaryItemCount;
+                ((HeaderHolder) viewHolder).bind(mSections.get(position));
+                break;
+            case VIEW_TYPE_TRANSACTION_COLLAPSED:
+            case VIEW_TYPE_TRANSACTION_EXPANDED:
+                ((ItemHolder)viewHolder).bind(this.itemList.get(sectionedPositionToPosition(position)));
+                break;
         }
     }
 
     @Override
     public int getItemViewType(int position) {
+        if(position < summaryItemCount) {
+            return VIEW_TYPE_SUMMARY;
+        }
         if(isSectionHeaderPosition(position)) {
             return VIEW_TYPE_HEADER;
         }
@@ -166,11 +179,15 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public int getItemCount() {
-        return (itemList.size() + mSections.size());
+        return (summaryItemCount + itemList.size() + mSections.size());
     }
 
     @Override
     public int getHeaderPositionFromItemPosition(int position) {
+        if(position < summaryItemCount) {
+            return RecyclerView.NO_POSITION;
+        }
+        position -= summaryItemCount;
         int headerPosition = 0;
         for (int i = 0; i < mSections.size(); i++) {
             if (mSections.valueAt(i).sectionedPosition > position) {
@@ -194,10 +211,12 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public boolean isSectionHeaderPosition(int position) {
+        position -= summaryItemCount;
         return mSections.get(position) != null;
     }
 
     public int positionToSectionedPosition(int position) {
+        position -= summaryItemCount;
         int offset = 0;
         for (int i = 0; i < mSections.size(); i++) {
             if (mSections.valueAt(i).firstPosition >= position) {
@@ -212,6 +231,7 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
         if (isSectionHeaderPosition(sectionedPosition)) {
             return RecyclerView.NO_POSITION;
         }
+        sectionedPosition -= summaryItemCount;
 
         int offset = 0;
         for (int i = 0; i < mSections.size(); i++) {
@@ -393,6 +413,16 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
         public void bind(Section item) {
             TextView title = (TextView) this.itemView.findViewById(R.id.header_title);
             title.setText(item.getTitle());
+        }
+    }
+
+    class SummaryHolder extends RecyclerView.ViewHolder {
+        public SummaryHolder(View itemView) {
+            super(itemView);
+        }
+        public void bind(Section item) {
+            //TextView title = (TextView) this.itemView.findViewById(R.id.header_title);
+            //title.setText(item.getTitle());
         }
     }
 }

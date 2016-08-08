@@ -162,6 +162,7 @@ public class AccountOverviewActivity extends AppCompatActivity implements Scroll
         recyclerAdapter.setItemList(iTransactionArrayList);
         if(iTransactionArrayList.size() > 0) {
             smoothScrollTo(0);
+            recyclerView.invalidateHeaderView();
         }
 
         SimpleDateFormat df = new SimpleDateFormat("MMM yyyy");

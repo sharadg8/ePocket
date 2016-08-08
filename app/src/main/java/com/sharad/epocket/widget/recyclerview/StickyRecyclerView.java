@@ -45,6 +45,7 @@ public class StickyRecyclerView extends FrameLayout {
     protected int mCurrentSectionPos = -1; // Position of section that has its header on the
                                            // top of the view
     protected int mNextSectionPosition = -1; // Position of next section's header
+    private boolean refreshHeader = true;
 
     /**
      * Interface that must be implemented by the ListView adapter to provide headers locations
@@ -133,8 +134,7 @@ public class StickyRecyclerView extends FrameLayout {
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                int firstVisibleItem = mLayoutManager.findFirstVisibleItemPosition();
-                updateStickyHeader(firstVisibleItem);
+                updateStickyHeader(mLayoutManager.findFirstVisibleItemPosition());
                 super.onScrolled(recyclerView, dx, dy);
             }
 
@@ -156,6 +156,11 @@ public class StickyRecyclerView extends FrameLayout {
         mContext = context;
      }
 
+    public void invalidateHeaderView() {
+        refreshHeader = true;
+        updateStickyHeader(mLayoutManager.findFirstVisibleItemPosition());
+    }
+
     public LinearLayoutManager getLayoutManager() {
         return mLayoutManager;
     }
@@ -173,7 +178,8 @@ public class StickyRecyclerView extends FrameLayout {
 
             // New section - set it in the header view
             boolean newView = false;
-            if (sectionPos != mCurrentSectionPos) {
+            if ((sectionPos != mCurrentSectionPos) || refreshHeader){
+                refreshHeader = false;
                 // No header for current position , use the dummy invisible one, hide the separator
                 if (sectionPos == -1) {
                     sectionSize = 0;
