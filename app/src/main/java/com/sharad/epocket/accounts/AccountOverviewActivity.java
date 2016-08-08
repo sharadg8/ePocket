@@ -7,8 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +16,7 @@ import com.sharad.epocket.database.ContentConstant;
 import com.sharad.epocket.utils.Constant;
 import com.sharad.epocket.utils.ScrollHandler;
 import com.sharad.epocket.utils.Utils;
+import com.sharad.epocket.widget.recyclerview.StickyRecyclerView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,9 +25,8 @@ import java.util.Calendar;
 public class AccountOverviewActivity extends AppCompatActivity implements ScrollHandler {
     private IAccount iAccount = null;
     private ArrayList<ITransaction> iTransactionArrayList = null;
-    private RecyclerView recyclerView = null;
+    private StickyRecyclerView recyclerView = null;
     private OverviewRecyclerAdapter recyclerAdapter = null;
-    private LinearLayoutManager layoutManager = null;
     private Calendar selectedMonth = Calendar.getInstance();
     private Button bMonth;
 
@@ -49,15 +47,14 @@ public class AccountOverviewActivity extends AppCompatActivity implements Scroll
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         bMonth = (Button) findViewById(R.id.month);
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
+        recyclerView = (StickyRecyclerView) findViewById(R.id.recyclerView);
 
         if(iAccount != null) {
             setTitle(iAccount.getTitle());
             iTransactionArrayList = new ArrayList<>();
             recyclerAdapter = new OverviewRecyclerAdapter(this, this);
             recyclerAdapter.setIsoCurrency(iAccount.getIsoCurrency());
+            recyclerView.setIndexer(recyclerAdapter);
             recyclerView.setAdapter(recyclerAdapter);
 
             switchToMonth(selectedMonth.getTimeInMillis());
@@ -140,7 +137,7 @@ public class AccountOverviewActivity extends AppCompatActivity implements Scroll
             findViewById(R.id.previous).setVisibility(View.INVISIBLE);
         }
         if(manager.hasAnyTransactionAfterMonth(this, iAccount, timeInMillis)
-                || timeInMillis < Calendar.getInstance().getTimeInMillis()) {
+                || Utils.getMonthEnd_ms(timeInMillis) < Calendar.getInstance().getTimeInMillis()) {
             findViewById(R.id.next).setVisibility(View.VISIBLE);
         } else {
             findViewById(R.id.next).setVisibility(View.INVISIBLE);
@@ -164,7 +161,7 @@ public class AccountOverviewActivity extends AppCompatActivity implements Scroll
 
         recyclerAdapter.setItemList(iTransactionArrayList);
         if(iTransactionArrayList.size() > 0) {
-            recyclerView.smoothScrollToPosition(0);
+            smoothScrollTo(0);
         }
 
         SimpleDateFormat df = new SimpleDateFormat("MMM yyyy");
@@ -178,6 +175,6 @@ public class AccountOverviewActivity extends AppCompatActivity implements Scroll
 
     @Override
     public void smoothScrollTo(int position) {
-        layoutManager.scrollToPosition(position);
+        recyclerView.getLayoutManager().scrollToPosition(position);
     }
 }
