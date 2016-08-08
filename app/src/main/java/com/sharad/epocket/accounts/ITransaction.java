@@ -29,6 +29,7 @@ public class ITransaction extends Item {
     public static final int TRANSACTION_TYPE_ACCOUNT_TRANSFER = 2;
     public static final int TRANSACTION_TYPE_ACCOUNT_WITHDRAW = 3;
     public static final int TRANSACTION_TYPE_ACCOUNT_DEPOSIT  = 4;
+    public static final int TRANSACTION_TYPE_MONTH_OPENING_BALANCE  = 5;
 
     public static final int TRANSACTION_SUB_TYPE_ACCOUNT_CARD = 1;
     public static final int TRANSACTION_SUB_TYPE_ACCOUNT_CASH = 2;

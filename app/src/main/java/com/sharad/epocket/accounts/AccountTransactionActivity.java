@@ -73,6 +73,7 @@ public class AccountTransactionActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.home) {
+            setResult(RESULT_CANCELED);
             finish();
             return true;
         }

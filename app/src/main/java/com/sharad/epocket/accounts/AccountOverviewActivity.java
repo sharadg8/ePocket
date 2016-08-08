@@ -1,5 +1,6 @@
 package com.sharad.epocket.accounts;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -75,7 +77,7 @@ public class AccountOverviewActivity extends AppCompatActivity implements Scroll
 
                 @Override
                 public void onDeleteClicked(final int position, final ITransaction iTransaction) {
-                    new AlertDialog.Builder(getBaseContext())
+                    new AlertDialog.Builder(AccountOverviewActivity.this)
                             .setMessage("Delete this transaction?")
                             .setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
@@ -92,6 +94,40 @@ public class AccountOverviewActivity extends AppCompatActivity implements Scroll
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if(id == android.R.id.home) {
+            setResult(RESULT_CANCELED);
+            finish();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_CANCELED) {
+            return;
+        }
+
+        switch (requestCode) {
+            case Constant.REQ_EDIT_TRANSACTION:
+                long transactionId = data.getExtras().getLong(Constant.ARG_TRANSACTION_NUMBER_LONG, Constant.INVALID_ID);
+                if (transactionId != Constant.INVALID_ID) {
+                    // TODO update this to retain current position.
+                    switchToMonth(selectedMonth.getTimeInMillis());
+                }
+                break;
+        }
+    }
+
     private void showWithdrawDialog(ITransaction iTransaction) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         Fragment prev = getSupportFragmentManager().findFragmentByTag(Constant.DLG_ACCOUNT_WITHDRAW);
@@ -105,8 +141,8 @@ public class AccountOverviewActivity extends AppCompatActivity implements Scroll
         newFragment.setOnWithdrawDialogListener(new WithdrawDialogFragment.OnWithdrawDialogListener() {
             @Override
             public void onTransactionUpdated(ITransaction iTransaction) {
-                /* TODO handle this */
-                //onActivityResult(Constant.REQ_ADD_TRANSACTION, Activity.RESULT_OK, null);
+                // TODO update this to retain current position.
+                switchToMonth(selectedMonth.getTimeInMillis());
             }
         });
         newFragment.show(ft, Constant.DLG_ACCOUNT_WITHDRAW);
@@ -158,12 +194,11 @@ public class AccountOverviewActivity extends AppCompatActivity implements Scroll
                 + " AND " + ContentConstant.KEY_TRANSACTION_DATE + "<=" + end_ms;
 
         dataSourceTransaction.getTransactions(iTransactionArrayList, where);
-
-        recyclerAdapter.setItemList(iTransactionArrayList);
         if(iTransactionArrayList.size() > 0) {
             smoothScrollTo(0);
             recyclerView.invalidateHeaderView();
         }
+        recyclerAdapter.setItemList(iTransactionArrayList);
 
         SimpleDateFormat df = new SimpleDateFormat("MMM yyyy");
         bMonth.setText(df.format(selectedMonth.getTime()));

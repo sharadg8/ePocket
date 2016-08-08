@@ -3,8 +3,6 @@ package com.sharad.epocket.accounts;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateUtils;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,30 +12,32 @@ import android.widget.TextView;
 
 import com.sharad.epocket.R;
 import com.sharad.epocket.utils.Constant;
+import com.sharad.epocket.utils.Item;
 import com.sharad.epocket.utils.ScrollHandler;
 import com.sharad.epocket.utils.Utils;
+import com.sharad.epocket.widget.chart.LineChartView;
 import com.sharad.epocket.widget.recyclerview.StickyRecyclerView;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Currency;
 import java.util.Locale;
 
 public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         implements StickyRecyclerView.HeaderIndexer {
-    private ArrayList<ITransaction> itemList;
-    private SparseArray<Section> mSections = new SparseArray<>();
+    private ArrayList<Item> itemList = null;
+    private ArrayList<Integer> itemType = null;
     private OnItemClickListener itemClickListener = null;
 
     private static final int VIEW_TYPE_SUMMARY = R.layout.item_account_transaction_list_summary;
+    private static final int VIEW_TYPE_LINE_CHART = R.layout.item_account_transaction_list_line_chart;
     private static final int VIEW_TYPE_PIE_CHART = R.layout.item_account_transaction_list_pie_chart;
     private static final int VIEW_TYPE_HEADER = R.layout.item_account_transaction_list_header;
-    private static final int VIEW_TYPE_TRANSACTION_COLLAPSED = R.layout.item_account_transaction_list;
+    private static final int VIEW_TYPE_TRANSACTION = R.layout.item_account_transaction_list;
     private static final int VIEW_TYPE_TRANSACTION_EXPANDED = R.layout.item_account_transaction_list_expanded;
 
-    private int summaryItemCount = 1;
-    private int mExpandedPosition = -1;
+    private int mExpandedPosition = RecyclerView.NO_POSITION;
     private long mExpandedId = Constant.INVALID_ID;
     private final ScrollHandler mScrollHandler;
     private String mIsoCurrency;
@@ -45,30 +45,11 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
     private LayoutInflater mInflater = null;
     private View mHeader = null;
 
-    public static class Section {
-        int firstPosition;
-        int sectionedPosition;
-        int sectionSize;
-        long date;
-
-        public Section(int firstPosition, long date) {
-            this.firstPosition = firstPosition;
-            this.date = date;
-        }
-
-        public CharSequence getTitle() {
-            if(DateUtils.isToday(date)) {
-                return "Today";
-            } else if(Utils.isYesterday(date)) {
-                return "Yesterday";
-            }
-            SimpleDateFormat df = new SimpleDateFormat("EEE, dd MMM yyyy");
-            return df.format(date);
-        }
-    }
+    private float[] lineChartData = new float[31];
 
     public OverviewRecyclerAdapter(Context context, ScrollHandler smoothScrollController) {
         this.itemList = new ArrayList<>();
+        this.itemType = new ArrayList<>();
         mContext = context;
         mInflater = LayoutInflater.from(context);
         mHeader = mInflater.inflate(R.layout.item_account_transaction_list_header, null, false);
@@ -78,46 +59,37 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
         setHasStableIds(true);
     }
 
-    public ArrayList<ITransaction> getItemList() {
-        return itemList;
-    }
-
-    public void setItemList(ArrayList<ITransaction> itemList) {
+    public void setItemList(ArrayList<ITransaction> transactionArrayList) {
         this.itemList.clear();
+        this.itemType.clear();
 
-        Collections.sort(itemList, new ITransaction.iComparator());
+        Collections.sort(transactionArrayList, new ITransaction.iComparator());
 
-        this.itemList.addAll(itemList);
+        this.itemList.add(new Item(0));
+        this.itemType.add(VIEW_TYPE_SUMMARY);
 
-        updateSections();
-        notifyDataSetChanged();
-    }
+        this.itemList.add(new Item(0));
+        this.itemType.add(VIEW_TYPE_LINE_CHART);
 
-    public void updateSections() {
-        int position = 0;
-        int size = 0;
+        this.itemList.add(new Item(0));
+        this.itemType.add(VIEW_TYPE_PIE_CHART);
+
+        this.itemList.add(new Item(0));
+        this.itemType.add(VIEW_TYPE_PIE_CHART);
+
         long date = 0;
-        mSections.clear();
-        for (ITransaction transaction : this.itemList) {
+        for (ITransaction transaction : transactionArrayList) {
             if(!Utils.isSameDay(date, transaction.getDate())) {
-                /**
-                 * Found another day, lets close the previous section and insert new one
-                 */
-                if(mSections.size() > 0) {
-                    mSections.valueAt(mSections.size()-1).sectionSize = size;
-                    size = 0;
-                }
                 date = transaction.getDate();
-                Section section = new Section(position, date);
-                section.sectionedPosition = mSections.size() + position;
-                mSections.append(section.sectionedPosition, section);
+                this.itemList.add(new Item(date));
+                this.itemType.add(VIEW_TYPE_HEADER);
             }
-            size++;
-            position++;
+            this.itemList.add(transaction);
+            this.itemType.add(VIEW_TYPE_TRANSACTION);
         }
-        if(mSections.size() > 0) {
-            mSections.valueAt(mSections.size()-1).sectionSize = size;
-        }
+
+        computeLineChartData();
+        notifyDataSetChanged();
     }
 
     public void setIsoCurrency(String isoCurrency) {
@@ -129,10 +101,13 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
         final View v = mInflater.inflate(viewType, viewGroup, false /* attachToRoot */);
         switch(viewType) {
             case VIEW_TYPE_SUMMARY:
+            case VIEW_TYPE_PIE_CHART:
                 return  new SummaryHolder(v);
+            case VIEW_TYPE_LINE_CHART:
+                return  new LineChartHolder(v);
             case VIEW_TYPE_HEADER:
                 return new HeaderHolder(v);
-            case VIEW_TYPE_TRANSACTION_COLLAPSED:
+            case VIEW_TYPE_TRANSACTION:
                 return new ItemHolder(v);
             case VIEW_TYPE_TRANSACTION_EXPANDED:
                 return new ExpandedItemHolder(v);
@@ -144,29 +119,31 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         switch (viewHolder.getItemViewType()) {
             case VIEW_TYPE_SUMMARY:
-                ((SummaryHolder) viewHolder).bind(mSections.get(position));
+            case VIEW_TYPE_PIE_CHART:
+                ((SummaryHolder)viewHolder).bind();
+                break;
+            case VIEW_TYPE_LINE_CHART:
+                ((LineChartHolder)viewHolder).bind();
                 break;
             case VIEW_TYPE_HEADER:
-                position -= summaryItemCount;
-                ((HeaderHolder) viewHolder).bind(mSections.get(position));
+                ((HeaderHolder)viewHolder).bind(itemList.get(position));
                 break;
-            case VIEW_TYPE_TRANSACTION_COLLAPSED:
+            case VIEW_TYPE_TRANSACTION:
             case VIEW_TYPE_TRANSACTION_EXPANDED:
-                ((ItemHolder)viewHolder).bind(this.itemList.get(sectionedPositionToPosition(position)));
+                ((ItemHolder)viewHolder).bind(this.itemList.get(position));
                 break;
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-        if(position < summaryItemCount) {
-            return VIEW_TYPE_SUMMARY;
+        int type = itemType.get(position);
+        if(type == VIEW_TYPE_TRANSACTION) {
+            long stableId = this.itemList.get(position).getId();
+            type = (stableId == mExpandedId) ? VIEW_TYPE_TRANSACTION_EXPANDED
+                    : VIEW_TYPE_TRANSACTION;
         }
-        if(isSectionHeaderPosition(position)) {
-            return VIEW_TYPE_HEADER;
-        }
-        long stableId = this.itemList.get(sectionedPositionToPosition(position)).getId();
-        return (stableId == mExpandedId) ? VIEW_TYPE_TRANSACTION_EXPANDED : VIEW_TYPE_TRANSACTION_COLLAPSED;
+        return type;
     }
 
     @Override
@@ -179,76 +156,94 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public int getItemCount() {
-        return (summaryItemCount + itemList.size() + mSections.size());
+        return itemList.size();
     }
 
     @Override
     public int getHeaderPositionFromItemPosition(int position) {
-        if(position < summaryItemCount) {
-            return RecyclerView.NO_POSITION;
-        }
-        position -= summaryItemCount;
-        int headerPosition = 0;
-        for (int i = 0; i < mSections.size(); i++) {
-            if (mSections.valueAt(i).sectionedPosition > position) {
-                break;
+        for(int i = position; i>=0; i--) {
+            if(itemType.get(i) == VIEW_TYPE_HEADER){
+                return i;
             }
-            headerPosition = mSections.valueAt(i).sectionedPosition;
         }
-        return headerPosition;
+        return RecyclerView.NO_POSITION;
     }
 
     @Override
     public int getHeaderItemsNumber(int headerPosition) {
-        return mSections.get(headerPosition).sectionSize;
+        int count = 0;
+        for(int i = headerPosition+1; i<itemType.size(); i++) {
+            if(itemType.get(i) == VIEW_TYPE_HEADER){
+                return count;
+            }
+            count++;
+        }
+        return 1;
     }
 
     @Override
     public View getHeaderView(int headerPosition) {
         TextView title = (TextView) mHeader.findViewById(R.id.header_title);
-        title.setText(mSections.get(headerPosition).getTitle());
+        title.setText(Utils.getLongDateString(itemList.get(headerPosition).getId()));
         return mHeader;
-    }
-
-    public boolean isSectionHeaderPosition(int position) {
-        position -= summaryItemCount;
-        return mSections.get(position) != null;
-    }
-
-    public int positionToSectionedPosition(int position) {
-        position -= summaryItemCount;
-        int offset = 0;
-        for (int i = 0; i < mSections.size(); i++) {
-            if (mSections.valueAt(i).firstPosition >= position) {
-                break;
-            }
-            ++offset;
-        }
-        return position + offset;
-    }
-
-    public int sectionedPositionToPosition(int sectionedPosition) {
-        if (isSectionHeaderPosition(sectionedPosition)) {
-            return RecyclerView.NO_POSITION;
-        }
-        sectionedPosition -= summaryItemCount;
-
-        int offset = 0;
-        for (int i = 0; i < mSections.size(); i++) {
-            if (mSections.valueAt(i).sectionedPosition > sectionedPosition) {
-                break;
-            }
-            --offset;
-        }
-        return sectionedPosition + offset;
     }
 
     public void removeAt(int position) {
         itemList.remove(position);
-        updateSections();
-        int sectionedPosition = positionToSectionedPosition(position);
-        notifyItemRemoved(sectionedPosition);
-        notifyItemRangeChanged(sectionedPosition, getItemCount());
+        itemType.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, getItemCount());
+
+        /**
+         * Remove extra headers if any left by position
+         */
+        if((position == itemType.size()-2)
+                || (isHeaderPosition(position-1) && isHeaderPosition(position))) {
+            itemList.remove(position-1);
+            itemType.remove(position-1);
+            notifyItemRemoved(position-1);
+            notifyItemRangeChanged(position-1, getItemCount());
+        }
+
+        computeLineChartData();
+    }
+
+    private boolean isHeaderPosition(int position) {
+        if((position >= 0) && (position < itemType.size())) {
+            return (itemType.get(position) == VIEW_TYPE_HEADER);
+        }
+        return false;
+    }
+
+    private void computeLineChartData() {
+        float balance = 0;
+        float transaction[] = new float[lineChartData.length];
+        Calendar calendar = Calendar.getInstance();
+        for(int i=0; i<itemType.size(); i++) {
+            if(itemType.get(i) == VIEW_TYPE_TRANSACTION) {
+                ITransaction iTransaction = (ITransaction)itemList.get(i);
+                calendar.setTimeInMillis(iTransaction.getDate());
+                int index = calendar.get(Calendar.DAY_OF_MONTH) - 1;
+                switch (iTransaction.getType()) {
+                    case ITransaction.TRANSACTION_TYPE_MONTH_OPENING_BALANCE:
+                        balance = iTransaction.getAccount();
+                        break;
+                    case ITransaction.TRANSACTION_TYPE_ACCOUNT_EXPENSE:
+                    case ITransaction.TRANSACTION_TYPE_ACCOUNT_DEPOSIT:
+                        transaction[index] -= iTransaction.getAmount();
+                        break;
+                    case ITransaction.TRANSACTION_TYPE_ACCOUNT_INCOME:
+                    case ITransaction.TRANSACTION_TYPE_ACCOUNT_WITHDRAW:
+                        transaction[index] += iTransaction.getAmount();
+                        break;
+                }
+            }
+        }
+
+        for(int i=0; i<lineChartData.length; i++) {
+            balance += transaction[i];
+            lineChartData[i] = balance;
+        }
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
@@ -264,7 +259,7 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
      * Request the UI to expand the alarm at selected position and scroll it into view.
      */
     public void expand(int position) {
-        final long stableId = this.itemList.get(sectionedPositionToPosition(position)).getId();;
+        final long stableId = this.itemList.get(position).getId();;
         if (mExpandedId == stableId) {
             return;
         }
@@ -300,63 +295,66 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
             });
         }
 
-        public void bind(ITransaction iTransaction) {
-            DataSourceCategory dataSourceCategory = new DataSourceCategory(mContext);
-            ICategory iCategory = dataSourceCategory.getCategory(iTransaction.getCategory());
+        public void bind(Item item) {
+            if(item instanceof ITransaction) {
+                ITransaction iTransaction = (ITransaction)item;
+                DataSourceCategory dataSourceCategory = new DataSourceCategory(mContext);
+                ICategory iCategory = dataSourceCategory.getCategory(iTransaction.getCategory());
 
-            TextView category = (TextView) itemView.findViewById(R.id.category);
-            TextView amount = (TextView) itemView.findViewById(R.id.amount);
-            TextView source = (TextView) itemView.findViewById(R.id.source);
-            TextView comment = (TextView) itemView.findViewById(R.id.comment);
-            ImageView categoryIcon = (ImageView) itemView.findViewById(R.id.category_icon);
-            View categoryColor = itemView.findViewById(R.id.category_color);
+                TextView category = (TextView) itemView.findViewById(R.id.category);
+                TextView amount = (TextView) itemView.findViewById(R.id.amount);
+                TextView source = (TextView) itemView.findViewById(R.id.source);
+                TextView comment = (TextView) itemView.findViewById(R.id.comment);
+                ImageView categoryIcon = (ImageView) itemView.findViewById(R.id.category_icon);
+                View categoryColor = itemView.findViewById(R.id.category_color);
 
-            amount.setText(Utils.formatCurrencyDec(mIsoCurrency, iTransaction.getAmount()));
-            String type = "";
-            switch (iTransaction.getType()) {
-                case ITransaction.TRANSACTION_TYPE_ACCOUNT_EXPENSE:
-                    category.setText(iCategory.getTitle());
-                    categoryIcon.setImageResource(iCategory.getImageResource());
-                    categoryColor.setBackgroundColor(iCategory.getColor());
-                    amount.setTextColor(ContextCompat.getColor(mContext, R.color.transaction_expense));
-                    type = "Expense";
-                    break;
-                case ITransaction.TRANSACTION_TYPE_ACCOUNT_INCOME:
-                    category.setText(iCategory.getTitle());
-                    categoryIcon.setImageResource(iCategory.getImageResource());
-                    categoryColor.setBackgroundColor(iCategory.getColor());
-                    amount.setTextColor(ContextCompat.getColor(mContext, R.color.transaction_income));
-                    type = "Income";
-                    break;
-                case ITransaction.TRANSACTION_TYPE_ACCOUNT_TRANSFER:
-                    amount.setTextColor(ContextCompat.getColor(mContext, R.color.transaction_transfer));
-                    type = "Transfer";
-                    break;
-                case ITransaction.TRANSACTION_TYPE_ACCOUNT_WITHDRAW:
-                    category.setText("Withdraw");
-                    categoryIcon.setImageResource(R.drawable.ic_local_atm_black_24px);
-                    categoryColor.setBackgroundColor(ContextCompat.getColor(mContext, R.color.primary));
-                    amount.setTextColor(ContextCompat.getColor(mContext, R.color.transaction_transfer));
-                    type = "";
-                    break;
-                case ITransaction.TRANSACTION_TYPE_ACCOUNT_DEPOSIT:
-                    category.setText("Deposit");
-                    categoryIcon.setImageResource(R.drawable.ic_local_atm_black_24px);
-                    categoryColor.setBackgroundColor(ContextCompat.getColor(mContext, R.color.primary));
-                    amount.setTextColor(ContextCompat.getColor(mContext, R.color.transaction_transfer));
-                    type = "";
-                    break;
-            }
+                amount.setText(Utils.formatCurrencyDec(mIsoCurrency, iTransaction.getAmount()));
+                String type = "";
+                switch (iTransaction.getType()) {
+                    case ITransaction.TRANSACTION_TYPE_ACCOUNT_EXPENSE:
+                        category.setText(iCategory.getTitle());
+                        categoryIcon.setImageResource(iCategory.getImageResource());
+                        categoryColor.setBackgroundColor(iCategory.getColor());
+                        amount.setTextColor(ContextCompat.getColor(mContext, R.color.transaction_expense));
+                        type = "Expense";
+                        break;
+                    case ITransaction.TRANSACTION_TYPE_ACCOUNT_INCOME:
+                        category.setText(iCategory.getTitle());
+                        categoryIcon.setImageResource(iCategory.getImageResource());
+                        categoryColor.setBackgroundColor(iCategory.getColor());
+                        amount.setTextColor(ContextCompat.getColor(mContext, R.color.transaction_income));
+                        type = "Income";
+                        break;
+                    case ITransaction.TRANSACTION_TYPE_ACCOUNT_TRANSFER:
+                        amount.setTextColor(ContextCompat.getColor(mContext, R.color.transaction_transfer));
+                        type = "Transfer";
+                        break;
+                    case ITransaction.TRANSACTION_TYPE_ACCOUNT_WITHDRAW:
+                        category.setText("Withdraw");
+                        categoryIcon.setImageResource(R.drawable.ic_local_atm_black_24px);
+                        categoryColor.setBackgroundColor(ContextCompat.getColor(mContext, R.color.primary));
+                        amount.setTextColor(ContextCompat.getColor(mContext, R.color.transaction_transfer));
+                        type = "";
+                        break;
+                    case ITransaction.TRANSACTION_TYPE_ACCOUNT_DEPOSIT:
+                        category.setText("Deposit");
+                        categoryIcon.setImageResource(R.drawable.ic_local_atm_black_24px);
+                        categoryColor.setBackgroundColor(ContextCompat.getColor(mContext, R.color.primary));
+                        amount.setTextColor(ContextCompat.getColor(mContext, R.color.transaction_transfer));
+                        type = "";
+                        break;
+                }
 
-            comment.setText((iTransaction.getComment().length() > 0) ? iTransaction.getComment() : type);
+                comment.setText((iTransaction.getComment().length() > 0) ? iTransaction.getComment() : type);
 
-            switch (iTransaction.getSubType()) {
-                case ITransaction.TRANSACTION_SUB_TYPE_ACCOUNT_CARD:
-                    source.setText("Card");
-                    break;
-                case ITransaction.TRANSACTION_SUB_TYPE_ACCOUNT_CASH:
-                    source.setText("Cash");
-                    break;
+                switch (iTransaction.getSubType()) {
+                    case ITransaction.TRANSACTION_SUB_TYPE_ACCOUNT_CARD:
+                        source.setText("Card");
+                        break;
+                    case ITransaction.TRANSACTION_SUB_TYPE_ACCOUNT_CASH:
+                        source.setText("Cash");
+                        break;
+                }
             }
         }
     }
@@ -373,8 +371,7 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
                 @Override
                 public void onClick(View v) {
                     if(itemClickListener != null) {
-                        itemClickListener.onEditClicked(
-                                sectionedPositionToPosition(getAdapterPosition()), mTransaction);
+                        itemClickListener.onEditClicked(getAdapterPosition(), mTransaction);
                     }
                 }
             });
@@ -383,8 +380,7 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
                 @Override
                 public void onClick(View v) {
                     if(itemClickListener != null) {
-                        itemClickListener.onDeleteClicked(
-                                sectionedPositionToPosition(getAdapterPosition()), mTransaction);
+                        itemClickListener.onDeleteClicked(getAdapterPosition(), mTransaction);
                     }
                 }
             });
@@ -400,9 +396,12 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
             });
         }
 
-        public void bind(ITransaction iTransaction) {
-            super.bind(iTransaction);
-            mTransaction = iTransaction;
+        public void bind(Item item) {
+            super.bind(item);
+            if(item instanceof ITransaction) {
+                ITransaction iTransaction = (ITransaction) item;
+                mTransaction = iTransaction;
+            }
         }
     }
 
@@ -410,9 +409,9 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
         public HeaderHolder(View itemView) {
             super(itemView);
         }
-        public void bind(Section item) {
+        public void bind(Item item) {
             TextView title = (TextView) this.itemView.findViewById(R.id.header_title);
-            title.setText(item.getTitle());
+            title.setText(Utils.getLongDateString(item.getId()));
         }
     }
 
@@ -420,9 +419,17 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
         public SummaryHolder(View itemView) {
             super(itemView);
         }
-        public void bind(Section item) {
-            //TextView title = (TextView) this.itemView.findViewById(R.id.header_title);
-            //title.setText(item.getTitle());
+        public void bind() {
+        }
+    }
+
+    class LineChartHolder extends RecyclerView.ViewHolder {
+        public LineChartHolder(View itemView) {
+            super(itemView);
+        }
+        public void bind() {
+            LineChartView chart = (LineChartView) itemView.findViewById(R.id.chart);
+            chart.setChartData(lineChartData);
         }
     }
 }

@@ -12,6 +12,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.format.DateUtils;
 import android.text.style.RelativeSizeSpan;
 import android.view.MenuItem;
 
@@ -20,6 +21,7 @@ import com.sharad.epocket.R;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
@@ -92,6 +94,19 @@ public class Utils {
 
             item.setIcon(wrapDrawable);
         }
+    }
+
+    public static String getLongDateString(long timeInMsec) {
+        String text;
+        if(DateUtils.isToday(timeInMsec)) {
+            text = "Today";
+        } else if(isYesterday(timeInMsec)) {
+            text = "Yesterday";
+        } else {
+            SimpleDateFormat df = new SimpleDateFormat("EEE, dd MMM yyyy");
+            text = df.format(timeInMsec);
+        }
+        return text;
     }
 
     public static long getMonthStart_ms(long time_ms){
