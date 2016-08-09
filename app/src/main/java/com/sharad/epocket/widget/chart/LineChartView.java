@@ -1,5 +1,6 @@
 package com.sharad.epocket.widget.chart;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -7,7 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.animation.AnimationUtils;
+import android.view.animation.OvershootInterpolator;
 
 /**
  * Created by Sharad on 08-Aug-16.
@@ -16,31 +17,15 @@ import android.view.animation.AnimationUtils;
 public class LineChartView extends View {
 
     private static final int MIN_LINES = 3;
-    private static final int MAX_LINES = 8;
+    private static final int MAX_LINES = 6;
     private static final int[] DISTANCES = { 1, 2, 5 };
-    private static final float GRAPH_SMOOTHNES = 0.15f;
+    private static final float GRAPH_SMOOTHNES = 0.02f;
     private static final float RATIO = 4f / 4f;
 
     private Dynamics[] datapoints;
+    private int numPoints = 0;
     private Paint paint = new Paint();
-
-    private Runnable animator = new Runnable() {
-        @Override
-        public void run() {
-            boolean needNewFrame = false;
-            long now = AnimationUtils.currentAnimationTimeMillis();
-            for (Dynamics dynamics : datapoints) {
-                dynamics.update(now);
-                if (!dynamics.isAtRest()) {
-                    needNewFrame = true;
-                }
-            }
-            if (needNewFrame) {
-                postDelayed(this, 20);
-            }
-            invalidate();
-        }
-    };
+    private ValueAnimator valueAnimator = null;
 
     public LineChartView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -51,26 +36,54 @@ public class LineChartView extends View {
      * be positive and equally spaced on the x-axis. The line chart will be
      * scaled so that the entire height of the view is used.
      *
-     * @param newDatapoints
-     *            y values of the line chart
+     * @param newDatapoints     y values of the line chart
+     * @param numPoints         number of points to draw
+     */
+    public void setChartData(float[] newDatapoints, int numPoints) {
+        setChartData(newDatapoints);
+        this.numPoints = (numPoints < this.numPoints) ? numPoints : this.numPoints;
+    }
+
+    /**
+     * Sets the y data points of the line chart. The data points are assumed to
+     * be positive and equally spaced on the x-axis. The line chart will be
+     * scaled so that the entire height of the view is used.
+     *
+     * @param newDatapoints     y values of the line chart
      */
     public void setChartData(float[] newDatapoints) {
-        long now = AnimationUtils.currentAnimationTimeMillis();
+        numPoints = newDatapoints.length;
         if (datapoints == null || datapoints.length != newDatapoints.length) {
             datapoints = new Dynamics[newDatapoints.length];
             for (int i = 0; i < newDatapoints.length; i++) {
-                datapoints[i] = new Dynamics(1.1f, 0.30f);
-                datapoints[i].setPosition(newDatapoints[i], now);
-                datapoints[i].setTargetPosition(newDatapoints[i], now);
+                datapoints[i] = new Dynamics();
+                datapoints[i].setTargetPosition(newDatapoints[i]);
             }
-            invalidate();
         } else {
             for (int i = 0; i < newDatapoints.length; i++) {
-                datapoints[i].setTargetPosition(newDatapoints[i], now);
+                datapoints[i].setTargetPosition(newDatapoints[i]);
             }
-            removeCallbacks(animator);
-            post(animator);
         }
+
+        /**
+         * Animate the values
+         */
+        if(valueAnimator != null) {
+            valueAnimator.cancel();
+        }
+        valueAnimator = ValueAnimator.ofFloat(0.01f, 1.0f);
+        valueAnimator.setDuration(1500);
+        valueAnimator.setInterpolator(new OvershootInterpolator());
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                for (Dynamics dynamics : datapoints) {
+                    dynamics.update(valueAnimator.getAnimatedFraction());
+                }
+                invalidate();
+            }
+        });
+        valueAnimator.start();
     }
 
     @Override
@@ -124,7 +137,7 @@ public class LineChartView extends View {
 
             // turn on anti alias again for the text
             paint.setAntiAlias(true);
-            canvas.drawText(String.valueOf(y), getPaddingLeft(), yPos - 2, paint);
+            canvas.drawText(String.valueOf(y), 0, yPos - 2, paint);
         }
     }
 
@@ -132,8 +145,10 @@ public class LineChartView extends View {
         long distance;
         int distanceIndex = 0;
         long distanceMultiplier = 1;
-        int numberOfLines = MIN_LINES;
-
+        int numberOfLines;
+        if(maxValue < 1.0) {
+            return 1;
+        }
         do {
             distance = DISTANCES[distanceIndex] * distanceMultiplier;
             numberOfLines = (int) Math.ceil(maxValue / distance);
@@ -165,7 +180,7 @@ public class LineChartView extends View {
 
         Path path = new Path();
         path.moveTo(getXPos(0), getYPos(datapoints[0].getPosition(), maxValue));
-        for (int i = 0; i < datapoints.length - 1; i++) {
+        for (int i = 0; i < numPoints - 1; i++) {
             float thisPointX = getXPos(i);
             float thisPointY = getYPos(datapoints[i].getPosition(), maxValue);
             float nextPointX = getXPos(i + 1);
@@ -204,10 +219,10 @@ public class LineChartView extends View {
     }
 
     private float getMax(Dynamics[] array) {
-        float max = array[0].getPosition();
+        float max = array[0].getMax();
         for (int i = 1; i < array.length; i++) {
-            if (array[i].getPosition() > max) {
-                max = array[i].getPosition();
+            if (array[i].getMax() > max) {
+                max = array[i].getMax();
             }
         }
         return max;
@@ -245,78 +260,30 @@ public class LineChartView extends View {
 
 
     public class Dynamics {
-        /**
-         * Used to compare floats, if the difference is smaller than this, they are
-         * considered equal
-         */
-        private static final float TOLERANCE = 0.01f;
-
         /** The position the dynamics should to be at */
-        private float targetPosition;
+        private float targetPosition = 0;
 
         /** The current position of the dynamics */
-        private float position;
+        private float position = 0;
 
-        /** The current velocity of the dynamics */
-        private float velocity;
+        /** The origin of the dynamics */
+        private float origin = 0;
 
-        /** The time the last update happened */
-        private long lastTime;
-
-        /** The amount of springiness that the dynamics has */
-        private float springiness;
-
-        /** The damping that the dynamics has */
-        private float damping;
-
-        public Dynamics(float springiness, float dampingRatio) {
-            this.springiness = springiness;
-            this.damping = (float)(dampingRatio * 2 * Math.sqrt(springiness));
-        }
-
-        public void setPosition(float position, long now) {
-            this.position = position;
-            lastTime = now;
-        }
-
-        public void setVelocity(float velocity, long now) {
-            this.velocity = velocity;
-            lastTime = now;
-        }
-
-        public void setTargetPosition(float targetPosition, long now) {
+        public void setTargetPosition(float targetPosition) {
+            this.origin = this.position;
             this.targetPosition = targetPosition;
-            lastTime = now;
         }
 
-        public void update(long now) {
-            float dt = Math.min(now - lastTime, 50) / 1000f;
-
-            float x = position - targetPosition;
-            float acceleration = -springiness * x - damping * velocity;
-
-            velocity += acceleration * dt;
-            position += velocity * dt;
-
-            lastTime = now;
-        }
-
-        public boolean isAtRest() {
-            final boolean standingStill = Math.abs(velocity) < TOLERANCE;
-            final boolean isAtTarget = (targetPosition - position) < TOLERANCE;
-            return standingStill && isAtTarget;
+        public void update(float factor) {
+            position = origin + (targetPosition - origin) * factor;
         }
 
         public float getPosition() {
             return position;
         }
 
-        public float getTargetPos() {
-            return targetPosition;
-        }
-
-        public float getVelocity() {
-            return velocity;
+        public float getMax() {
+            return Math.max(targetPosition, position);
         }
     }
 }

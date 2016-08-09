@@ -30,6 +30,7 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
     private ArrayList<Integer> itemType = null;
     private OnItemClickListener itemClickListener = null;
 
+    private final int MAX_NUM_DAYS = 31;
     private static final int VIEW_TYPE_SUMMARY = R.layout.item_account_transaction_list_summary;
     private static final int VIEW_TYPE_LINE_CHART = R.layout.item_account_transaction_list_line_chart;
     private static final int VIEW_TYPE_PIE_CHART = R.layout.item_account_transaction_list_pie_chart;
@@ -39,13 +40,14 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     private int mExpandedPosition = RecyclerView.NO_POSITION;
     private long mExpandedId = Constant.INVALID_ID;
+    private long selectedMonth = 0;
     private final ScrollHandler mScrollHandler;
     private String mIsoCurrency;
     private Context mContext = null;
     private LayoutInflater mInflater = null;
     private View mHeader = null;
 
-    private float[] lineChartData = new float[31];
+    private float[] lineChartData = new float[MAX_NUM_DAYS];
 
     public OverviewRecyclerAdapter(Context context, ScrollHandler smoothScrollController) {
         this.itemList = new ArrayList<>();
@@ -59,7 +61,8 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
         setHasStableIds(true);
     }
 
-    public void setItemList(ArrayList<ITransaction> transactionArrayList) {
+    public void setItemList(ArrayList<ITransaction> transactionArrayList, long selectedMonth) {
+        this.selectedMonth = selectedMonth;
         this.itemList.clear();
         this.itemType.clear();
 
@@ -222,8 +225,7 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
         for(int i=0; i<itemType.size(); i++) {
             if(itemType.get(i) == VIEW_TYPE_TRANSACTION) {
                 ITransaction iTransaction = (ITransaction)itemList.get(i);
-                calendar.setTimeInMillis(iTransaction.getDate());
-                int index = calendar.get(Calendar.DAY_OF_MONTH) - 1;
+                int index = Utils.getDayOfMonth(iTransaction.getDate()) - 1;
                 switch (iTransaction.getType()) {
                     case ITransaction.TRANSACTION_TYPE_MONTH_OPENING_BALANCE:
                         balance = iTransaction.getAccount();
@@ -429,7 +431,8 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
         public void bind() {
             LineChartView chart = (LineChartView) itemView.findViewById(R.id.chart);
-            chart.setChartData(lineChartData);
+            int numPoints = Utils.isThisMonth(selectedMonth) ? Utils.getDayOfMonth(selectedMonth) : MAX_NUM_DAYS;
+            chart.setChartData(lineChartData, numPoints);
         }
     }
 }

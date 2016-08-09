@@ -168,4 +168,10 @@ public class Utils {
                 && (cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH));
         return isThisMonth;
     }
+
+    public static int getDayOfMonth(long date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(date);
+        return cal.get(Calendar.DAY_OF_MONTH);
+    }
 }

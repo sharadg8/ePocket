@@ -198,7 +198,7 @@ public class AccountOverviewActivity extends AppCompatActivity implements Scroll
             smoothScrollTo(0);
             recyclerView.invalidateHeaderView();
         }
-        recyclerAdapter.setItemList(iTransactionArrayList);
+        recyclerAdapter.setItemList(iTransactionArrayList, selectedMonth.getTimeInMillis());
 
         SimpleDateFormat df = new SimpleDateFormat("MMM yyyy");
         bMonth.setText(df.format(selectedMonth.getTime()));
