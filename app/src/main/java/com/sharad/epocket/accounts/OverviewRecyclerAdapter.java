@@ -16,6 +16,7 @@ import com.sharad.epocket.utils.Item;
 import com.sharad.epocket.utils.ScrollHandler;
 import com.sharad.epocket.utils.Utils;
 import com.sharad.epocket.widget.chart.LineChartView;
+import com.sharad.epocket.widget.chart.PieChartView;
 import com.sharad.epocket.widget.recyclerview.StickyRecyclerView;
 
 import java.util.ArrayList;
@@ -29,7 +30,12 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
     private ArrayList<Integer> itemType = null;
     private OnItemClickListener itemClickListener = null;
 
-    private final int MAX_NUM_DAYS = 31;
+    private final int MAX_NUM_DAYS            = 31;
+    private final int SUMMARY_INDEX           = 0;
+    private final int LINE_CHART_INDEX        = 1;
+    private final int PIE_CHART_EXPENSE_INDEX = 2;
+    private final int PIE_CHART_INCOME_INDEX  = 3;
+
     private static final int VIEW_TYPE_SUMMARY = R.layout.item_account_transaction_list_summary;
     private static final int VIEW_TYPE_LINE_CHART = R.layout.item_account_transaction_list_line_chart;
     private static final int VIEW_TYPE_PIE_CHART = R.layout.item_account_transaction_list_pie_chart;
@@ -47,6 +53,8 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
     private View mHeader = null;
 
     private float[] mLineChartData = new float[MAX_NUM_DAYS];
+    private ArrayList<PieChartView.PieSector> mExpenseSectors = new ArrayList<>();
+    private ArrayList<PieChartView.PieSector> mIncomeSectors = new ArrayList<>();
     private float   mOpeningBalance = 0;
     private float   mClosingBalance = 0;
     private float   mExpense = 0;
@@ -72,16 +80,16 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
 
         Collections.sort(transactionArrayList, new ITransaction.iComparator());
 
-        this.itemList.add(new Item(0));
+        this.itemList.add(new Item(SUMMARY_INDEX));
         this.itemType.add(VIEW_TYPE_SUMMARY);
 
-        this.itemList.add(new Item(0));
+        this.itemList.add(new Item(LINE_CHART_INDEX));
         this.itemType.add(VIEW_TYPE_LINE_CHART);
 
-        this.itemList.add(new Item(0));
+        this.itemList.add(new Item(PIE_CHART_EXPENSE_INDEX));
         this.itemType.add(VIEW_TYPE_PIE_CHART);
 
-        this.itemList.add(new Item(0));
+        this.itemList.add(new Item(PIE_CHART_INCOME_INDEX));
         this.itemType.add(VIEW_TYPE_PIE_CHART);
 
         long date = 0;
@@ -127,13 +135,13 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         switch (viewHolder.getItemViewType()) {
             case VIEW_TYPE_SUMMARY:
-                ((SummaryHolder)viewHolder).bind();
+                ((SummaryHolder)viewHolder).bind(itemList.get(position));
                 break;
             case VIEW_TYPE_PIE_CHART:
-                ((PieChartHolder)viewHolder).bind();
+                ((PieChartHolder)viewHolder).bind(itemList.get(position));
                 break;
             case VIEW_TYPE_LINE_CHART:
-                ((LineChartHolder)viewHolder).bind();
+                ((LineChartHolder)viewHolder).bind(itemList.get(position));
                 break;
             case VIEW_TYPE_HEADER:
                 ((HeaderHolder)viewHolder).bind(itemList.get(position));
@@ -226,6 +234,8 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     private void processData() {
+        mExpenseSectors.clear();
+        mIncomeSectors.clear();
         float balance = 0;
         mOpeningBalance = 0;
         mExpense = 0;
@@ -234,6 +244,7 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
         float transaction[] = new float[mLineChartData.length];
         for(int i=0; i<itemType.size(); i++) {
             if(itemType.get(i) == VIEW_TYPE_TRANSACTION) {
+                boolean sectorAdded = false;
                 ITransaction iTransaction = (ITransaction)itemList.get(i);
                 int index = Utils.getDayOfMonth(iTransaction.getDate()) - 1;
                 switch (iTransaction.getType()) {
@@ -244,10 +255,34 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
                     case ITransaction.TRANSACTION_TYPE_ACCOUNT_EXPENSE:
                         transaction[index] -= iTransaction.getAmount();
                         mExpense += iTransaction.getAmount();
+                        for(PieChartView.PieSector sector : mExpenseSectors) {
+                            if(sector.id == iTransaction.getCategory()) {
+                                sector.value += iTransaction.getAmount();
+                                sectorAdded = true;
+                            }
+                        }
+                        if(sectorAdded == false) {
+                            mExpenseSectors.add(
+                                    new PieChartView.PieSector(
+                                            iTransaction.getCategory(),
+                                            iTransaction.getAmount()));
+                        }
                         break;
                     case ITransaction.TRANSACTION_TYPE_ACCOUNT_INCOME:
                         transaction[index] += iTransaction.getAmount();
                         mIncome += iTransaction.getAmount();
+                        for(PieChartView.PieSector sector : mIncomeSectors) {
+                            if(sector.id == iTransaction.getCategory()) {
+                                sector.value += iTransaction.getAmount();
+                                sectorAdded = true;
+                            }
+                        }
+                        if(sectorAdded == false) {
+                            mIncomeSectors.add(
+                                    new PieChartView.PieSector(
+                                            iTransaction.getCategory(),
+                                            iTransaction.getAmount()));
+                        }
                         break;
                     case ITransaction.TRANSACTION_TYPE_ACCOUNT_TRANSFER:
                         mTransfer += iTransaction.getAmount();
@@ -261,6 +296,21 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
         for(int i=0; i<mLineChartData.length; i++) {
             balance += transaction[i];
             mLineChartData[i] = balance;
+        }
+
+        // TODO change this.
+        DataSourceCategory dataSourceCategory = new DataSourceCategory(mContext);
+        for(PieChartView.PieSector sector : mExpenseSectors) {
+            ICategory iCategory = dataSourceCategory.getCategory(sector.id);
+            sector.color = iCategory.getColor();
+            sector.name = iCategory.getTitle();
+            sector.resourceId = iCategory.getImageResource();
+        }
+        for(PieChartView.PieSector sector : mIncomeSectors) {
+            ICategory iCategory = dataSourceCategory.getCategory(sector.id);
+            sector.color = iCategory.getColor();
+            sector.name = iCategory.getTitle();
+            sector.resourceId = iCategory.getImageResource();
         }
     }
 
@@ -437,7 +487,7 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
         public SummaryHolder(View itemView) {
             super(itemView);
         }
-        public void bind() {
+        public void bind(Item item) {
             TextView opening = (TextView)itemView.findViewById(R.id.opening_balance);
             opening.setText(Utils.formatCurrencyDec(mIsoCurrency, mOpeningBalance));
 
@@ -462,8 +512,16 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
         public PieChartHolder(View itemView) {
             super(itemView);
         }
-        public void bind() {
-
+        public void bind(Item item) {
+            TextView title = (TextView)itemView.findViewById(R.id.title);
+            PieChartView chart = (PieChartView)itemView.findViewById(R.id.chart);
+            if(item.getId() == PIE_CHART_EXPENSE_INDEX) {
+                title.setText("Expense");
+                chart.setValues(mExpenseSectors);
+            } else if(item.getId() == PIE_CHART_INCOME_INDEX) {
+                title.setText("Income");
+                chart.setValues(mIncomeSectors);
+            }
         }
     }
 
@@ -471,7 +529,7 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
         public LineChartHolder(View itemView) {
             super(itemView);
         }
-        public void bind() {
+        public void bind(Item item) {
             LineChartView chart = (LineChartView) itemView.findViewById(R.id.chart);
             int numPoints = Utils.isThisMonth(mSelectedMonth) ? Utils.getDayOfMonth(mSelectedMonth) : MAX_NUM_DAYS;
             chart.setChartData(mLineChartData, numPoints);

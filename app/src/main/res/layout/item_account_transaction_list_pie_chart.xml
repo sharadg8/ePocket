@@ -18,11 +18,10 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Header"
             android:fontFamily="monospace" />
-        <View
-            android:layout_width="192dp"
+        <com.sharad.epocket.widget.chart.PieChartView
+            android:id="@+id/chart"
+            android:layout_width="match_parent"
             android:layout_height="192dp"
-            android:layout_margin="24dp"
-            android:layout_gravity="center"
-            android:background="@drawable/circle"/>
+            android:layout_gravity="center"/>
     </LinearLayout>
 </android.support.v7.widget.CardView>
