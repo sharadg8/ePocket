@@ -71,7 +71,7 @@ public class LineChartView extends View {
         if(valueAnimator != null) {
             valueAnimator.cancel();
         }
-        valueAnimator = ValueAnimator.ofFloat(0.01f, 1.0f);
+        valueAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
         valueAnimator.setDuration(1500);
         valueAnimator.setInterpolator(new OvershootInterpolator());
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {

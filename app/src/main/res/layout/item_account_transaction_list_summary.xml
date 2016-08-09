@@ -18,8 +18,9 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="Open Balance"/>
+                android:text="Opening Balance"/>
             <TextView
+                android:id="@+id/opening_balance"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
@@ -36,6 +37,7 @@
                 android:layout_height="wrap_content"
                 android:text="Closing Balance"/>
             <TextView
+                android:id="@+id/closing_balance"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
@@ -58,6 +60,7 @@
                 android:layout_height="wrap_content"
                 android:text="Income"/>
             <TextView
+                android:id="@+id/income"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
@@ -75,6 +78,7 @@
                 android:layout_height="wrap_content"
                 android:text="Expense"/>
             <TextView
+                android:id="@+id/expense"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
@@ -92,6 +96,7 @@
                 android:layout_height="wrap_content"
                 android:text="Transfer"/>
             <TextView
+                android:id="@+id/transfer"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
@@ -107,6 +112,7 @@
             android:layout_marginBottom="8dp"
             android:background="@color/divider"/>
         <TextView
+            android:id="@+id/balance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"

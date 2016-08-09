@@ -19,7 +19,6 @@ import com.sharad.epocket.widget.chart.LineChartView;
 import com.sharad.epocket.widget.recyclerview.StickyRecyclerView;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Currency;
 import java.util.Locale;
@@ -40,14 +39,19 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     private int mExpandedPosition = RecyclerView.NO_POSITION;
     private long mExpandedId = Constant.INVALID_ID;
-    private long selectedMonth = 0;
+    private long mSelectedMonth = 0;
     private final ScrollHandler mScrollHandler;
     private String mIsoCurrency;
     private Context mContext = null;
     private LayoutInflater mInflater = null;
     private View mHeader = null;
 
-    private float[] lineChartData = new float[MAX_NUM_DAYS];
+    private float[] mLineChartData = new float[MAX_NUM_DAYS];
+    private float   mOpeningBalance = 0;
+    private float   mClosingBalance = 0;
+    private float   mExpense = 0;
+    private float   mIncome = 0;
+    private float   mTransfer = 0;
 
     public OverviewRecyclerAdapter(Context context, ScrollHandler smoothScrollController) {
         this.itemList = new ArrayList<>();
@@ -62,7 +66,7 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     public void setItemList(ArrayList<ITransaction> transactionArrayList, long selectedMonth) {
-        this.selectedMonth = selectedMonth;
+        this.mSelectedMonth = selectedMonth;
         this.itemList.clear();
         this.itemType.clear();
 
@@ -91,7 +95,7 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
             this.itemType.add(VIEW_TYPE_TRANSACTION);
         }
 
-        computeLineChartData();
+        processData();
         notifyDataSetChanged();
     }
 
@@ -104,8 +108,9 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
         final View v = mInflater.inflate(viewType, viewGroup, false /* attachToRoot */);
         switch(viewType) {
             case VIEW_TYPE_SUMMARY:
-            case VIEW_TYPE_PIE_CHART:
                 return  new SummaryHolder(v);
+            case VIEW_TYPE_PIE_CHART:
+                return new PieChartHolder(v);
             case VIEW_TYPE_LINE_CHART:
                 return  new LineChartHolder(v);
             case VIEW_TYPE_HEADER:
@@ -122,8 +127,10 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         switch (viewHolder.getItemViewType()) {
             case VIEW_TYPE_SUMMARY:
-            case VIEW_TYPE_PIE_CHART:
                 ((SummaryHolder)viewHolder).bind();
+                break;
+            case VIEW_TYPE_PIE_CHART:
+                ((PieChartHolder)viewHolder).bind();
                 break;
             case VIEW_TYPE_LINE_CHART:
                 ((LineChartHolder)viewHolder).bind();
@@ -208,7 +215,7 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
             notifyItemRangeChanged(position-1, getItemCount());
         }
 
-        computeLineChartData();
+        processData();
     }
 
     private boolean isHeaderPosition(int position) {
@@ -218,33 +225,42 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
         return false;
     }
 
-    private void computeLineChartData() {
+    private void processData() {
         float balance = 0;
-        float transaction[] = new float[lineChartData.length];
-        Calendar calendar = Calendar.getInstance();
+        mOpeningBalance = 0;
+        mExpense = 0;
+        mIncome = 0;
+        mTransfer = 0;
+        float transaction[] = new float[mLineChartData.length];
         for(int i=0; i<itemType.size(); i++) {
             if(itemType.get(i) == VIEW_TYPE_TRANSACTION) {
                 ITransaction iTransaction = (ITransaction)itemList.get(i);
                 int index = Utils.getDayOfMonth(iTransaction.getDate()) - 1;
                 switch (iTransaction.getType()) {
                     case ITransaction.TRANSACTION_TYPE_MONTH_OPENING_BALANCE:
-                        balance = iTransaction.getAccount();
+                        balance += iTransaction.getAccount();
+                        mOpeningBalance = iTransaction.getAccount();
                         break;
                     case ITransaction.TRANSACTION_TYPE_ACCOUNT_EXPENSE:
-                    case ITransaction.TRANSACTION_TYPE_ACCOUNT_DEPOSIT:
                         transaction[index] -= iTransaction.getAmount();
+                        mExpense += iTransaction.getAmount();
                         break;
                     case ITransaction.TRANSACTION_TYPE_ACCOUNT_INCOME:
-                    case ITransaction.TRANSACTION_TYPE_ACCOUNT_WITHDRAW:
                         transaction[index] += iTransaction.getAmount();
+                        mIncome += iTransaction.getAmount();
+                        break;
+                    case ITransaction.TRANSACTION_TYPE_ACCOUNT_TRANSFER:
+                        mTransfer += iTransaction.getAmount();
                         break;
                 }
             }
         }
 
-        for(int i=0; i<lineChartData.length; i++) {
+        mClosingBalance = mOpeningBalance + mIncome - mExpense - mTransfer;
+
+        for(int i=0; i<mLineChartData.length; i++) {
             balance += transaction[i];
-            lineChartData[i] = balance;
+            mLineChartData[i] = balance;
         }
     }
 
@@ -422,6 +438,32 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
             super(itemView);
         }
         public void bind() {
+            TextView opening = (TextView)itemView.findViewById(R.id.opening_balance);
+            opening.setText(Utils.formatCurrencyDec(mIsoCurrency, mOpeningBalance));
+
+            TextView closing = (TextView)itemView.findViewById(R.id.closing_balance);
+            closing.setText(Utils.formatCurrencyDec(mIsoCurrency, mClosingBalance));
+
+            TextView income = (TextView)itemView.findViewById(R.id.income);
+            income.setText(Utils.formatCurrencyDec(mIsoCurrency, mIncome));
+
+            TextView expense = (TextView)itemView.findViewById(R.id.expense);
+            expense.setText(Utils.formatCurrencyDec(mIsoCurrency, mExpense));
+
+            TextView transfer = (TextView)itemView.findViewById(R.id.transfer);
+            transfer.setText(Utils.formatCurrencyDec(mIsoCurrency, mTransfer));
+
+            TextView balance = (TextView)itemView.findViewById(R.id.balance);
+            balance.setText(Utils.formatCurrencyDec(mIsoCurrency, mClosingBalance-mOpeningBalance));
+        }
+    }
+
+    class PieChartHolder extends RecyclerView.ViewHolder {
+        public PieChartHolder(View itemView) {
+            super(itemView);
+        }
+        public void bind() {
+
         }
     }
 
@@ -431,8 +473,8 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
         public void bind() {
             LineChartView chart = (LineChartView) itemView.findViewById(R.id.chart);
-            int numPoints = Utils.isThisMonth(selectedMonth) ? Utils.getDayOfMonth(selectedMonth) : MAX_NUM_DAYS;
-            chart.setChartData(lineChartData, numPoints);
+            int numPoints = Utils.isThisMonth(mSelectedMonth) ? Utils.getDayOfMonth(mSelectedMonth) : MAX_NUM_DAYS;
+            chart.setChartData(mLineChartData, numPoints);
         }
     }
 }
