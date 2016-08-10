@@ -79,7 +79,7 @@ public class AddTransactionFragment extends Fragment {
                             .setNegativeButton(android.R.string.cancel, null)
                             .show();
                 }
-                itemList.add(new ICategory(CategoryImageList.imageResource.length-1));
+                itemList.add(new ICategory(CategoryImageList.RESOURCE_ADD_NEW));
                 break;
             case ICategory.CATEGORY_TYPE_INCOME:
                 where = ContentConstant.KEY_CATEGORY_TYPE + "=" + ICategory.CATEGORY_TYPE_INCOME;
@@ -102,7 +102,7 @@ public class AddTransactionFragment extends Fragment {
                             .setNegativeButton(android.R.string.cancel, null)
                             .show();
                 }
-                itemList.add(new ICategory(CategoryImageList.imageResource.length-1));
+                itemList.add(new ICategory(CategoryImageList.RESOURCE_ADD_NEW));
                 break;
             case ICategory.CATEGORY_TYPE_TRANSFER:
                 break;

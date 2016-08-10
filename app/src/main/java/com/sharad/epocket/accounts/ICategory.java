@@ -33,7 +33,7 @@ public class ICategory extends Item{
     }
     public ICategory(long id, int imageIndex, int color, String title, int type, int usageCount) {
         super(id);
-        this.imageIndex = (imageIndex < CategoryImageList.imageResource.length) ? imageIndex : 0;
+        this.imageIndex = (imageIndex < CategoryImageList.RESOURCE_COUNT) ? imageIndex : 0;
         this.color = color;
         this.title = title;
         this.type = type;
@@ -51,7 +51,7 @@ public class ICategory extends Item{
         int usageCount = c.getInt(c.getColumnIndex(ContentConstant.KEY_CATEGORY_COUNT));
 
         this.id = id;
-        this.imageIndex = (imageIndex < CategoryImageList.imageResource.length) ? imageIndex : 0;
+        this.imageIndex = (imageIndex < CategoryImageList.RESOURCE_COUNT) ? imageIndex : 0;
         this.color = color;
         this.title = title;
         this.type = type;
@@ -76,14 +76,14 @@ public class ICategory extends Item{
     public String getTitle() {      return title;           }
     public int getType() {          return type;            }
     public int getUsageCount() {    return usageCount;      }
-    public int getImageResource() { return CategoryImageList.imageResource[imageIndex]; }
+    public int getImageResource() { return CategoryImageList.getImageResource(imageIndex); }
 
     public void setColor(int color) {           this.color = color;            }
     public void setTitle(String title) {        this.title = title;            }
     public void setType(int type) {             this.type = type;              }
     public void setUsageCount(int usageCount) { this.usageCount = usageCount;  }
     public void setImageIndex(int imageIndex) {
-        this.imageIndex = (imageIndex < CategoryImageList.imageResource.length) ? imageIndex : 0;
+        this.imageIndex = (imageIndex < CategoryImageList.RESOURCE_COUNT) ? imageIndex : 0;
     }
 
     public static class iComparator implements Comparator<ICategory> {

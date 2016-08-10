@@ -7,7 +7,7 @@ import com.sharad.epocket.R;
  */
 
 public class CategoryImageList {
-    public static final int imageResource[] = {
+    private static final int imageResource[] = {
     /*000*/ R.drawable.c_home_black_24dp,
     /*001*/ R.drawable.c_account_balance_wallet_black_24dp,
     /*002*/ R.drawable.c_favorite_black_24dp,
@@ -103,4 +103,11 @@ public class CategoryImageList {
     public static final int RESOURCE_COUNT = imageResource.length - 2;
     public static final int RESOURCE_UNKNOWN = imageResource.length - 2;
     public static final int RESOURCE_ADD_NEW = imageResource.length - 1;
+
+    public static final int getImageResource(int index) {
+        if(index < imageResource.length) {
+            return imageResource[index];
+        }
+        return  0;
+    }
 }

@@ -303,13 +303,13 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
         for(PieChartView.PieSector sector : mExpenseSectors) {
             ICategory iCategory = dataSourceCategory.getCategory(sector.id);
             sector.color = iCategory.getColor();
-            sector.name = iCategory.getTitle();
+            sector.title = iCategory.getTitle();
             sector.resourceId = iCategory.getImageResource();
         }
         for(PieChartView.PieSector sector : mIncomeSectors) {
             ICategory iCategory = dataSourceCategory.getCategory(sector.id);
             sector.color = iCategory.getColor();
-            sector.name = iCategory.getTitle();
+            sector.title = iCategory.getTitle();
             sector.resourceId = iCategory.getImageResource();
         }
     }
@@ -517,10 +517,10 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
             PieChartView chart = (PieChartView)itemView.findViewById(R.id.chart);
             if(item.getId() == PIE_CHART_EXPENSE_INDEX) {
                 title.setText("Expense");
-                chart.setValues(mExpenseSectors);
+                chart.setValues(mIsoCurrency, mExpenseSectors);
             } else if(item.getId() == PIE_CHART_INCOME_INDEX) {
                 title.setText("Income");
-                chart.setValues(mIncomeSectors);
+                chart.setValues(mIsoCurrency, mIncomeSectors);
             }
         }
     }
