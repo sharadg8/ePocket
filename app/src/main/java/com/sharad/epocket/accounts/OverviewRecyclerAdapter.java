@@ -21,8 +21,6 @@ import com.sharad.epocket.widget.recyclerview.StickyRecyclerView;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Currency;
-import java.util.Locale;
 
 public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         implements StickyRecyclerView.HeaderIndexer {
@@ -61,13 +59,13 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
     private float   mIncome = 0;
     private float   mTransfer = 0;
 
-    public OverviewRecyclerAdapter(Context context, ScrollHandler smoothScrollController) {
+    public OverviewRecyclerAdapter(Context context, ScrollHandler smoothScrollController, String isoCurrency) {
         this.itemList = new ArrayList<>();
         this.itemType = new ArrayList<>();
         mContext = context;
         mInflater = LayoutInflater.from(context);
         mHeader = mInflater.inflate(R.layout.item_account_transaction_list_header, null, false);
-        mIsoCurrency = Currency.getInstance(Locale.getDefault()).getCurrencyCode();
+        mIsoCurrency = isoCurrency;
         mScrollHandler = smoothScrollController;
 
         setHasStableIds(true);

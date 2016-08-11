@@ -56,8 +56,9 @@
         </LinearLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <com.sharad.epocket.widget.recyclerview.StickyRecyclerView
-        android:id="@+id/recyclerView"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
 </LinearLayout>

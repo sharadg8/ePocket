@@ -9,7 +9,7 @@ public interface Constant {
 
     String ARG_ACCOUNT_NUMBER_LONG      = "account_number";
     String ARG_TRANSACTION_NUMBER_LONG  = "transaction_number";
-    String ARG_TAB_NUMBER_INT           = "tab_number";
+    String ARG_TIME_IN_MS_LONG          = "time_in_ms";
 
     String DLG_CURRENCY_PICKER          = "currency_picker";
     String DLG_ACCOUNT_WITHDRAW         = "account_withdraw";
