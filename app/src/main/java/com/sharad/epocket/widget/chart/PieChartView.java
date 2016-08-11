@@ -9,7 +9,6 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
@@ -23,8 +22,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sharad.epocket.R;
-import com.sharad.epocket.accounts.CategoryImageList;
 import com.sharad.epocket.utils.Utils;
+import com.sharad.epocket.widget.FlowLayout;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -63,7 +62,7 @@ public class PieChartView extends LinearLayout {
         valueText = new TextView(context);
         valueText.setTextAppearance(context, android.R.style.TextAppearance_Material_Headline);
         valueText.setGravity(Gravity.CENTER);
-        valueText.setTextColor(ContextCompat.getColor(context, R.color.primary));
+        valueText.setTextColor(Color.LTGRAY);
         valueText.setMinimumHeight(pieHeight);
         LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
         llp.setMargins(0, 0, 0, pieHeight/10);
@@ -104,13 +103,13 @@ public class PieChartView extends LinearLayout {
                 this.sectors.add(add);
             } else {
                 others.value += sector.value;
+                others.resourceId.add(sector.resourceId.get(0));
             }
         }
 
         if(others.value > 0.01f) {
-            others.title = "Others";
+            others.isGroup = true;
             others.color = Color.BLACK;
-            others.resourceId = CategoryImageList.getImageResource(CategoryImageList.RESOURCE_UNKNOWN);
             others.sweepAngle = 360 * (others.value / total);
             others.percentage = Math.round((others.value / total) * 100);
             others.factor = others.value / max;
@@ -151,6 +150,9 @@ public class PieChartView extends LinearLayout {
         super.onDraw(canvas);
 
         float temp = 0;
+        if(sectors.size() > 0) {
+            temp = 360 + 90 - (sectors.get(0).sweepAngle - MIN_SWEEP_ANGLE_TO_DRAW)/2;
+        }
         for (PieSector sector : sectors) {
             if(sector.sweepAngle > MIN_SWEEP_ANGLE_TO_DRAW) {
                 paint.setColor(sector.color);
@@ -166,15 +168,17 @@ public class PieChartView extends LinearLayout {
         public long id;
         public float value;
         public String title;
-        public int resourceId;
+        public ArrayList<Integer> resourceId;
         public int color;
         public int percentage;
         public float sweepAngle;
         public float factor;
+        public boolean isGroup = false;
 
         public PieSector(long id, float value) {
             this.id = id;
             this.value = value;
+            this.resourceId = new ArrayList<>();
         }
 
         public static class iComparator implements Comparator<PieSector> {
@@ -189,10 +193,6 @@ public class PieChartView extends LinearLayout {
 
     public class SectorViewGroup extends LinearLayout {
         Paint paint;
-        ImageView sectorIcon;
-        TextView titleText;
-        TextView percentageText;
-        TextView valueText;
         PieSector sector;
         public SectorViewGroup(Context context, PieSector sector) {
             super(context);
@@ -205,17 +205,35 @@ public class PieChartView extends LinearLayout {
 
             View view = LayoutInflater.from(context).inflate(R.layout.view_pie_sector_bar, this);
 
-            titleText = (TextView) view.findViewById(R.id.title);
-            titleText.setText(sector.title);
-            percentageText = (TextView) view.findViewById(R.id.percentage);
+            ImageView sectorIcon = (ImageView) view.findViewById(R.id.icon);
+            TextView titleText = (TextView) view.findViewById(R.id.title);
+            FlowLayout otherLayout = (FlowLayout) view.findViewById(R.id.others);
+            TextView percentageText = (TextView) view.findViewById(R.id.percentage);
+            TextView valueText = (TextView) view.findViewById(R.id.value);
+
             SpannableString percentageSpan = new SpannableString(""+sector.percentage+"%");
             int perPos = percentageSpan.toString().lastIndexOf("%");
             percentageSpan.setSpan(new RelativeSizeSpan(0.6f), perPos, perPos+1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             percentageText.setText(percentageSpan);
-            valueText = (TextView) view.findViewById(R.id.value);
             valueText.setText(Utils.formatCurrencyDec(isoCurrency, sector.value));
-            sectorIcon = (ImageView) view.findViewById(R.id.icon);
-            sectorIcon.setImageResource(sector.resourceId);
+
+            if(sector.isGroup) {
+                otherLayout.setVisibility(VISIBLE);
+                titleText.setVisibility(GONE);
+                sectorIcon.setVisibility(GONE);
+                for(Integer resource : sector.resourceId) {
+                    ImageView icon = new ImageView(context);
+                    icon.setImageResource(resource);
+                    icon.setColorFilter(Color.WHITE);
+                    otherLayout.addView(icon);
+                }
+            } else {
+                titleText.setVisibility(VISIBLE);
+                sectorIcon.setVisibility(VISIBLE);
+                otherLayout.setVisibility(GONE);
+                titleText.setText(sector.title);
+                sectorIcon.setImageResource(sector.resourceId.get(0));
+            }
 
             paint = new Paint(Paint.ANTI_ALIAS_FLAG);
             paint.setColor(sector.color);

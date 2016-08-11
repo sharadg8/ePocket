@@ -2,30 +2,40 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="0.13"
         android:paddingTop="4dp"
         android:paddingBottom="4dp"
         android:paddingLeft="16dp"
-        android:paddingRight="8dp"
+        android:scaleType="fitStart"
         android:tint="@android:color/white"
         android:src="@drawable/ic_help_outline_black_24dp"/>
     <TextView
         android:id="@+id/title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="0.5"
+        android:layout_weight="0.45"
         android:lines="1"
         android:ellipsize="end"
         android:paddingRight="8dp"
         android:text="Category"
         android:textColor="@android:color/white"
         android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+    <com.sharad.epocket.widget.FlowLayout
+        android:id="@+id/others"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.58"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:paddingLeft="16dp"
+        android:visibility="gone"/>
     <TextView
         android:id="@+id/percentage"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="0.15"
+        android:layout_weight="0.12"
         android:gravity="right"
         android:lines="1"
         android:paddingRight="8dp"
@@ -36,7 +46,7 @@
         android:id="@+id/value"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="0.35"
+        android:layout_weight="0.3"
         android:gravity="right"
         android:lines="1"
         android:paddingRight="16dp"

@@ -304,13 +304,13 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
             ICategory iCategory = dataSourceCategory.getCategory(sector.id);
             sector.color = iCategory.getColor();
             sector.title = iCategory.getTitle();
-            sector.resourceId = iCategory.getImageResource();
+            sector.resourceId.add(iCategory.getImageResource());
         }
         for(PieChartView.PieSector sector : mIncomeSectors) {
             ICategory iCategory = dataSourceCategory.getCategory(sector.id);
             sector.color = iCategory.getColor();
             sector.title = iCategory.getTitle();
-            sector.resourceId = iCategory.getImageResource();
+            sector.resourceId.add(iCategory.getImageResource());
         }
     }
 
