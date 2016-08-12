@@ -1,6 +1,7 @@
 package com.sharad.epocket.accounts;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -84,6 +85,37 @@ public class AccountOverviewActivity extends AppCompatActivity {
         }
     }
 
+    private Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            AccountManager manager = AccountManager.getInstance();
+            if(viewPager.getCurrentItem() < 2) {
+                if (manager.hasAnyTransactionBeforeMonth(getBaseContext(), iAccount, monthList.get(0))) {
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTimeInMillis(monthList.get(0));
+                    calendar.add(Calendar.MONTH, -1);
+                    if (Constant.INVALID_ID == monthList.indexOf(calendar.getTimeInMillis())) {
+                        monthList.add(0, calendar.getTimeInMillis());
+                        pagerAdapter.notifyDataSetChanged();
+                        viewPager.setCurrentItem((viewPager.getCurrentItem() + 1), false);
+                    }
+                }
+            }
+
+            if(viewPager.getCurrentItem() > (monthList.size() - 3)) {
+                if (manager.hasAnyTransactionAfterMonth(getBaseContext(), iAccount, monthList.get(monthList.size() - 1))) {
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTimeInMillis(monthList.get(monthList.size() - 1));
+                    calendar.add(Calendar.MONTH, +1);
+                    if (Constant.INVALID_ID == monthList.indexOf(calendar.getTimeInMillis())) {
+                        monthList.add(calendar.getTimeInMillis());
+                        pagerAdapter.notifyDataSetChanged();
+                    }
+                }
+            }
+        }
+    };
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -137,32 +169,6 @@ public class AccountOverviewActivity extends AppCompatActivity {
     }
 
     private void updateMonth() {
-        AccountManager manager = AccountManager.getInstance();
-        if(viewPager.getCurrentItem() < 2) {
-            if (manager.hasAnyTransactionBeforeMonth(this, iAccount, monthList.get(0))) {
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTimeInMillis(monthList.get(0));
-                calendar.add(Calendar.MONTH, -1);
-                if (Constant.INVALID_ID == monthList.indexOf(calendar.getTimeInMillis())) {
-                    monthList.add(0, calendar.getTimeInMillis());
-                    pagerAdapter.notifyDataSetChanged();
-                    viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
-                }
-            }
-        }
-
-        if(viewPager.getCurrentItem() > (monthList.size() - 3)) {
-            if (manager.hasAnyTransactionAfterMonth(this, iAccount, monthList.get(monthList.size() - 1))) {
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTimeInMillis(monthList.get(monthList.size() - 1));
-                calendar.add(Calendar.MONTH, +1);
-                if (Constant.INVALID_ID == monthList.indexOf(calendar.getTimeInMillis())) {
-                    monthList.add(calendar.getTimeInMillis());
-                    pagerAdapter.notifyDataSetChanged();
-                }
-            }
-        }
-
         findViewById(R.id.previous).setVisibility((viewPager.getCurrentItem() > 0) ? View.VISIBLE : View.INVISIBLE);
         findViewById(R.id.next).setVisibility((viewPager.getCurrentItem() < monthList.size()-1) ? View.VISIBLE : View.INVISIBLE);
 
@@ -171,5 +177,8 @@ public class AccountOverviewActivity extends AppCompatActivity {
         SimpleDateFormat df = new SimpleDateFormat("MMM yyyy");
         Button month = (Button) findViewById(R.id.month);
         month.setText(df.format(calendar.getTime()));
+
+        /* Load more data */
+        new Handler().postDelayed(runnable, 500);
     }
 }
