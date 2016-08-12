@@ -13,7 +13,6 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
 import android.util.AttributeSet;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,8 +48,7 @@ public class PieChartView extends LinearLayout {
 
         setOrientation(VERTICAL);
 
-        pieHeight = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                192, getResources().getDisplayMetrics());
+        pieHeight = Utils.dp2pix(192);
 
         int[] set = {
                 android.R.attr.minHeight, // idx 0

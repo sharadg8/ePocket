@@ -3,6 +3,7 @@ package com.sharad.epocket.utils;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -96,6 +97,14 @@ public class Utils {
         }
     }
 
+    public static int dp2pix(int dp) {
+        return Math.round(dp * Resources.getSystem().getDisplayMetrics().density);
+    }
+
+    public static int pix2dp(int pix) {
+        return Math.round(pix / Resources.getSystem().getDisplayMetrics().density);
+    }
+
     public static String getLongDateString(long timeInMsec) {
         String text;
         if(DateUtils.isToday(timeInMsec)) {
@@ -122,6 +131,28 @@ public class Utils {
     public static long getMonthEnd_ms(long time_ms){
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(time_ms);
+        cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.SECOND, 59);
+        return cal.getTimeInMillis();
+    }
+
+    public static long getYearStart_ms(long time_ms){
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(time_ms);
+        cal.set(Calendar.MONTH, 0);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        return cal.getTimeInMillis();
+    }
+
+    public static long getYearEnd_ms(long time_ms){
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(time_ms);
+        cal.set(Calendar.MONTH, 11);
         cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
         cal.set(Calendar.HOUR_OF_DAY, 23);
         cal.set(Calendar.MINUTE, 59);

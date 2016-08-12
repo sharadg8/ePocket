@@ -22,7 +22,7 @@ import com.sharad.epocket.widget.recyclerview.StickyRecyclerView;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+public class OverviewMonthRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         implements StickyRecyclerView.HeaderIndexer {
     private ArrayList<Item> itemList = null;
     private ArrayList<Integer> itemType = null;
@@ -59,7 +59,7 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
     private float   mIncome = 0;
     private float   mTransfer = 0;
 
-    public OverviewRecyclerAdapter(Context context, ScrollHandler smoothScrollController, String isoCurrency) {
+    public OverviewMonthRecyclerAdapter(Context context, ScrollHandler smoothScrollController, String isoCurrency) {
         this.itemList = new ArrayList<>();
         this.itemType = new ArrayList<>();
         mContext = context;
@@ -246,7 +246,7 @@ public class OverviewRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
                 ITransaction iTransaction = (ITransaction)itemList.get(i);
                 int index = Utils.getDayOfMonth(iTransaction.getDate()) - 1;
                 switch (iTransaction.getType()) {
-                    case ITransaction.TRANSACTION_TYPE_MONTH_OPENING_BALANCE:
+                    case ITransaction.META_DATA_MONTH_OPENING_BALANCE:
                         balance += iTransaction.getAccount();
                         mOpeningBalance = iTransaction.getAccount();
                         break;

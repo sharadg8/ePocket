@@ -21,10 +21,17 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class AccountOverviewActivity extends AppCompatActivity {
+    private static final int MODE_MONTH = 0;
+    private static final int MODE_YEAR  = 1;
+
     private IAccount iAccount = null;
     private ViewPager viewPager = null;
-    private MonthPagerAdapter pagerAdapter = null;
+    private MonthPagerAdapter monthPagerAdapter = null;
+    private YearPagerAdapter yearPagerAdapter = null;
     private ArrayList<Long> monthList = null;
+    private ArrayList<Long> yearList = null;
+
+    private int mode = MODE_MONTH;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +43,7 @@ public class AccountOverviewActivity extends AppCompatActivity {
         long accountId = extras.getLong(Constant.ARG_ACCOUNT_NUMBER_LONG, Constant.INVALID_ID);
 
         monthList = new ArrayList<>();
+        yearList = new ArrayList<>();
 
         DataSourceAccount dataSourceAccount = new DataSourceAccount(this);
         iAccount = dataSourceAccount.getAccount(accountId);
@@ -47,8 +55,10 @@ public class AccountOverviewActivity extends AppCompatActivity {
         if(iAccount != null) {
             setTitle(iAccount.getTitle());
             viewPager = (ViewPager) findViewById(R.id.viewPager);
-            pagerAdapter = new MonthPagerAdapter(getSupportFragmentManager());
-            viewPager.setAdapter(pagerAdapter);
+
+            yearPagerAdapter = new YearPagerAdapter(getSupportFragmentManager());
+            monthPagerAdapter = new MonthPagerAdapter(getSupportFragmentManager());
+            viewPager.setAdapter(monthPagerAdapter);
 
             viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
@@ -68,6 +78,8 @@ public class AccountOverviewActivity extends AppCompatActivity {
             Calendar calendar = Calendar.getInstance();
             long timeInMillis = calendar.getTimeInMillis();
             monthList.add(timeInMillis);
+            yearList.add(timeInMillis);
+
             AccountManager manager = AccountManager.getInstance();
             if(manager.hasAnyTransactionBeforeMonth(this, iAccount, timeInMillis)) {
                 calendar.setTimeInMillis(timeInMillis);
@@ -79,7 +91,10 @@ public class AccountOverviewActivity extends AppCompatActivity {
                 calendar.add(Calendar.MONTH, +1);
                 monthList.add(calendar.getTimeInMillis());
             }
-            pagerAdapter.notifyDataSetChanged();
+
+            yearPagerAdapter.notifyDataSetChanged();
+            monthPagerAdapter.notifyDataSetChanged();
+
             updateMonth();
             viewPager.setCurrentItem(monthList.indexOf(timeInMillis), true);
         }
@@ -96,7 +111,7 @@ public class AccountOverviewActivity extends AppCompatActivity {
                     calendar.add(Calendar.MONTH, -1);
                     if (Constant.INVALID_ID == monthList.indexOf(calendar.getTimeInMillis())) {
                         monthList.add(0, calendar.getTimeInMillis());
-                        pagerAdapter.notifyDataSetChanged();
+                        monthPagerAdapter.notifyDataSetChanged();
                         viewPager.setCurrentItem((viewPager.getCurrentItem() + 1), false);
                     }
                 }
@@ -109,7 +124,7 @@ public class AccountOverviewActivity extends AppCompatActivity {
                     calendar.add(Calendar.MONTH, +1);
                     if (Constant.INVALID_ID == monthList.indexOf(calendar.getTimeInMillis())) {
                         monthList.add(calendar.getTimeInMillis());
-                        pagerAdapter.notifyDataSetChanged();
+                        monthPagerAdapter.notifyDataSetChanged();
                     }
                 }
             }
@@ -142,6 +157,11 @@ public class AccountOverviewActivity extends AppCompatActivity {
                 viewPager.setCurrentItem((viewPager.getCurrentItem() + 1), true);
                 break;
             case R.id.month:
+                if(mode == MODE_MONTH) {
+                    mode = MODE_YEAR;
+                    viewPager.setAdapter(yearPagerAdapter);
+                    viewPager.invalidate();
+                }
                 break;
         }
     }
@@ -159,7 +179,29 @@ public class AccountOverviewActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            return AccountOverviewFragment.newInstance(iAccount.getId(), monthList.get(position));
+            return AccountOverviewMonthFragment.newInstance(iAccount.getId(), monthList.get(position));
+        }
+
+        @Override
+        public int getItemPosition(Object item) {
+            return POSITION_NONE;
+        }
+    }
+
+    public class YearPagerAdapter extends FragmentStatePagerAdapter {
+
+        public YearPagerAdapter(FragmentManager fragmentManager) {
+            super(fragmentManager);
+        }
+
+        @Override
+        public int getCount() {
+            return yearList.size();
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return AccountOverviewYearFragment.newInstance(iAccount.getId(), yearList.get(position));
         }
 
         @Override

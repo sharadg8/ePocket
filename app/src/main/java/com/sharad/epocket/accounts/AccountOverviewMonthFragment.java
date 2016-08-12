@@ -21,14 +21,14 @@ import com.sharad.epocket.widget.recyclerview.StickyRecyclerView;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class AccountOverviewFragment extends Fragment implements ScrollHandler{
+public class AccountOverviewMonthFragment extends Fragment implements ScrollHandler{
     IAccount iAccount = null;
     long timeInMillis;
     ArrayList<ITransaction> iTransactionArrayList = null;
     StickyRecyclerView recyclerView = null;
-    OverviewRecyclerAdapter recyclerAdapter = null;
+    OverviewMonthRecyclerAdapter recyclerAdapter = null;
 
-    public AccountOverviewFragment() {
+    public AccountOverviewMonthFragment() {
         // Required empty public constructor
     }
 
@@ -38,10 +38,10 @@ public class AccountOverviewFragment extends Fragment implements ScrollHandler{
      *
      * @param accountId Account database id.
      * @param timeMs    Time in msec for the selected month.
-     * @return A new instance of fragment AccountOverviewFragment.
+     * @return A new instance of fragment AccountOverviewMonthFragment.
      */
-    public static AccountOverviewFragment newInstance(long accountId, long timeMs) {
-        AccountOverviewFragment fragment = new AccountOverviewFragment();
+    public static AccountOverviewMonthFragment newInstance(long accountId, long timeMs) {
+        AccountOverviewMonthFragment fragment = new AccountOverviewMonthFragment();
         Bundle args = new Bundle();
         args.putLong(Constant.ARG_ACCOUNT_NUMBER_LONG, accountId);
         args.putLong(Constant.ARG_TIME_IN_MS_LONG, timeMs);
@@ -80,16 +80,16 @@ public class AccountOverviewFragment extends Fragment implements ScrollHandler{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_account_overview, container, false);
+        View view = inflater.inflate(R.layout.fragment_account_overview_month, container, false);
 
-        recyclerAdapter = new OverviewRecyclerAdapter(getContext(), this, iAccount.getIsoCurrency());
+        recyclerAdapter = new OverviewMonthRecyclerAdapter(getContext(), this, iAccount.getIsoCurrency());
         recyclerAdapter.setItemList(iTransactionArrayList, timeInMillis);
 
         recyclerView = (StickyRecyclerView) view.findViewById(R.id.recyclerView);
         recyclerView.setIndexer(recyclerAdapter);
         recyclerView.setAdapter(recyclerAdapter);
 
-        recyclerAdapter.setOnItemClickListener(new OverviewRecyclerAdapter.OnItemClickListener() {
+        recyclerAdapter.setOnItemClickListener(new OverviewMonthRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onEditClicked(int position, ITransaction iTransaction) {
                 if((iTransaction.getType() == ITransaction.TRANSACTION_TYPE_ACCOUNT_WITHDRAW)
