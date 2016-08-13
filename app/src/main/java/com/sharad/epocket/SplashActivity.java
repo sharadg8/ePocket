@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.sharad.epocket.accounts.AccountManager;
 import com.sharad.epocket.accounts.DataSourceAccount;
 import com.sharad.epocket.accounts.IAccount;
 import com.sharad.epocket.accounts.ICategory;
@@ -38,11 +39,13 @@ public class SplashActivity extends AppCompatActivity {
             /**
              * Preload currency locale
              */
-            final ArrayList<IAccount> accountItems = new ArrayList<>();
+            final ArrayList<IAccount> iAccountArrayList = new ArrayList<>();
             final DataSourceAccount dataSourceAccount = new DataSourceAccount(SplashActivity.this);
-            dataSourceAccount.getAccounts(accountItems);
-            for(IAccount a : accountItems) {
-                Utils.formatCurrency(a.getIsoCurrency(), a.getBalance());
+            dataSourceAccount.getAccounts(iAccountArrayList);
+            AccountManager accountManager = AccountManager.getInstance();
+            for(IAccount iAccount : iAccountArrayList) {
+                Utils.formatCurrency(iAccount.getIsoCurrency(), iAccount.getBalance());
+                accountManager.service(SplashActivity.this, iAccount);
             }
 
             /**

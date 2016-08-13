@@ -43,9 +43,9 @@ public class DataSourceTransaction extends DatabaseAdapter {
         return status;
     }
 
-    public boolean deleteTransaction(long rowId) {
+    public boolean deleteTransaction(ITransaction iTransaction) {
         SQLiteDatabase db = openDb();
-        String where = ContentConstant.KEY_TRANSACTION_ROWID + "=" + rowId;
+        String where = ContentConstant.KEY_TRANSACTION_ROWID + "=" + iTransaction.getId();
         boolean status = db.delete(DATABASE_TABLE_TRANSACTION, where, null) != 0;
         closeDb();
         return status;

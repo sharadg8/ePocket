@@ -24,6 +24,7 @@ import java.util.Collections;
 
 public class OverviewMonthRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         implements StickyRecyclerView.HeaderIndexer {
+    private ArrayList<ITransaction> iMetaDataList = null;
     private ArrayList<Item> itemList = null;
     private ArrayList<Integer> itemType = null;
     private OnItemClickListener itemClickListener = null;
@@ -62,6 +63,7 @@ public class OverviewMonthRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
     public OverviewMonthRecyclerAdapter(Context context, ScrollHandler smoothScrollController, String isoCurrency) {
         this.itemList = new ArrayList<>();
         this.itemType = new ArrayList<>();
+        this.iMetaDataList = new ArrayList<>();
         mContext = context;
         mInflater = LayoutInflater.from(context);
         mHeader = mInflater.inflate(R.layout.item_account_transaction_list_header, null, false);
@@ -75,6 +77,7 @@ public class OverviewMonthRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
         this.mSelectedMonth = selectedMonth;
         this.itemList.clear();
         this.itemType.clear();
+        this.iMetaDataList.clear();
 
         Collections.sort(transactionArrayList, new ITransaction.iComparator());
 
@@ -92,21 +95,21 @@ public class OverviewMonthRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
 
         long date = 0;
         for (ITransaction transaction : transactionArrayList) {
-            if(!Utils.isSameDay(date, transaction.getDate())) {
-                date = transaction.getDate();
-                this.itemList.add(new Item(date));
-                this.itemType.add(VIEW_TYPE_HEADER);
+            if(transaction.getType() < ITransaction.META_DATA_START) {
+                if(!Utils.isSameDay(date, transaction.getDate())) {
+                    date = transaction.getDate();
+                    this.itemList.add(new Item(date));
+                    this.itemType.add(VIEW_TYPE_HEADER);
+                }
+                this.itemList.add(transaction);
+                this.itemType.add(VIEW_TYPE_TRANSACTION);
+            } else {
+                this.iMetaDataList.add(transaction);
             }
-            this.itemList.add(transaction);
-            this.itemType.add(VIEW_TYPE_TRANSACTION);
         }
 
         processData();
         notifyDataSetChanged();
-    }
-
-    public void setIsoCurrency(String isoCurrency) {
-        this.mIsoCurrency = isoCurrency;
     }
 
     @Override
@@ -234,7 +237,6 @@ public class OverviewMonthRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
     private void processData() {
         mExpenseSectors.clear();
         mIncomeSectors.clear();
-        float balance = 0;
         mOpeningBalance = 0;
         mExpense = 0;
         mIncome = 0;
@@ -246,10 +248,6 @@ public class OverviewMonthRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
                 ITransaction iTransaction = (ITransaction)itemList.get(i);
                 int index = Utils.getDayOfMonth(iTransaction.getDate()) - 1;
                 switch (iTransaction.getType()) {
-                    case ITransaction.META_DATA_MONTH_OPENING_BALANCE:
-                        balance += iTransaction.getAccount();
-                        mOpeningBalance = iTransaction.getAccount();
-                        break;
                     case ITransaction.TRANSACTION_TYPE_ACCOUNT_EXPENSE:
                         transaction[index] -= iTransaction.getAmount();
                         mExpense += iTransaction.getAmount();
@@ -285,12 +283,37 @@ public class OverviewMonthRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
                     case ITransaction.TRANSACTION_TYPE_ACCOUNT_TRANSFER:
                         mTransfer += iTransaction.getAmount();
                         break;
+                    case ITransaction.TRANSACTION_TYPE_ACCOUNT_WITHDRAW:
+                        break;
+                    case ITransaction.TRANSACTION_TYPE_ACCOUNT_DEPOSIT:
+                        break;
                 }
+            }
+        }
+
+        for(ITransaction iTransaction : iMetaDataList) {
+            switch (iTransaction.getType()) {
+                case ITransaction.META_DATA_MONTH_OPENING_BALANCE_CARD:
+                case ITransaction.META_DATA_MONTH_OPENING_BALANCE_CASH:
+                    mOpeningBalance += iTransaction.getAmount();
+                    break;
+                /*
+                case ITransaction.META_DATA_MONTH_INCOME:
+                    mIncome = iTransaction.getAmount();
+                    break;
+                case ITransaction.META_DATA_MONTH_EXPENSE:
+                    mExpense = iTransaction.getAmount();
+                    break;
+                case ITransaction.META_DATA_MONTH_TRANSFER:
+                    mTransfer = iTransaction.getAmount();
+                    break;
+                */
             }
         }
 
         mClosingBalance = mOpeningBalance + mIncome - mExpense - mTransfer;
 
+        float balance = mOpeningBalance;
         for(int i=0; i<mLineChartData.length; i++) {
             balance += transaction[i];
             mLineChartData[i] = balance;

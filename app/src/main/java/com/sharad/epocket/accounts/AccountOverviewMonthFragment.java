@@ -111,7 +111,7 @@ public class AccountOverviewMonthFragment extends Fragment implements ScrollHand
                             public void onClick(DialogInterface dialog, int which) {
                                 DataSourceTransaction source = new DataSourceTransaction(
                                         getContext());
-                                source.deleteTransaction(iTransaction.getId());
+                                source.deleteTransaction(iTransaction);
                                 recyclerAdapter.removeAt(position);
                             }
                         })
