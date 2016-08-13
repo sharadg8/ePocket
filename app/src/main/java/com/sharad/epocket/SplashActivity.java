@@ -53,19 +53,20 @@ public class SplashActivity extends AppCompatActivity {
             /**
              * Add default categories
              */
-            final ArrayList<ICategory> categories = new ArrayList<>();
+            final ArrayList<ICategory> iCategories = new ArrayList<>();
             final DataSourceCategory dataSourceCategory = new DataSourceCategory(SplashActivity.this);
-            dataSourceCategory.getCategories(categories);
-            if(categories.size() == 0) {
-                ICategory.getDefaultExpenseCategories(SplashActivity.this, categories);
-                for(ICategory c : categories) {
+            dataSourceCategory.getCategories(iCategories);
+            if(iCategories.size() == 0) {
+                ICategory.getDefaultExpenseCategories(SplashActivity.this, iCategories);
+                for(ICategory c : iCategories) {
                     c.setId(dataSourceCategory.insertCategory(c));
                 }
-                ICategory.getDefaultIncomeCategories(SplashActivity.this, categories);
-                for(ICategory c : categories) {
+                ICategory.getDefaultIncomeCategories(SplashActivity.this, iCategories);
+                for(ICategory c : iCategories) {
                     c.setId(dataSourceCategory.insertCategory(c));
                 }
             }
+            ICategory.loadCategoryMap(iCategories);
 
             return null;
         }

@@ -103,6 +103,7 @@ public class CategoryImageList {
     public static final int RESOURCE_COUNT = imageResource.length - 2;
     public static final int RESOURCE_UNKNOWN = imageResource.length - 2;
     public static final int RESOURCE_ADD_NEW = imageResource.length - 1;
+    public static final int RESOURCE_LENGTH = imageResource.length;
 
     public static final int getImageResource(int index) {
         if(index < imageResource.length) {

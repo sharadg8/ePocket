@@ -319,16 +319,14 @@ public class OverviewMonthRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
             mLineChartData[i] = balance;
         }
 
-        // TODO change this.
-        DataSourceCategory dataSourceCategory = new DataSourceCategory(mContext);
         for(PieChartView.PieSector sector : mExpenseSectors) {
-            ICategory iCategory = dataSourceCategory.getCategory(sector.id);
+            ICategory iCategory = ICategory.getCategory(sector.id);
             sector.color = iCategory.getColor();
             sector.title = iCategory.getTitle();
             sector.resourceId.add(iCategory.getImageResource());
         }
         for(PieChartView.PieSector sector : mIncomeSectors) {
-            ICategory iCategory = dataSourceCategory.getCategory(sector.id);
+            ICategory iCategory = ICategory.getCategory(sector.id);
             sector.color = iCategory.getColor();
             sector.title = iCategory.getTitle();
             sector.resourceId.add(iCategory.getImageResource());
@@ -387,8 +385,7 @@ public class OverviewMonthRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
         public void bind(Item item) {
             if(item instanceof ITransaction) {
                 ITransaction iTransaction = (ITransaction)item;
-                DataSourceCategory dataSourceCategory = new DataSourceCategory(mContext);
-                ICategory iCategory = dataSourceCategory.getCategory(iTransaction.getCategory());
+                ICategory iCategory = ICategory.getCategory(iTransaction.getCategory());
 
                 TextView category = (TextView) itemView.findViewById(R.id.category);
                 TextView amount = (TextView) itemView.findViewById(R.id.amount);

@@ -235,12 +235,7 @@ public class AddTransactionActivity extends AppCompatActivity implements
             iTransaction = dataSourceTransaction.getTransaction(transactionId);
             DataSourceAccount dataSourceAccount = new DataSourceAccount(this);
             iAccount = dataSourceAccount.getAccount(iTransaction.getAccount());
-            if(iTransaction.getCategory() != Constant.INVALID_ID) {
-                DataSourceCategory dataSourceCategory = new DataSourceCategory(this);
-                iCategory = dataSourceCategory.getCategory(iTransaction.getCategory());
-            } else {
-                iCategory = new ICategory(CategoryImageList.RESOURCE_UNKNOWN);
-            }
+            iCategory = ICategory.getCategory(iTransaction.getCategory());
         }
 
         /**

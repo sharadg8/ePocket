@@ -19,10 +19,11 @@ public class DataSourceCategory extends DatabaseAdapter {
         super(context);
     }
 
-    public long insertCategory(ICategory category) {
+    public long insertCategory(ICategory iCategory) {
+        ICategory.updateCategory(iCategory);
         SQLiteDatabase db = openDb();
 
-        ContentValues content = category.getContentValues();
+        ContentValues content = iCategory.getContentValues();
 
         // Insert it into the database.
         long id = db.insert(DATABASE_TABLE_CATEGORY, null, content);
@@ -30,12 +31,13 @@ public class DataSourceCategory extends DatabaseAdapter {
         return id;
     }
 
-    public boolean updateCategory(ICategory category) {
+    public boolean updateCategory(ICategory iCategory) {
+        ICategory.updateCategory(iCategory);
         SQLiteDatabase db = openDb();
-        String where = ContentConstant.KEY_CATEGORY_ROWID + "=" + category.getId();
+        String where = ContentConstant.KEY_CATEGORY_ROWID + "=" + iCategory.getId();
 
         // Create row's data:
-        ContentValues content = category.getContentValues();
+        ContentValues content = iCategory.getContentValues();
 
         // Update it into the database.
         boolean status = db.update(DATABASE_TABLE_CATEGORY, content, where, null) != 0;
@@ -44,6 +46,7 @@ public class DataSourceCategory extends DatabaseAdapter {
     }
 
     public boolean deleteCategory(long rowId) {
+        ICategory.removeCategory(rowId);
         SQLiteDatabase db = openDb();
         String where = ContentConstant.KEY_CATEGORY_ROWID + "=" + rowId;
         boolean status = db.delete(DATABASE_TABLE_CATEGORY, where, null) != 0;

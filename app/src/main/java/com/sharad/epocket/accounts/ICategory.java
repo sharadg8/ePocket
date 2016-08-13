@@ -11,6 +11,7 @@ import com.sharad.epocket.utils.Item;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Random;
 
 /**
@@ -33,7 +34,7 @@ public class ICategory extends Item{
     }
     public ICategory(long id, int imageIndex, int color, String title, int type, int usageCount) {
         super(id);
-        this.imageIndex = (imageIndex < CategoryImageList.RESOURCE_COUNT) ? imageIndex : 0;
+        this.imageIndex = (imageIndex < CategoryImageList.RESOURCE_LENGTH) ? imageIndex : 0;
         this.color = color;
         this.title = title;
         this.type = type;
@@ -51,7 +52,7 @@ public class ICategory extends Item{
         int usageCount = c.getInt(c.getColumnIndex(ContentConstant.KEY_CATEGORY_COUNT));
 
         this.id = id;
-        this.imageIndex = (imageIndex < CategoryImageList.RESOURCE_COUNT) ? imageIndex : 0;
+        this.imageIndex = (imageIndex < CategoryImageList.RESOURCE_LENGTH) ? imageIndex : 0;
         this.color = color;
         this.title = title;
         this.type = type;
@@ -83,7 +84,7 @@ public class ICategory extends Item{
     public void setType(int type) {             this.type = type;              }
     public void setUsageCount(int usageCount) { this.usageCount = usageCount;  }
     public void setImageIndex(int imageIndex) {
-        this.imageIndex = (imageIndex < CategoryImageList.RESOURCE_COUNT) ? imageIndex : 0;
+        this.imageIndex = (imageIndex < CategoryImageList.RESOURCE_LENGTH) ? imageIndex : 0;
     }
 
     public static class iComparator implements Comparator<ICategory> {
@@ -93,6 +94,31 @@ public class ICategory extends Item{
                     ? 0
                     : ((o.getUsageCount() < o1.getUsageCount()) ? 1 : -1);
         }
+    }
+
+    private static HashMap<Long, ICategory> categoryMap = new HashMap<>();
+
+    public static void loadCategoryMap(ArrayList<ICategory> iCategories) {
+        for (ICategory iCategory : iCategories) {
+            categoryMap.put(iCategory.getId(), iCategory);
+        }
+    }
+
+    public static ICategory getCategory(long id) {
+        ICategory iCategory = categoryMap.get(id);
+        if(iCategory == null) {
+            iCategory = new ICategory(CategoryImageList.RESOURCE_UNKNOWN);
+            iCategory.setTitle("Unknown");
+        }
+        return iCategory;
+    }
+
+    public static void removeCategory(long id) {
+        categoryMap.remove(id);
+    }
+
+    public static void updateCategory(ICategory iCategory) {
+        categoryMap.put(iCategory.getId(), iCategory);
     }
 
     public static void getDefaultIncomeCategories(Context c, ArrayList<ICategory> list) {

@@ -16,7 +16,6 @@ import com.sharad.epocket.R;
 import com.sharad.epocket.utils.Constant;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
@@ -69,12 +68,6 @@ public class WithdrawDialogFragment extends DialogFragment {
             iTransaction.setType(ITransaction.TRANSACTION_TYPE_ACCOUNT_WITHDRAW);
             iTransaction.setSubType(ITransaction.TRANSACTION_SUB_TYPE_ACCOUNT_BOTH);
             iTransaction.setAccount(accountId);
-
-            /* TODO Remove this */
-            DataSourceCategory dataSourceCategory = new DataSourceCategory(getContext());
-            ArrayList<ICategory> iCategories = new ArrayList<>();
-            dataSourceCategory.getCategories(iCategories);
-            iTransaction.setCategory(iCategories.get(0).getId());
         }
 
         setStyle(DialogFragment.STYLE_NO_TITLE, android.R.style.Theme_Material_Light_Dialog_MinWidth);
