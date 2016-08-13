@@ -132,6 +132,20 @@ public class AccountManager {
         source.deleteAccount(id);
     }
 
+    public boolean hasAnyTransactionThisMonth(Context context, IAccount iAccount, long timeInMillis) {
+        long start_ms = Utils.getMonthStart_ms(timeInMillis);
+        long end_ms = Utils.getMonthEnd_ms(timeInMillis);
+
+        DataSourceTransaction dataSourceTransaction = new DataSourceTransaction(context);
+        String where = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + iAccount.getId()
+                + " AND " + ContentConstant.KEY_TRANSACTION_DATE + ">=" + start_ms
+                + " AND " + ContentConstant.KEY_TRANSACTION_DATE + "<=" + end_ms;
+        ArrayList<ITransaction> iTransactionArrayList = new ArrayList<>();
+        dataSourceTransaction.getTransactions(iTransactionArrayList, where);
+
+        return (iTransactionArrayList.size() > 0);
+    }
+
     public boolean hasAnyTransactionBeforeMonth(Context context, IAccount iAccount, long timeInMillis) {
         long end_ms = Utils.getMonthStart_ms(timeInMillis);
 
@@ -146,6 +160,30 @@ public class AccountManager {
 
     public boolean hasAnyTransactionAfterMonth(Context context, IAccount iAccount, long timeInMillis) {
         long start_ms = Utils.getMonthEnd_ms(timeInMillis);
+
+        DataSourceTransaction dataSourceTransaction = new DataSourceTransaction(context);
+        String where = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + iAccount.getId()
+                + " AND " + ContentConstant.KEY_TRANSACTION_DATE + ">=" + start_ms;
+        ArrayList<ITransaction> iTransactionArrayList = new ArrayList<>();
+        dataSourceTransaction.getTransactions(iTransactionArrayList, where);
+
+        return (iTransactionArrayList.size() > 0);
+    }
+
+    public boolean hasAnyTransactionBeforeYear(Context context, IAccount iAccount, long timeInMillis) {
+        long end_ms = Utils.getYearStart_ms(timeInMillis);
+
+        DataSourceTransaction dataSourceTransaction = new DataSourceTransaction(context);
+        String where = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + iAccount.getId()
+                + " AND " + ContentConstant.KEY_TRANSACTION_DATE + "<=" + end_ms;
+        ArrayList<ITransaction> iTransactionArrayList = new ArrayList<>();
+        dataSourceTransaction.getTransactions(iTransactionArrayList, where);
+
+        return (iTransactionArrayList.size() > 0);
+    }
+
+    public boolean hasAnyTransactionAfterYear(Context context, IAccount iAccount, long timeInMillis) {
+        long start_ms = Utils.getYearEnd_ms(timeInMillis);
 
         DataSourceTransaction dataSourceTransaction = new DataSourceTransaction(context);
         String where = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + iAccount.getId()

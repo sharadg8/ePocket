@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.sharad.epocket.R;
 import com.sharad.epocket.utils.Constant;
@@ -20,18 +21,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class AccountOverviewActivity extends AppCompatActivity {
-    private static final int MODE_MONTH = 0;
-    private static final int MODE_YEAR  = 1;
-
+public class AccountOverviewYearActivity extends AppCompatActivity {
     private IAccount iAccount = null;
     private ViewPager viewPager = null;
-    private MonthPagerAdapter monthPagerAdapter = null;
     private YearPagerAdapter yearPagerAdapter = null;
-    private ArrayList<Long> monthList = null;
     private ArrayList<Long> yearList = null;
-
-    private int mode = MODE_MONTH;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +35,9 @@ public class AccountOverviewActivity extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         long accountId = extras.getLong(Constant.ARG_ACCOUNT_NUMBER_LONG, Constant.INVALID_ID);
+        Calendar calendar = Calendar.getInstance();
+        long timeInMillis = extras.getLong(Constant.ARG_TIME_IN_MS_LONG, calendar.getTimeInMillis());
 
-        monthList = new ArrayList<>();
         yearList = new ArrayList<>();
 
         DataSourceAccount dataSourceAccount = new DataSourceAccount(this);
@@ -57,8 +52,7 @@ public class AccountOverviewActivity extends AppCompatActivity {
             viewPager = (ViewPager) findViewById(R.id.viewPager);
 
             yearPagerAdapter = new YearPagerAdapter(getSupportFragmentManager());
-            monthPagerAdapter = new MonthPagerAdapter(getSupportFragmentManager());
-            viewPager.setAdapter(monthPagerAdapter);
+            viewPager.setAdapter(yearPagerAdapter);
 
             viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
@@ -67,7 +61,7 @@ public class AccountOverviewActivity extends AppCompatActivity {
 
                 @Override
                 public void onPageSelected(int position) {
-                    updateMonth();
+                    updateYear();
                 }
 
                 @Override
@@ -75,28 +69,43 @@ public class AccountOverviewActivity extends AppCompatActivity {
                 }
             });
 
-            Calendar calendar = Calendar.getInstance();
-            long timeInMillis = calendar.getTimeInMillis();
-            monthList.add(timeInMillis);
             yearList.add(timeInMillis);
 
             AccountManager manager = AccountManager.getInstance();
-            if(manager.hasAnyTransactionBeforeMonth(this, iAccount, timeInMillis)) {
+            if(manager.hasAnyTransactionBeforeYear(this, iAccount, timeInMillis)) {
                 calendar.setTimeInMillis(timeInMillis);
-                calendar.add(Calendar.MONTH, -1);
-                monthList.add(0, calendar.getTimeInMillis());
+                calendar.add(Calendar.YEAR, -1);
+                yearList.add(0, calendar.getTimeInMillis());
             }
-            if(manager.hasAnyTransactionAfterMonth(this, iAccount, timeInMillis)) {
+            if(manager.hasAnyTransactionAfterYear(this, iAccount, timeInMillis)) {
                 calendar.setTimeInMillis(timeInMillis);
-                calendar.add(Calendar.MONTH, +1);
-                monthList.add(calendar.getTimeInMillis());
+                calendar.add(Calendar.YEAR, +1);
+                yearList.add(calendar.getTimeInMillis());
             }
 
             yearPagerAdapter.notifyDataSetChanged();
-            monthPagerAdapter.notifyDataSetChanged();
 
-            updateMonth();
-            viewPager.setCurrentItem(monthList.indexOf(timeInMillis), true);
+            updateYear();
+            viewPager.setCurrentItem(yearList.indexOf(timeInMillis), true);
+
+            ImageButton previous = (ImageButton) findViewById(R.id.previous);
+            previous.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    viewPager.setCurrentItem((viewPager.getCurrentItem() - 1), true);
+                }
+            });
+
+            Button date = (Button) findViewById(R.id.date);
+            date.setClickable(false);
+
+            ImageButton next = (ImageButton) findViewById(R.id.next);
+            next.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    viewPager.setCurrentItem((viewPager.getCurrentItem() + 1), true);
+                }
+            });
         }
     }
 
@@ -105,26 +114,26 @@ public class AccountOverviewActivity extends AppCompatActivity {
         public void run() {
             AccountManager manager = AccountManager.getInstance();
             if(viewPager.getCurrentItem() < 2) {
-                if (manager.hasAnyTransactionBeforeMonth(getBaseContext(), iAccount, monthList.get(0))) {
+                if (manager.hasAnyTransactionBeforeYear(getBaseContext(), iAccount, yearList.get(0))) {
                     Calendar calendar = Calendar.getInstance();
-                    calendar.setTimeInMillis(monthList.get(0));
-                    calendar.add(Calendar.MONTH, -1);
-                    if (Constant.INVALID_ID == monthList.indexOf(calendar.getTimeInMillis())) {
-                        monthList.add(0, calendar.getTimeInMillis());
-                        monthPagerAdapter.notifyDataSetChanged();
+                    calendar.setTimeInMillis(yearList.get(0));
+                    calendar.add(Calendar.YEAR, -1);
+                    if (Constant.INVALID_ID == yearList.indexOf(calendar.getTimeInMillis())) {
+                        yearList.add(0, calendar.getTimeInMillis());
+                        yearPagerAdapter.notifyDataSetChanged();
                         viewPager.setCurrentItem((viewPager.getCurrentItem() + 1), false);
                     }
                 }
             }
 
-            if(viewPager.getCurrentItem() > (monthList.size() - 3)) {
-                if (manager.hasAnyTransactionAfterMonth(getBaseContext(), iAccount, monthList.get(monthList.size() - 1))) {
+            if(viewPager.getCurrentItem() > (yearList.size() - 3)) {
+                if (manager.hasAnyTransactionAfterYear(getBaseContext(), iAccount, yearList.get(yearList.size() - 1))) {
                     Calendar calendar = Calendar.getInstance();
-                    calendar.setTimeInMillis(monthList.get(monthList.size() - 1));
-                    calendar.add(Calendar.MONTH, +1);
-                    if (Constant.INVALID_ID == monthList.indexOf(calendar.getTimeInMillis())) {
-                        monthList.add(calendar.getTimeInMillis());
-                        monthPagerAdapter.notifyDataSetChanged();
+                    calendar.setTimeInMillis(yearList.get(yearList.size() - 1));
+                    calendar.add(Calendar.YEAR, +1);
+                    if (Constant.INVALID_ID == yearList.indexOf(calendar.getTimeInMillis())) {
+                        yearList.add(calendar.getTimeInMillis());
+                        yearPagerAdapter.notifyDataSetChanged();
                     }
                 }
             }
@@ -146,46 +155,6 @@ public class AccountOverviewActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public void onButtonClick(View view) {
-        switch (view.getId()) {
-            case R.id.previous:
-                viewPager.setCurrentItem((viewPager.getCurrentItem() - 1), true);
-                break;
-            case R.id.next:
-                viewPager.setCurrentItem((viewPager.getCurrentItem() + 1), true);
-                break;
-            case R.id.month:
-                if(mode == MODE_MONTH) {
-                    mode = MODE_YEAR;
-                    viewPager.setAdapter(yearPagerAdapter);
-                    viewPager.invalidate();
-                }
-                break;
-        }
-    }
-
-    public class MonthPagerAdapter extends FragmentStatePagerAdapter {
-
-        public MonthPagerAdapter(FragmentManager fragmentManager) {
-            super(fragmentManager);
-        }
-
-        @Override
-        public int getCount() {
-            return monthList.size();
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return AccountOverviewMonthFragment.newInstance(iAccount.getId(), monthList.get(position));
-        }
-
-        @Override
-        public int getItemPosition(Object item) {
-            return POSITION_NONE;
-        }
     }
 
     public class YearPagerAdapter extends FragmentStatePagerAdapter {
@@ -210,15 +179,15 @@ public class AccountOverviewActivity extends AppCompatActivity {
         }
     }
 
-    private void updateMonth() {
+    private void updateYear() {
         findViewById(R.id.previous).setVisibility((viewPager.getCurrentItem() > 0) ? View.VISIBLE : View.INVISIBLE);
-        findViewById(R.id.next).setVisibility((viewPager.getCurrentItem() < monthList.size()-1) ? View.VISIBLE : View.INVISIBLE);
+        findViewById(R.id.next).setVisibility((viewPager.getCurrentItem() < yearList.size()-1) ? View.VISIBLE : View.INVISIBLE);
 
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(monthList.get(viewPager.getCurrentItem()));
-        SimpleDateFormat df = new SimpleDateFormat("MMM yyyy");
-        Button month = (Button) findViewById(R.id.month);
-        month.setText(df.format(calendar.getTime()));
+        calendar.setTimeInMillis(yearList.get(viewPager.getCurrentItem()));
+        SimpleDateFormat df = new SimpleDateFormat("yyyy");
+        Button date = (Button) findViewById(R.id.date);
+        date.setText(df.format(calendar.getTime()));
 
         /* Load more data */
         new Handler().postDelayed(runnable, 500);

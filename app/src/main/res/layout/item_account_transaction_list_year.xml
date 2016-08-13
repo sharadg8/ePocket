@@ -5,6 +5,7 @@
     android:layout_margin="4dp"
     app:contentPadding="4dp"
     android:clickable="true"
+    android:transitionName="@string/transition_name_transaction_month"
     android:foreground="?android:attr/selectableItemBackground"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -62,6 +63,26 @@
                 android:lines="1"
                 android:text="$2600.24"
                 android:alpha="0.7"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/empty"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:tint="@color/colorInactive"
+                android:src="@drawable/ic_not_interested_black_24dp"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:textColor="@color/colorInactive"
+                android:text="No data!"/>
         </LinearLayout>
     </FrameLayout>
 

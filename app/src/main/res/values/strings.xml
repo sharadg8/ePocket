@@ -12,6 +12,7 @@
 
 
     <string name="transition_name_toolbar">transition:TOOLBAR</string>
+    <string name="transition_name_transaction_month">transition:TRANSACTION_MONTH</string>
 
 
     <!-- Message shown when user enters wrong PIN -->

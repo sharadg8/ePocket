@@ -1,8 +1,12 @@
 package com.sharad.epocket.accounts;
 
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
@@ -18,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
+import static com.sharad.epocket.accounts.OverviewYearRecyclerAdapter.MonthItem;
 
 public class AccountOverviewYearFragment extends Fragment {
     IAccount iAccount = null;
@@ -86,21 +91,38 @@ public class AccountOverviewYearFragment extends Fragment {
         recyclerAdapter = new OverviewYearRecyclerAdapter(getContext(), iAccount.getIsoCurrency());
         recyclerView.setAdapter(recyclerAdapter);
 
-        ArrayList<String> strings = new ArrayList<>();
-        strings.add("JAN");
-        strings.add("FEB");
-        strings.add("MAR");
-        strings.add("APR");
-        strings.add("MAY");
-        strings.add("JUN");
-        strings.add("JUL");
-        strings.add("AUG");
-        strings.add("SEP");
-        strings.add("OCT");
-        strings.add("NOV");
-        strings.add("DEC");
+        recyclerAdapter.setOnItemClickListener(new OverviewYearRecyclerAdapter.OnItemClickListener() {
+            @Override
+            public void onClick(View view, long timeInMillis) {
+                Intent intent = new Intent(getActivity(), AccountOverviewMonthActivity.class);
+                intent.putExtra(Constant.ARG_ACCOUNT_NUMBER_LONG, iAccount.getId());
+                intent.putExtra(Constant.ARG_TIME_IN_MS_LONG, timeInMillis);
 
-        recyclerAdapter.setItemList(strings, Calendar.getInstance().getTimeInMillis());
+                View movingView = getActivity().findViewById(R.id.appBarLayout);
+                Pair<View, String> pair1 = Pair.create(movingView, movingView.getTransitionName());
+                //Pair<View, String> pair2 = Pair.create(view, view.getTransitionName());
+
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        getActivity(), pair1/*, pair2*/
+                );
+                ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+            }
+        });
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(timeInMillis);
+        ArrayList<MonthItem> monthItems = new ArrayList<>();
+        AccountManager manager = AccountManager.getInstance();
+        for(int i = 0; i <= calendar.getActualMaximum(Calendar.MONTH); i++) {
+            calendar.set(Calendar.MONTH, i);
+            if(manager.hasAnyTransactionThisMonth(getContext(), iAccount, calendar.getTimeInMillis())) {
+                monthItems.add(new MonthItem(calendar.getTimeInMillis(), 2600.24f, 260.24f, 1260.24f));
+            } else {
+                monthItems.add(new MonthItem(calendar.getTimeInMillis()));
+            }
+        }
+
+        recyclerAdapter.setItemList(monthItems);
 
         return view;
     }

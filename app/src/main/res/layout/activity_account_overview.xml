@@ -6,8 +6,10 @@
     android:orientation="vertical">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:transitionName="@string/transition_name_toolbar"
         android:fitsSystemWindows="true"
         android:paddingTop="24dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
@@ -30,17 +32,15 @@
                 android:layout_height="match_parent"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
-                android:onClick="onButtonClick"
                 android:src="@drawable/ic_keyboard_arrow_left_black_24dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:tint="@android:color/white"/>
             <Button
-                android:id="@+id/month"
+                android:id="@+id/date"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="AUG 2016"
-                android:onClick="onButtonClick"
                 android:textColor="@android:color/white"
                 android:background="?attr/selectableItemBackground"/>
             <ImageButton
@@ -49,7 +49,6 @@
                 android:layout_height="match_parent"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
-                android:onClick="onButtonClick"
                 android:src="@drawable/ic_keyboard_arrow_right_black_24dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:tint="@android:color/white"/>

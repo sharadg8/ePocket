@@ -35,8 +35,13 @@
             android:name=".budget.AddBudgetActivity"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".accounts.AccountOverviewActivity"
-            android:parentActivityName=".MainActivity"/>
+            android:name=".accounts.AccountOverviewMonthActivity"
+            android:parentActivityName=".MainActivity"
+            android:noHistory="true" />
+        <activity
+            android:name=".accounts.AccountOverviewYearActivity"
+            android:parentActivityName=".MainActivity"
+            android:noHistory="true" />
     </application>
 
 </manifest>
