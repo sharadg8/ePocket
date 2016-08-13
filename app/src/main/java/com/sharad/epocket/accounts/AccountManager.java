@@ -20,7 +20,7 @@ public class AccountManager {
         return ourInstance;
     }
 
-    public void service(Context context, IAccount iAccount) {
+    public void service(Context context, IAccount iAccount, long fromTimeInMillis) {
         DataSourceTransaction dataSourceTransaction = new DataSourceTransaction(context);
         String where = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + iAccount.getId();
         ArrayList<ITransaction> iTransactionArrayList = new ArrayList<>();
@@ -28,7 +28,9 @@ public class AccountManager {
 
         Collections.sort(iTransactionArrayList, new ITransaction.iComparator());
         if(iTransactionArrayList.size() > 0) {
-            long oldest = iTransactionArrayList.get(iTransactionArrayList.size() - 1).getDate();
+            long oldest = Math.max(
+                    iTransactionArrayList.get(iTransactionArrayList.size() - 1).getDate(),
+                    fromTimeInMillis);
             long newest = Math.max(
                     iTransactionArrayList.get(0).getDate(),
                     Calendar.getInstance().getTimeInMillis() );
@@ -37,6 +39,26 @@ public class AccountManager {
             float balanceCash = 0;
             float balanceCard = 0;
             ArrayList<ITransaction> monthList = new ArrayList<>();
+
+            /**
+             * Update the initial balance same as the selected month
+             */
+            long start_ms = Utils.getMonthStart_ms(timeInMillis);
+            long end_ms = Utils.getMonthEnd_ms(timeInMillis);
+            String monthWhere = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + iAccount.getId()
+                    + " AND " + ContentConstant.KEY_TRANSACTION_DATE + ">=" + start_ms
+                    + " AND " + ContentConstant.KEY_TRANSACTION_DATE + "<=" + end_ms
+                    + " AND " + ContentConstant.KEY_TRANSACTION_TYPE + ">" + ITransaction.META_DATA_START;
+            dataSourceTransaction.getTransactions(monthList, monthWhere);
+            for(ITransaction iTransaction : monthList) {
+                if(iTransaction.getType() == ITransaction.META_DATA_MONTH_OPENING_BALANCE_CARD) {
+                    balanceCard += iTransaction.getAmount();
+                }
+                if(iTransaction.getType() == ITransaction.META_DATA_MONTH_OPENING_BALANCE_CASH) {
+                    balanceCash += iTransaction.getAmount();
+                }
+            }
+
             boolean accountOpened = false;
             do {
                 float income = 0;
@@ -44,9 +66,9 @@ public class AccountManager {
                 float transfer = 0;
                 float openingCard = balanceCard;
                 float openingCash = balanceCash;
-                long start_ms = Utils.getMonthStart_ms(timeInMillis);
-                long end_ms = Utils.getMonthEnd_ms(timeInMillis);
-                String monthWhere = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + iAccount.getId()
+                start_ms = Utils.getMonthStart_ms(timeInMillis);
+                end_ms = Utils.getMonthEnd_ms(timeInMillis);
+                monthWhere = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + iAccount.getId()
                         + " AND " + ContentConstant.KEY_TRANSACTION_DATE + ">=" + start_ms
                         + " AND " + ContentConstant.KEY_TRANSACTION_DATE + "<=" + end_ms
                         + " AND " + ContentConstant.KEY_TRANSACTION_TYPE + "<" + ITransaction.META_DATA_START;
@@ -98,17 +120,49 @@ public class AccountManager {
                     }
                 }
 
+                monthWhere = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + iAccount.getId()
+                        + " AND " + ContentConstant.KEY_TRANSACTION_DATE + ">=" + start_ms
+                        + " AND " + ContentConstant.KEY_TRANSACTION_DATE + "<=" + end_ms
+                        + " AND " + ContentConstant.KEY_TRANSACTION_TYPE + ">" + ITransaction.META_DATA_START;
+                dataSourceTransaction.getTransactions(monthList, monthWhere);
+
                 if(accountOpened) {
-                    /* Opening balance card */
-                    monthWhere = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + iAccount.getId()
-                            + " AND " + ContentConstant.KEY_TRANSACTION_DATE + ">=" + start_ms
-                            + " AND " + ContentConstant.KEY_TRANSACTION_DATE + "<=" + end_ms
-                            + " AND " + ContentConstant.KEY_TRANSACTION_TYPE + "=" + ITransaction.META_DATA_MONTH_OPENING_BALANCE_CARD;
-                    dataSourceTransaction.getTransactions(monthList, monthWhere);
-                    if(monthList.size() > 0) {
-                        monthList.get(0).setAmount(openingCard);
-                        dataSourceTransaction.updateTransaction(monthList.get(0));
-                    } else {
+                    boolean openingCardAdded = false;
+                    boolean openingCashAdded = false;
+                    boolean incomeAdded = false;
+                    boolean expenseAdded = false;
+                    boolean transferAdded = false;
+                    for (ITransaction iTransaction : monthList) {
+                        switch (iTransaction.getType()) {
+                            case ITransaction.META_DATA_MONTH_OPENING_BALANCE_CARD:
+                                openingCardAdded = true;
+                                iTransaction.setAmount(openingCard);
+                                dataSourceTransaction.updateTransaction(iTransaction);
+                                break;
+                            case ITransaction.META_DATA_MONTH_OPENING_BALANCE_CASH:
+                                openingCashAdded = true;
+                                iTransaction.setAmount(openingCash);
+                                dataSourceTransaction.updateTransaction(iTransaction);
+                                break;
+                            case ITransaction.META_DATA_MONTH_INCOME:
+                                incomeAdded = true;
+                                iTransaction.setAmount(income);
+                                dataSourceTransaction.updateTransaction(iTransaction);
+                                break;
+                            case ITransaction.META_DATA_MONTH_EXPENSE:
+                                expenseAdded = true;
+                                iTransaction.setAmount(expense);
+                                dataSourceTransaction.updateTransaction(iTransaction);
+                                break;
+                            case ITransaction.META_DATA_MONTH_TRANSFER:
+                                transferAdded = true;
+                                iTransaction.setAmount(transfer);
+                                dataSourceTransaction.updateTransaction(iTransaction);
+                                break;
+                        }
+                    }
+
+                    if(openingCardAdded == false) {
                         ITransaction iOpeningCard = new ITransaction();
                         iOpeningCard.setAccount(iAccount.getId());
                         iOpeningCard.setDate(start_ms + 1);
@@ -117,16 +171,7 @@ public class AccountManager {
                         dataSourceTransaction.insertTransaction(iOpeningCard);
                     }
 
-                    /* Opening balance cash */
-                    monthWhere = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + iAccount.getId()
-                            + " AND " + ContentConstant.KEY_TRANSACTION_DATE + ">=" + start_ms
-                            + " AND " + ContentConstant.KEY_TRANSACTION_DATE + "<=" + end_ms
-                            + " AND " + ContentConstant.KEY_TRANSACTION_TYPE + "=" + ITransaction.META_DATA_MONTH_OPENING_BALANCE_CASH;
-                    dataSourceTransaction.getTransactions(monthList, monthWhere);
-                    if(monthList.size() > 0) {
-                        monthList.get(0).setAmount(openingCash);
-                        dataSourceTransaction.updateTransaction(monthList.get(0));
-                    } else {
+                    if(openingCashAdded == false) {
                         ITransaction iOpeningCash = new ITransaction();
                         iOpeningCash.setAccount(iAccount.getId());
                         iOpeningCash.setDate(start_ms + 1);
@@ -135,16 +180,7 @@ public class AccountManager {
                         dataSourceTransaction.insertTransaction(iOpeningCash);
                     }
 
-                    /* Income */
-                    monthWhere = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + iAccount.getId()
-                            + " AND " + ContentConstant.KEY_TRANSACTION_DATE + ">=" + start_ms
-                            + " AND " + ContentConstant.KEY_TRANSACTION_DATE + "<=" + end_ms
-                            + " AND " + ContentConstant.KEY_TRANSACTION_TYPE + "=" + ITransaction.META_DATA_MONTH_INCOME;
-                    dataSourceTransaction.getTransactions(monthList, monthWhere);
-                    if(monthList.size() > 0) {
-                        monthList.get(0).setAmount(income);
-                        dataSourceTransaction.updateTransaction(monthList.get(0));
-                    } else {
+                    if(incomeAdded == false) {
                         ITransaction iIncome = new ITransaction();
                         iIncome.setAccount(iAccount.getId());
                         iIncome.setDate(start_ms + 1);
@@ -153,16 +189,7 @@ public class AccountManager {
                         dataSourceTransaction.insertTransaction(iIncome);
                     }
 
-                    /* Expense */
-                    monthWhere = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + iAccount.getId()
-                            + " AND " + ContentConstant.KEY_TRANSACTION_DATE + ">=" + start_ms
-                            + " AND " + ContentConstant.KEY_TRANSACTION_DATE + "<=" + end_ms
-                            + " AND " + ContentConstant.KEY_TRANSACTION_TYPE + "=" + ITransaction.META_DATA_MONTH_EXPENSE;
-                    dataSourceTransaction.getTransactions(monthList, monthWhere);
-                    if(monthList.size() > 0) {
-                        monthList.get(0).setAmount(expense);
-                        dataSourceTransaction.updateTransaction(monthList.get(0));
-                    } else {
+                    if(expenseAdded == false) {
                         ITransaction iExpense = new ITransaction();
                         iExpense.setAccount(iAccount.getId());
                         iExpense.setDate(start_ms + 1);
@@ -171,16 +198,7 @@ public class AccountManager {
                         dataSourceTransaction.insertTransaction(iExpense);
                     }
 
-                    /* Transfer */
-                    monthWhere = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + iAccount.getId()
-                            + " AND " + ContentConstant.KEY_TRANSACTION_DATE + ">=" + start_ms
-                            + " AND " + ContentConstant.KEY_TRANSACTION_DATE + "<=" + end_ms
-                            + " AND " + ContentConstant.KEY_TRANSACTION_TYPE + "=" + ITransaction.META_DATA_MONTH_TRANSFER;
-                    dataSourceTransaction.getTransactions(monthList, monthWhere);
-                    if(monthList.size() > 0) {
-                        monthList.get(0).setAmount(transfer);
-                        dataSourceTransaction.updateTransaction(monthList.get(0));
-                    } else {
+                    if(transferAdded == false) {
                         ITransaction iTransfer = new ITransaction();
                         iTransfer.setAccount(iAccount.getId());
                         iTransfer.setDate(start_ms + 1);
@@ -189,11 +207,6 @@ public class AccountManager {
                         dataSourceTransaction.insertTransaction(iTransfer);
                     }
                 } else {
-                    monthWhere = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + iAccount.getId()
-                            + " AND " + ContentConstant.KEY_TRANSACTION_DATE + ">=" + start_ms
-                            + " AND " + ContentConstant.KEY_TRANSACTION_DATE + "<=" + end_ms
-                            + " AND " + ContentConstant.KEY_TRANSACTION_TYPE + ">=" + ITransaction.META_DATA_START;
-                    dataSourceTransaction.getTransactions(monthList, monthWhere);
                     for (ITransaction delete : monthList) {
                         dataSourceTransaction.deleteTransaction(delete);
                     }
@@ -313,6 +326,39 @@ public class AccountManager {
         sourceTransaction.deleteTransactions(where);
         DataSourceAccount source = new DataSourceAccount(context);
         source.deleteAccount(id);
+    }
+
+    public void deleteTransaction(Context context, ITransaction iTransaction) {
+        DataSourceAccount dataSourceAccount = new DataSourceAccount(context);
+        DataSourceTransaction dataSourceTransaction = new DataSourceTransaction(context);
+        dataSourceTransaction.deleteTransaction(iTransaction);
+
+        IAccount iAccount = dataSourceAccount.getAccount(iTransaction.getAccount());
+        service(context, iAccount, iTransaction.getDate());
+    }
+
+    public long insertTransaction(Context context, ITransaction iTransaction) {
+        DataSourceAccount dataSourceAccount = new DataSourceAccount(context);
+        DataSourceTransaction dataSourceTransaction = new DataSourceTransaction(context);
+        long id = dataSourceTransaction.insertTransaction(iTransaction);
+
+        IAccount iAccount = dataSourceAccount.getAccount(iTransaction.getAccount());
+        service(context, iAccount, iTransaction.getDate());
+        return id;
+    }
+
+    public void updateTransaction(Context context, ITransaction iTransaction) {
+        DataSourceAccount dataSourceAccount = new DataSourceAccount(context);
+        DataSourceTransaction dataSourceTransaction = new DataSourceTransaction(context);
+
+        ITransaction oldTransaction = dataSourceTransaction.getTransaction(iTransaction.getId());
+        long oldTimeInMillis = oldTransaction.getDate();
+        long newTimeInMillis = iTransaction.getDate();
+
+        dataSourceTransaction.updateTransaction(iTransaction);
+
+        IAccount iAccount = dataSourceAccount.getAccount(iTransaction.getAccount());
+        service(context, iAccount, Math.min(oldTimeInMillis, newTimeInMillis));
     }
 
     public boolean hasAnyTransactionThisMonth(Context context, IAccount iAccount, long timeInMillis) {

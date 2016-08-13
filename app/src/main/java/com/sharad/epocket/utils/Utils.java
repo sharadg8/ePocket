@@ -23,6 +23,7 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
@@ -33,6 +34,17 @@ import java.util.Locale;
 
 public class Utils {
     private static HashMap<String, Locale> localeMap = new HashMap<>();
+
+    public static void loadLocaleMap(ArrayList<String> isoCurrencies) {
+        for (Locale locale : NumberFormat.getAvailableLocales()) {
+            String code = NumberFormat.getCurrencyInstance(locale).getCurrency().getCurrencyCode();
+            if (isoCurrencies.indexOf(code) != Constant.INVALID_ID) {
+                localeMap.put(code, new Locale.Builder().setLocale(locale).setLanguage("en").build());
+                isoCurrencies.remove(code);
+                if(isoCurrencies.size() == 0) { break; }
+            }
+        }
+    }
 
     public static String formatCurrency(String isoCurrency, float value) {
         NumberFormat nf = NumberFormat.getCurrencyInstance(getLocale(isoCurrency));

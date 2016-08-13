@@ -51,13 +51,6 @@ public class DataSourceTransaction extends DatabaseAdapter {
         return status;
     }
 
-    public void deleteAllTransactions() {
-        SQLiteDatabase db = openDb();
-        db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_TRANSACTION);
-        db.execSQL(DATABASE_CREATE_SQL_TRANSACTION);
-        closeDb();
-    }
-
     public ITransaction getTransaction(long rowId) {
         SQLiteDatabase db = openDb();
         ITransaction transaction = null;

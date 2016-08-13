@@ -370,11 +370,11 @@ public class AddTransactionActivity extends AppCompatActivity implements
                         .start();
                 return;
             }
-            DataSourceTransaction dataSourceTransaction = new DataSourceTransaction(this);
+            AccountManager accountManager = AccountManager.getInstance();
             if(iTransaction.getId() == Constant.INVALID_ID) {
-                iTransaction.setId(dataSourceTransaction.insertTransaction(iTransaction));
+                iTransaction.setId(accountManager.insertTransaction(this, iTransaction));
             } else {
-                dataSourceTransaction.updateTransaction(iTransaction);
+                accountManager.updateTransaction(this, iTransaction);
             }
 
             Bundle activityResult = new Bundle();

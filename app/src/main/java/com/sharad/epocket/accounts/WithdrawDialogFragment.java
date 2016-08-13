@@ -134,11 +134,12 @@ public class WithdrawDialogFragment extends DialogFragment {
             float amount = Float.parseFloat(eAmount.getText().toString());
             if(amount > 0.01) {
                 iTransaction.setAmount(amount);
-                DataSourceTransaction dataSourceTransaction = new DataSourceTransaction(getContext());
+
+                AccountManager accountManager = AccountManager.getInstance();
                 if (id == Constant.INVALID_ID) {
-                    iTransaction.setId(dataSourceTransaction.insertTransaction(iTransaction));
+                    iTransaction.setId(accountManager.insertTransaction(getContext(), iTransaction));
                 } else {
-                    dataSourceTransaction.updateTransaction(iTransaction);
+                    accountManager.updateTransaction(getContext(), iTransaction);
                 }
                 if (onWithdrawDialogListener != null) {
                     onWithdrawDialogListener.onTransactionUpdated(iTransaction);

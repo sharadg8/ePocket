@@ -109,9 +109,8 @@ public class AccountOverviewMonthFragment extends Fragment implements ScrollHand
                         .setMessage("Delete this transaction?")
                         .setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                DataSourceTransaction source = new DataSourceTransaction(
-                                        getContext());
-                                source.deleteTransaction(iTransaction);
+                                AccountManager manager = AccountManager.getInstance();
+                                manager.deleteTransaction(getContext(), iTransaction);
                                 recyclerAdapter.removeAt(position);
                             }
                         })

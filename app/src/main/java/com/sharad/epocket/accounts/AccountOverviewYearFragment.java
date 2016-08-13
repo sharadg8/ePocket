@@ -143,7 +143,8 @@ public class AccountOverviewYearFragment extends Fragment {
                 }
             }
 
-            if(manager.hasAnyTransactionThisMonth(getContext(), iAccount, calendar.getTimeInMillis())) {
+            if((manager.hasAnyTransactionThisMonth(getContext(), iAccount, calendar.getTimeInMillis()))
+                || (Utils.isThisMonth(calendar.getTimeInMillis()))) {
                 monthItems.add(new MonthItem(calendar.getTimeInMillis(), income, expense, transfer));
             } else {
                 monthItems.add(new MonthItem(calendar.getTimeInMillis()));
