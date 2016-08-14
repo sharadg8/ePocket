@@ -121,7 +121,7 @@ public class OverviewYearRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
                 TypedArray ta = mContext.obtainStyledAttributes(attrs);
                 int color = ta.getColor(0, Color.WHITE);
                 ta.recycle();
-                color = (int) new ArgbEvaluator().evaluate(0.8f, color, Color.WHITE);
+                color = (int) new ArgbEvaluator().evaluate(0.5f, color, Color.WHITE);
                 ((CardView)itemView).setCardBackgroundColor(color);
                 ((CardView)itemView).setCardElevation(0);
                 ((CardView)itemView).setForeground(null);
@@ -132,6 +132,10 @@ public class OverviewYearRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
                 transfer.setVisibility(View.GONE);
                 View empty = itemView.findViewById(R.id.empty);
                 empty.setVisibility(View.VISIBLE);
+            }
+
+            if(Utils.isThisMonth(monthItem.getTimeInMillis())) {
+                itemView.findViewById(R.id.thisMonth).setVisibility(View.VISIBLE);
             }
 
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -161,6 +165,21 @@ public class OverviewYearRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
             this(timeInMillis);
             this.income = income;
             this.expense = expense;
+            this.transfer = transfer;
+            this.active = true;
+        }
+
+        public void setExpense(float expense) {
+            this.expense = expense;
+            this.active = true;
+        }
+
+        public void setIncome(float income) {
+            this.income = income;
+            this.active = true;
+        }
+
+        public void setTransfer(float transfer) {
             this.transfer = transfer;
             this.active = true;
         }

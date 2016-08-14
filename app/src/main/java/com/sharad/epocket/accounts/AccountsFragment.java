@@ -23,6 +23,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
@@ -122,7 +124,7 @@ public class AccountsFragment extends BaseFragment implements ScrollHandler {
     }
 
     private void setupRecyclerView(View rootView) {
-        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+        final RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
         recyclerAdapter = new AccountsRecyclerAdapter(getContext(), createItemList(), this);
         mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
@@ -158,7 +160,16 @@ public class AccountsFragment extends BaseFragment implements ScrollHandler {
             public void onViewTransactionClicked(int position, IAccount account) {
                 Intent intent = new Intent(getActivity().getApplicationContext(), AccountOverviewMonthActivity.class);
                 intent.putExtra(Constant.ARG_ACCOUNT_NUMBER_LONG, account.getId());
-                startActivityForResult(intent, Constant.REQ_LIST_TRANSACTION);
+
+                //View movingView = getActivity().findViewById(R.id.appBarLayout);
+                //Pair<View, String> pair1 = Pair.create(movingView, movingView.getTransitionName());
+                //View childView = recyclerView.findViewHolderForAdapterPosition(position).itemView;
+                //Pair<View, String> pair2 = Pair.create(childView, childView.getTransitionName());
+
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        getActivity()/*, pair1/*, pair2*/
+                );
+                ActivityCompat.startActivityForResult(getActivity(), intent, Constant.REQ_LIST_TRANSACTION, options.toBundle());
             }
 
             @Override

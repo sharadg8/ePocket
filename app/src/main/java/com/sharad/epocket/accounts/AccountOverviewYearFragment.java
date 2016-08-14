@@ -109,51 +109,51 @@ public class AccountOverviewYearFragment extends Fragment {
             }
         });
 
+        return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(timeInMillis);
-        ArrayList<MonthItem> monthItems = new ArrayList<>();
-        AccountManager manager = AccountManager.getInstance();
-        DataSourceTransaction dataSourceTransaction = new DataSourceTransaction(getContext());
+
         ArrayList<ITransaction> iTransactionArrayList = new ArrayList<>();
+        long start_ms = Utils.getYearStart_ms(calendar.getTimeInMillis());
+        long end_ms = Utils.getYearEnd_ms(calendar.getTimeInMillis());
+        String where = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + iAccount.getId()
+                + " AND " + ContentConstant.KEY_TRANSACTION_DATE + ">=" + start_ms
+                + " AND " + ContentConstant.KEY_TRANSACTION_DATE + "<=" + end_ms
+                + " AND " + ContentConstant.KEY_TRANSACTION_TYPE + ">" + ITransaction.META_DATA_START;
 
+        DataSourceTransaction dataSourceTransaction = new DataSourceTransaction(getContext());
+        dataSourceTransaction.getTransactions(iTransactionArrayList, where);
+
+        ArrayList<MonthItem> monthItems = new ArrayList<>();
         for(int i = 0; i <= calendar.getActualMaximum(Calendar.MONTH); i++) {
-            float income = 0;
-            float expense = 0;
-            float transfer = 0;
             calendar.set(Calendar.MONTH, i);
-            long start_ms = Utils.getMonthStart_ms(calendar.getTimeInMillis());
-            long end_ms = Utils.getMonthEnd_ms(calendar.getTimeInMillis());
-            String where = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + iAccount.getId()
-                    + " AND " + ContentConstant.KEY_TRANSACTION_DATE + ">=" + start_ms
-                    + " AND " + ContentConstant.KEY_TRANSACTION_DATE + "<=" + end_ms
-                    + " AND " + ContentConstant.KEY_TRANSACTION_TYPE + ">" + ITransaction.META_DATA_START;
+            monthItems.add(new MonthItem(calendar.getTimeInMillis()));
+        }
 
-            dataSourceTransaction.getTransactions(iTransactionArrayList, where);
-            for(ITransaction iTransaction : iTransactionArrayList) {
-                switch (iTransaction.getType()) {
-                    case ITransaction.META_DATA_MONTH_INCOME:
-                        income = iTransaction.getAmount();
-                        break;
-                    case ITransaction.META_DATA_MONTH_EXPENSE:
-                        expense = iTransaction.getAmount();
-                        break;
-                    case ITransaction.META_DATA_MONTH_TRANSFER:
-                        transfer = iTransaction.getAmount();
-                        break;
-                }
-            }
-
-            if((manager.hasAnyTransactionThisMonth(getContext(), iAccount, calendar.getTimeInMillis()))
-                || (Utils.isThisMonth(calendar.getTimeInMillis()))) {
-                monthItems.add(new MonthItem(calendar.getTimeInMillis(), income, expense, transfer));
-            } else {
-                monthItems.add(new MonthItem(calendar.getTimeInMillis()));
+        for(ITransaction iTransaction : iTransactionArrayList) {
+            switch (iTransaction.getType()) {
+                case ITransaction.META_DATA_MONTH_INCOME:
+                    calendar.setTimeInMillis(iTransaction.getDate());
+                    monthItems.get(calendar.get(Calendar.MONTH)).setIncome(iTransaction.getAmount());
+                    break;
+                case ITransaction.META_DATA_MONTH_EXPENSE:
+                    calendar.setTimeInMillis(iTransaction.getDate());
+                    monthItems.get(calendar.get(Calendar.MONTH)).setExpense(iTransaction.getAmount());
+                    break;
+                case ITransaction.META_DATA_MONTH_TRANSFER:
+                    calendar.setTimeInMillis(iTransaction.getDate());
+                    monthItems.get(calendar.get(Calendar.MONTH)).setTransfer(iTransaction.getAmount());
+                    break;
             }
         }
 
         recyclerAdapter.setItemList(monthItems);
-
-        return view;
     }
 
 }
