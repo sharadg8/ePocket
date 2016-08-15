@@ -5,8 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.sharad.epocket.database.ContentConstant;
-import com.sharad.epocket.database.DatabaseAdapter;
+import com.sharad.epocket.database.AccountTable;
+import com.sharad.epocket.database.DatabaseHelper;
 
 import java.util.ArrayList;
 
@@ -14,61 +14,55 @@ import java.util.ArrayList;
  * Created by Sharad on 17-Jul-16.
  */
 
-public class DataSourceAccount extends DatabaseAdapter {
+public class DataSourceAccount {
+    DatabaseHelper helper;
+
     public DataSourceAccount(Context context) {
-        super(context);
+        helper = new DatabaseHelper(context);
     }
 
     public long insertAccount(IAccount account) {
-        SQLiteDatabase db = openDb();
+        SQLiteDatabase db = helper.getWritableDatabase();
 
         ContentValues content = account.getContentValues();
 
         // Insert it into the database.
-        long id = db.insert(DATABASE_TABLE_ACCOUNT, null, content);
-        closeDb();
+        long id = db.insert(AccountTable.TABLE_ACCOUNT, null, content);
+        helper.close();
         return id;
     }
 
     public boolean updateAccount(IAccount iAccount) {
-        SQLiteDatabase db = openDb();
-        String where = ContentConstant.KEY_ACCOUNT_ROWID + "=" + iAccount.getId();
+        SQLiteDatabase db = helper.getWritableDatabase();
+        String where = AccountTable.COLUMN_ID + "=" + iAccount.getId();
 
         // Create row's data:
         ContentValues content = iAccount.getContentValues();
 
         // Update it into the database.
-        boolean status = db.update(DATABASE_TABLE_ACCOUNT, content, where, null) != 0;
-        closeDb();
+        boolean status = db.update(AccountTable.TABLE_ACCOUNT, content, where, null) != 0;
+        helper.close();
         return status;
     }
 
     public boolean deleteAccount(long rowId) {
-        SQLiteDatabase db = openDb();
-        String where = ContentConstant.KEY_ACCOUNT_ROWID + "=" + rowId;
-        boolean status = db.delete(DATABASE_TABLE_ACCOUNT, where, null) != 0;
-        closeDb();
+        SQLiteDatabase db = helper.getWritableDatabase();
+        String where = AccountTable.COLUMN_ID + "=" + rowId;
+        boolean status = db.delete(AccountTable.TABLE_ACCOUNT, where, null) != 0;
+        helper.close();
         return status;
     }
 
-    public void deleteAllAccounts() {
-        SQLiteDatabase db = openDb();
-        db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_ACCOUNT);
-        db.execSQL(DATABASE_CREATE_SQL_ACCOUNT);
-        closeDb();
-    }
-
     public IAccount getAccount(long rowId) {
-        SQLiteDatabase db = openDb();
+        SQLiteDatabase db = helper.getReadableDatabase();
         IAccount account = null;
-        String where = ContentConstant.KEY_ACCOUNT_ROWID + "=" + rowId;
-        Cursor c = 	db.query(true, DATABASE_TABLE_ACCOUNT, ContentConstant.ALL_KEYS_ACCOUNT,
-                where, null, null, null, null, null);
+        String where = AccountTable.COLUMN_ID + "=" + rowId;
+        Cursor c = 	db.query(true, AccountTable.TABLE_ACCOUNT, null, where, null, null, null, null, null);
         if(c.moveToFirst()) {
             account = new IAccount(c);
         }
 
-        closeDb();
+        helper.close();
         return account;
     }
 
@@ -77,10 +71,9 @@ public class DataSourceAccount extends DatabaseAdapter {
     }
 
     public void getAccounts(ArrayList<IAccount> accounts, String where) {
-        SQLiteDatabase db = openDb();
+        SQLiteDatabase db = helper.getReadableDatabase();
         accounts.clear();
-        Cursor c = 	db.query(true, DATABASE_TABLE_ACCOUNT, ContentConstant.ALL_KEYS_ACCOUNT,
-                where, null, null, null, null, null);
+        Cursor c = 	db.query(true, AccountTable.TABLE_ACCOUNT, null, where, null, null, null, null, null);
         if (c != null) {
             if(c.moveToFirst()) {
                 do {
@@ -88,6 +81,6 @@ public class DataSourceAccount extends DatabaseAdapter {
                 } while (c.moveToNext());
             }
         }
-        closeDb();
+        helper.close();
     }
 }

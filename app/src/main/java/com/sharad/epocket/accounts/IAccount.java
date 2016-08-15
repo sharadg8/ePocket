@@ -4,7 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.text.format.DateUtils;
 
-import com.sharad.epocket.database.ContentConstant;
+import com.sharad.epocket.database.AccountTable;
 import com.sharad.epocket.utils.Constant;
 import com.sharad.epocket.utils.Item;
 
@@ -70,20 +70,20 @@ public class IAccount extends Item{
     public IAccount(Cursor c) {
         super(Constant.INVALID_ID);
 
-        long id 		     = c.getLong(c.getColumnIndex(ContentConstant.KEY_ACCOUNT_ROWID));
-        String title         = c.getString(c.getColumnIndex(ContentConstant.KEY_ACCOUNT_TITLE));
-        String isoCurrency   = c.getString(c.getColumnIndex(ContentConstant.KEY_ACCOUNT_CURRENCY));
-        String note          = c.getString(c.getColumnIndex(ContentConstant.KEY_ACCOUNT_NOTE));
-        String accountNumber = c.getString(c.getColumnIndex(ContentConstant.KEY_ACCOUNT_NUMBER));
-        String loginId       = c.getString(c.getColumnIndex(ContentConstant.KEY_ACCOUNT_LOGIN));
-        String password      = c.getString(c.getColumnIndex(ContentConstant.KEY_ACCOUNT_PASSWORD));
-        String contact       = c.getString(c.getColumnIndex(ContentConstant.KEY_ACCOUNT_CONTACT));
-        int imageIndex       = c.getInt(c.getColumnIndex(ContentConstant.KEY_ACCOUNT_LOGO));
-        int accountType      = c.getInt(c.getColumnIndex(ContentConstant.KEY_ACCOUNT_TYPE));
-        int listIndex        = c.getInt(c.getColumnIndex(ContentConstant.KEY_ACCOUNT_LIST_INDEX));
-        float balanceCard    = c.getFloat(c.getColumnIndex(ContentConstant.KEY_ACCOUNT_BAL_CARD));
-        float balanceCash    = c.getFloat(c.getColumnIndex(ContentConstant.KEY_ACCOUNT_BAL_CASH));
-        long lastUpdateMSec  = c.getLong(c.getColumnIndex(ContentConstant.KEY_ACCOUNT_LAST_UPDATE));
+        long id 		     = c.getLong(c.getColumnIndex(AccountTable.COLUMN_ID));
+        String title         = c.getString(c.getColumnIndex(AccountTable.COLUMN_TITLE));
+        String isoCurrency   = c.getString(c.getColumnIndex(AccountTable.COLUMN_CURRENCY));
+        String note          = c.getString(c.getColumnIndex(AccountTable.COLUMN_NOTE));
+        String accountNumber = c.getString(c.getColumnIndex(AccountTable.COLUMN_NUMBER));
+        String loginId       = c.getString(c.getColumnIndex(AccountTable.COLUMN_LOGIN));
+        String password      = c.getString(c.getColumnIndex(AccountTable.COLUMN_PASSWORD));
+        String contact       = c.getString(c.getColumnIndex(AccountTable.COLUMN_CONTACT));
+        int imageIndex       = c.getInt(c.getColumnIndex(AccountTable.COLUMN_LOGO));
+        int accountType      = c.getInt(c.getColumnIndex(AccountTable.COLUMN_TYPE));
+        int listIndex        = c.getInt(c.getColumnIndex(AccountTable.COLUMN_LIST_INDEX));
+        float balanceCard    = c.getFloat(c.getColumnIndex(AccountTable.COLUMN_BAL_CARD));
+        float balanceCash    = c.getFloat(c.getColumnIndex(AccountTable.COLUMN_BAL_CASH));
+        long lastUpdateMSec  = c.getLong(c.getColumnIndex(AccountTable.COLUMN_LAST_UPDATE));
 
         this.id = id;
         this.isoCurrency = isoCurrency;
@@ -109,19 +109,19 @@ public class IAccount extends Item{
     public ContentValues getContentValues() {
         // Create row's data:
         ContentValues content = new ContentValues();
-        content.put(ContentConstant.KEY_ACCOUNT_TITLE, this.getTitle());
-        content.put(ContentConstant.KEY_ACCOUNT_CURRENCY, this.getIsoCurrency());
-        content.put(ContentConstant.KEY_ACCOUNT_NOTE, this.getNote());
-        content.put(ContentConstant.KEY_ACCOUNT_NUMBER, this.getAccountNumber());
-        content.put(ContentConstant.KEY_ACCOUNT_LOGIN, this.getLoginId());
-        content.put(ContentConstant.KEY_ACCOUNT_PASSWORD, this.getPassword());
-        content.put(ContentConstant.KEY_ACCOUNT_CONTACT, this.getContact());
-        content.put(ContentConstant.KEY_ACCOUNT_LOGO, this.getImageIndex());
-        content.put(ContentConstant.KEY_ACCOUNT_TYPE, this.getAccountType());
-        content.put(ContentConstant.KEY_ACCOUNT_LIST_INDEX, this.getListIndex());
-        content.put(ContentConstant.KEY_ACCOUNT_BAL_CARD, this.getBalanceCard());
-        content.put(ContentConstant.KEY_ACCOUNT_BAL_CASH, this.getBalanceCash());
-        content.put(ContentConstant.KEY_ACCOUNT_LAST_UPDATE, this.getLastUpdate());
+        content.put(AccountTable.COLUMN_TITLE, this.getTitle());
+        content.put(AccountTable.COLUMN_CURRENCY, this.getIsoCurrency());
+        content.put(AccountTable.COLUMN_NOTE, this.getNote());
+        content.put(AccountTable.COLUMN_NUMBER, this.getAccountNumber());
+        content.put(AccountTable.COLUMN_LOGIN, this.getLoginId());
+        content.put(AccountTable.COLUMN_PASSWORD, this.getPassword());
+        content.put(AccountTable.COLUMN_CONTACT, this.getContact());
+        content.put(AccountTable.COLUMN_LOGO, this.getImageIndex());
+        content.put(AccountTable.COLUMN_TYPE, this.getAccountType());
+        content.put(AccountTable.COLUMN_LIST_INDEX, this.getListIndex());
+        content.put(AccountTable.COLUMN_BAL_CARD, this.getBalanceCard());
+        content.put(AccountTable.COLUMN_BAL_CASH, this.getBalanceCash());
+        content.put(AccountTable.COLUMN_LAST_UPDATE, this.getLastUpdate());
 
         return content;
     }

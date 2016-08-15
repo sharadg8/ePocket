@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sharad.epocket.R;
-import com.sharad.epocket.database.ContentConstant;
+import com.sharad.epocket.database.TransactionTable;
 import com.sharad.epocket.utils.Constant;
 import com.sharad.epocket.utils.Utils;
 
@@ -70,9 +70,9 @@ public class AccountOverviewYearFragment extends Fragment {
             if (iAccount != null) {
                 long start_ms = Utils.getYearStart_ms(timeInMillis);
                 long end_ms = Utils.getYearEnd_ms(timeInMillis);
-                String where = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + iAccount.getId()
-                        + " AND " + ContentConstant.KEY_TRANSACTION_DATE + ">=" + start_ms
-                        + " AND " + ContentConstant.KEY_TRANSACTION_DATE + "<=" + end_ms;
+                String where = TransactionTable.COLUMN_ACCOUNT + "=" + iAccount.getId()
+                        + " AND " + TransactionTable.COLUMN_DATE + ">=" + start_ms
+                        + " AND " + TransactionTable.COLUMN_DATE + "<=" + end_ms;
                 DataSourceTransaction dataSourceTransaction = new DataSourceTransaction(getContext());
                 dataSourceTransaction.getTransactions(iTransactionArrayList, where);
             }
@@ -122,10 +122,10 @@ public class AccountOverviewYearFragment extends Fragment {
         ArrayList<ITransaction> iTransactionArrayList = new ArrayList<>();
         long start_ms = Utils.getYearStart_ms(calendar.getTimeInMillis());
         long end_ms = Utils.getYearEnd_ms(calendar.getTimeInMillis());
-        String where = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + iAccount.getId()
-                + " AND " + ContentConstant.KEY_TRANSACTION_DATE + ">=" + start_ms
-                + " AND " + ContentConstant.KEY_TRANSACTION_DATE + "<=" + end_ms
-                + " AND " + ContentConstant.KEY_TRANSACTION_TYPE + ">" + ITransaction.META_DATA_START;
+        String where = TransactionTable.COLUMN_ACCOUNT + "=" + iAccount.getId()
+                + " AND " + TransactionTable.COLUMN_DATE + ">=" + start_ms
+                + " AND " + TransactionTable.COLUMN_DATE + "<=" + end_ms
+                + " AND " + TransactionTable.COLUMN_TYPE + ">" + ITransaction.META_DATA_START;
 
         DataSourceTransaction dataSourceTransaction = new DataSourceTransaction(getContext());
         dataSourceTransaction.getTransactions(iTransactionArrayList, where);

@@ -2,7 +2,7 @@ package com.sharad.epocket.accounts;
 
 import android.content.Context;
 
-import com.sharad.epocket.database.ContentConstant;
+import com.sharad.epocket.database.TransactionTable;
 import com.sharad.epocket.utils.Utils;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ public class AccountManager {
 
     public void service(Context context, IAccount iAccount, long fromTimeInMillis) {
         DataSourceTransaction dataSourceTransaction = new DataSourceTransaction(context);
-        String where = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + iAccount.getId();
+        String where = TransactionTable.COLUMN_ACCOUNT + "=" + iAccount.getId();
         ArrayList<ITransaction> iTransactionArrayList = new ArrayList<>();
         dataSourceTransaction.getTransactions(iTransactionArrayList, where);
 
@@ -45,10 +45,10 @@ public class AccountManager {
              */
             long start_ms = Utils.getMonthStart_ms(timeInMillis);
             long end_ms = Utils.getMonthEnd_ms(timeInMillis);
-            String monthWhere = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + iAccount.getId()
-                    + " AND " + ContentConstant.KEY_TRANSACTION_DATE + ">=" + start_ms
-                    + " AND " + ContentConstant.KEY_TRANSACTION_DATE + "<=" + end_ms
-                    + " AND " + ContentConstant.KEY_TRANSACTION_TYPE + ">" + ITransaction.META_DATA_START;
+            String monthWhere = TransactionTable.COLUMN_ACCOUNT + "=" + iAccount.getId()
+                    + " AND " + TransactionTable.COLUMN_DATE + ">=" + start_ms
+                    + " AND " + TransactionTable.COLUMN_DATE + "<=" + end_ms
+                    + " AND " + TransactionTable.COLUMN_TYPE + ">" + ITransaction.META_DATA_START;
             dataSourceTransaction.getTransactions(monthList, monthWhere);
             for(ITransaction iTransaction : monthList) {
                 if(iTransaction.getType() == ITransaction.META_DATA_MONTH_OPENING_BALANCE_CARD) {
@@ -68,10 +68,10 @@ public class AccountManager {
                 float openingCash = balanceCash;
                 start_ms = Utils.getMonthStart_ms(timeInMillis);
                 end_ms = Utils.getMonthEnd_ms(timeInMillis);
-                monthWhere = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + iAccount.getId()
-                        + " AND " + ContentConstant.KEY_TRANSACTION_DATE + ">=" + start_ms
-                        + " AND " + ContentConstant.KEY_TRANSACTION_DATE + "<=" + end_ms
-                        + " AND " + ContentConstant.KEY_TRANSACTION_TYPE + "<" + ITransaction.META_DATA_START;
+                monthWhere = TransactionTable.COLUMN_ACCOUNT + "=" + iAccount.getId()
+                        + " AND " + TransactionTable.COLUMN_DATE + ">=" + start_ms
+                        + " AND " + TransactionTable.COLUMN_DATE + "<=" + end_ms
+                        + " AND " + TransactionTable.COLUMN_TYPE + "<" + ITransaction.META_DATA_START;
                 dataSourceTransaction.getTransactions(monthList, monthWhere);
                 for (ITransaction iTransaction : monthList) {
                     accountOpened = true;
@@ -120,10 +120,10 @@ public class AccountManager {
                     }
                 }
 
-                monthWhere = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + iAccount.getId()
-                        + " AND " + ContentConstant.KEY_TRANSACTION_DATE + ">=" + start_ms
-                        + " AND " + ContentConstant.KEY_TRANSACTION_DATE + "<=" + end_ms
-                        + " AND " + ContentConstant.KEY_TRANSACTION_TYPE + ">" + ITransaction.META_DATA_START;
+                monthWhere = TransactionTable.COLUMN_ACCOUNT + "=" + iAccount.getId()
+                        + " AND " + TransactionTable.COLUMN_DATE + ">=" + start_ms
+                        + " AND " + TransactionTable.COLUMN_DATE + "<=" + end_ms
+                        + " AND " + TransactionTable.COLUMN_TYPE + ">" + ITransaction.META_DATA_START;
                 dataSourceTransaction.getTransactions(monthList, monthWhere);
 
                 if(accountOpened) {
@@ -237,9 +237,9 @@ public class AccountManager {
         long start_ms = Utils.getMonthStart_ms(now.getTimeInMillis());
         long end_ms = now.getTimeInMillis();
         DataSourceTransaction dataSourceTransaction = new DataSourceTransaction(context);
-        String where = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + iAccount.getId()
-                + " AND " + ContentConstant.KEY_TRANSACTION_DATE + ">=" + start_ms
-                + " AND " + ContentConstant.KEY_TRANSACTION_DATE + "<=" + end_ms;
+        String where = TransactionTable.COLUMN_ACCOUNT + "=" + iAccount.getId()
+                + " AND " + TransactionTable.COLUMN_DATE + ">=" + start_ms
+                + " AND " + TransactionTable.COLUMN_DATE + "<=" + end_ms;
         ArrayList<ITransaction> iTransactionArrayList = new ArrayList<>();
         dataSourceTransaction.getTransactions(iTransactionArrayList, where);
         for (ITransaction iTransaction : iTransactionArrayList) {
@@ -258,9 +258,9 @@ public class AccountManager {
         long start_ms = Utils.getMonthStart_ms(now.getTimeInMillis());
         long end_ms = now.getTimeInMillis();
         DataSourceTransaction dataSourceTransaction = new DataSourceTransaction(context);
-        String where = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + iAccount.getId()
-                + " AND " + ContentConstant.KEY_TRANSACTION_DATE + ">=" + start_ms
-                + " AND " + ContentConstant.KEY_TRANSACTION_DATE + "<=" + end_ms;
+        String where = TransactionTable.COLUMN_ACCOUNT + "=" + iAccount.getId()
+                + " AND " + TransactionTable.COLUMN_DATE + ">=" + start_ms
+                + " AND " + TransactionTable.COLUMN_DATE + "<=" + end_ms;
         ArrayList<ITransaction> iTransactionArrayList = new ArrayList<>();
         dataSourceTransaction.getTransactions(iTransactionArrayList, where);
         for (ITransaction iTransaction : iTransactionArrayList) {
@@ -277,9 +277,9 @@ public class AccountManager {
     public float getAccountBalanceCash(Context context, IAccount iAccount) {
         float balCash = 0;
         DataSourceTransaction dataSourceTransaction = new DataSourceTransaction(context);
-        String where = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + iAccount.getId()
-                + " AND ( " + ContentConstant.KEY_TRANSACTION_SUB_TYPE + "=" + ITransaction.TRANSACTION_SUB_TYPE_ACCOUNT_CASH
-                + " OR " + ContentConstant.KEY_TRANSACTION_SUB_TYPE + "=" + ITransaction.TRANSACTION_SUB_TYPE_ACCOUNT_BOTH + " )";
+        String where = TransactionTable.COLUMN_ACCOUNT + "=" + iAccount.getId()
+                + " AND ( " + TransactionTable.COLUMN_SUB_TYPE + "=" + ITransaction.TRANSACTION_SUB_TYPE_ACCOUNT_CASH
+                + " OR " + TransactionTable.COLUMN_SUB_TYPE + "=" + ITransaction.TRANSACTION_SUB_TYPE_ACCOUNT_BOTH + " )";
         ArrayList<ITransaction> iTransactionArrayList = new ArrayList<>();
         dataSourceTransaction.getTransactions(iTransactionArrayList, where);
         for (ITransaction iTransaction : iTransactionArrayList) {
@@ -300,9 +300,9 @@ public class AccountManager {
     public float getAccountBalanceCard(Context context, IAccount iAccount) {
         float balCard = 0;
         DataSourceTransaction dataSourceTransaction = new DataSourceTransaction(context);
-        String where = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + iAccount.getId()
-                + " AND ( " + ContentConstant.KEY_TRANSACTION_SUB_TYPE + "=" + ITransaction.TRANSACTION_SUB_TYPE_ACCOUNT_CARD
-                + " OR " + ContentConstant.KEY_TRANSACTION_SUB_TYPE + "=" + ITransaction.TRANSACTION_SUB_TYPE_ACCOUNT_BOTH + " )";
+        String where = TransactionTable.COLUMN_ACCOUNT + "=" + iAccount.getId()
+                + " AND ( " + TransactionTable.COLUMN_SUB_TYPE + "=" + ITransaction.TRANSACTION_SUB_TYPE_ACCOUNT_CARD
+                + " OR " + TransactionTable.COLUMN_SUB_TYPE + "=" + ITransaction.TRANSACTION_SUB_TYPE_ACCOUNT_BOTH + " )";
         ArrayList<ITransaction> iTransactionArrayList = new ArrayList<>();
         dataSourceTransaction.getTransactions(iTransactionArrayList, where);
         for (ITransaction iTransaction : iTransactionArrayList) {
@@ -322,7 +322,7 @@ public class AccountManager {
 
     public void deleteAccount(Context context, long id) {
         DataSourceTransaction sourceTransaction = new DataSourceTransaction(context);
-        String where = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + id;
+        String where = TransactionTable.COLUMN_ACCOUNT + "=" + id;
         sourceTransaction.deleteTransactions(where);
         DataSourceAccount source = new DataSourceAccount(context);
         source.deleteAccount(id);
@@ -366,9 +366,9 @@ public class AccountManager {
         long end_ms = Utils.getMonthEnd_ms(timeInMillis);
 
         DataSourceTransaction dataSourceTransaction = new DataSourceTransaction(context);
-        String where = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + iAccount.getId()
-                + " AND " + ContentConstant.KEY_TRANSACTION_DATE + ">=" + start_ms
-                + " AND " + ContentConstant.KEY_TRANSACTION_DATE + "<=" + end_ms;
+        String where = TransactionTable.COLUMN_ACCOUNT + "=" + iAccount.getId()
+                + " AND " + TransactionTable.COLUMN_DATE + ">=" + start_ms
+                + " AND " + TransactionTable.COLUMN_DATE + "<=" + end_ms;
         ArrayList<ITransaction> iTransactionArrayList = new ArrayList<>();
         dataSourceTransaction.getTransactions(iTransactionArrayList, where);
 
@@ -379,8 +379,8 @@ public class AccountManager {
         long end_ms = Utils.getMonthStart_ms(timeInMillis);
 
         DataSourceTransaction dataSourceTransaction = new DataSourceTransaction(context);
-        String where = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + iAccount.getId()
-                + " AND " + ContentConstant.KEY_TRANSACTION_DATE + "<=" + end_ms;
+        String where = TransactionTable.COLUMN_ACCOUNT + "=" + iAccount.getId()
+                + " AND " + TransactionTable.COLUMN_DATE + "<=" + end_ms;
         ArrayList<ITransaction> iTransactionArrayList = new ArrayList<>();
         dataSourceTransaction.getTransactions(iTransactionArrayList, where);
 
@@ -391,8 +391,8 @@ public class AccountManager {
         long start_ms = Utils.getMonthEnd_ms(timeInMillis);
 
         DataSourceTransaction dataSourceTransaction = new DataSourceTransaction(context);
-        String where = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + iAccount.getId()
-                + " AND " + ContentConstant.KEY_TRANSACTION_DATE + ">=" + start_ms;
+        String where = TransactionTable.COLUMN_ACCOUNT + "=" + iAccount.getId()
+                + " AND " + TransactionTable.COLUMN_DATE + ">=" + start_ms;
         ArrayList<ITransaction> iTransactionArrayList = new ArrayList<>();
         dataSourceTransaction.getTransactions(iTransactionArrayList, where);
 
@@ -403,8 +403,8 @@ public class AccountManager {
         long end_ms = Utils.getYearStart_ms(timeInMillis);
 
         DataSourceTransaction dataSourceTransaction = new DataSourceTransaction(context);
-        String where = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + iAccount.getId()
-                + " AND " + ContentConstant.KEY_TRANSACTION_DATE + "<=" + end_ms;
+        String where = TransactionTable.COLUMN_ACCOUNT + "=" + iAccount.getId()
+                + " AND " + TransactionTable.COLUMN_DATE + "<=" + end_ms;
         ArrayList<ITransaction> iTransactionArrayList = new ArrayList<>();
         dataSourceTransaction.getTransactions(iTransactionArrayList, where);
 
@@ -415,8 +415,8 @@ public class AccountManager {
         long start_ms = Utils.getYearEnd_ms(timeInMillis);
 
         DataSourceTransaction dataSourceTransaction = new DataSourceTransaction(context);
-        String where = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + iAccount.getId()
-                + " AND " + ContentConstant.KEY_TRANSACTION_DATE + ">=" + start_ms;
+        String where = TransactionTable.COLUMN_ACCOUNT + "=" + iAccount.getId()
+                + " AND " + TransactionTable.COLUMN_DATE + ">=" + start_ms;
         ArrayList<ITransaction> iTransactionArrayList = new ArrayList<>();
         dataSourceTransaction.getTransactions(iTransactionArrayList, where);
 

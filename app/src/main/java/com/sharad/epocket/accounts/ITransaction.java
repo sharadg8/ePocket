@@ -3,7 +3,7 @@ package com.sharad.epocket.accounts;
 import android.content.ContentValues;
 import android.database.Cursor;
 
-import com.sharad.epocket.database.ContentConstant;
+import com.sharad.epocket.database.TransactionTable;
 import com.sharad.epocket.utils.Constant;
 import com.sharad.epocket.utils.Item;
 
@@ -65,15 +65,15 @@ public class ITransaction extends Item {
     public ITransaction(Cursor c) {
         super(Constant.INVALID_ID);
 
-        long id 	    = c.getLong(c.getColumnIndex(ContentConstant.KEY_TRANSACTION_ROWID));
-        long date       = c.getLong(c.getColumnIndex(ContentConstant.KEY_TRANSACTION_DATE));
-        String comment  = c.getString(c.getColumnIndex(ContentConstant.KEY_TRANSACTION_COMMENT));
-        String repeat   = c.getString(c.getColumnIndex(ContentConstant.KEY_TRANSACTION_REPEAT));
-        int type        = c.getInt(c.getColumnIndex(ContentConstant.KEY_TRANSACTION_TYPE));
-        int subType     = c.getInt(c.getColumnIndex(ContentConstant.KEY_TRANSACTION_SUB_TYPE));
-        long account    = c.getLong(c.getColumnIndex(ContentConstant.KEY_TRANSACTION_ACCOUNT));
-        long category   = c.getLong(c.getColumnIndex(ContentConstant.KEY_TRANSACTION_CATEGORY));
-        float amount    = c.getFloat(c.getColumnIndex(ContentConstant.KEY_TRANSACTION_AMOUNT));
+        long id 	    = c.getLong(c.getColumnIndex(TransactionTable.COLUMN_ID));
+        long date       = c.getLong(c.getColumnIndex(TransactionTable.COLUMN_DATE));
+        String comment  = c.getString(c.getColumnIndex(TransactionTable.COLUMN_COMMENT));
+        String repeat   = c.getString(c.getColumnIndex(TransactionTable.COLUMN_REPEAT));
+        int type        = c.getInt(c.getColumnIndex(TransactionTable.COLUMN_TYPE));
+        int subType     = c.getInt(c.getColumnIndex(TransactionTable.COLUMN_SUB_TYPE));
+        long account    = c.getLong(c.getColumnIndex(TransactionTable.COLUMN_ACCOUNT));
+        long category   = c.getLong(c.getColumnIndex(TransactionTable.COLUMN_CATEGORY));
+        float amount    = c.getFloat(c.getColumnIndex(TransactionTable.COLUMN_AMOUNT));
 
         this.id = id;
         this.date = date;
@@ -90,14 +90,14 @@ public class ITransaction extends Item {
     public ContentValues getContentValues() {
         // Create row's data:
         ContentValues content = new ContentValues();
-        content.put(ContentConstant.KEY_TRANSACTION_DATE,     this.getDate());
-        content.put(ContentConstant.KEY_TRANSACTION_COMMENT,  this.getComment());
-        content.put(ContentConstant.KEY_TRANSACTION_REPEAT,   this.getRepeat());
-        content.put(ContentConstant.KEY_TRANSACTION_TYPE,     this.getType());
-        content.put(ContentConstant.KEY_TRANSACTION_SUB_TYPE, this.getSubType());
-        content.put(ContentConstant.KEY_TRANSACTION_ACCOUNT,  this.getAccount());
-        content.put(ContentConstant.KEY_TRANSACTION_CATEGORY, this.getCategory());
-        content.put(ContentConstant.KEY_TRANSACTION_AMOUNT,   this.getAmount());
+        content.put(TransactionTable.COLUMN_DATE,     this.getDate());
+        content.put(TransactionTable.COLUMN_COMMENT,  this.getComment());
+        content.put(TransactionTable.COLUMN_REPEAT,   this.getRepeat());
+        content.put(TransactionTable.COLUMN_TYPE,     this.getType());
+        content.put(TransactionTable.COLUMN_SUB_TYPE, this.getSubType());
+        content.put(TransactionTable.COLUMN_ACCOUNT,  this.getAccount());
+        content.put(TransactionTable.COLUMN_CATEGORY, this.getCategory());
+        content.put(TransactionTable.COLUMN_AMOUNT,   this.getAmount());
 
         return content;
     }

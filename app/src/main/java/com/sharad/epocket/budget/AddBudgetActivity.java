@@ -11,7 +11,7 @@ import com.sharad.epocket.R;
 import com.sharad.epocket.accounts.CategoryRecyclerAdapter;
 import com.sharad.epocket.accounts.DataSourceCategory;
 import com.sharad.epocket.accounts.ICategory;
-import com.sharad.epocket.database.ContentConstant;
+import com.sharad.epocket.database.CategoryTable;
 import com.sharad.epocket.utils.Utils;
 import com.sharad.epocket.widget.AutofitRecyclerView;
 import com.sharad.epocket.widget.FlowLayout;
@@ -32,7 +32,7 @@ public class AddBudgetActivity extends AppCompatActivity {
 
         final FlowLayout flowLayout = (FlowLayout) findViewById(R.id.categories);
 
-        String where = ContentConstant.KEY_CATEGORY_TYPE + "=" + ICategory.CATEGORY_TYPE_EXPENSE;
+        String where = CategoryTable.COLUMN_TYPE + "=" + ICategory.CATEGORY_TYPE_EXPENSE;
         final ArrayList<ICategory> itemList = new ArrayList<>();
         DataSourceCategory dataSourceCategory = new DataSourceCategory(this);
         dataSourceCategory.getCategories(itemList, where);

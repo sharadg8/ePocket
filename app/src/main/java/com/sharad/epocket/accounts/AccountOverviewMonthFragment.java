@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sharad.epocket.R;
-import com.sharad.epocket.database.ContentConstant;
+import com.sharad.epocket.database.TransactionTable;
 import com.sharad.epocket.utils.Constant;
 import com.sharad.epocket.utils.ScrollHandler;
 import com.sharad.epocket.utils.Utils;
@@ -67,9 +67,9 @@ public class AccountOverviewMonthFragment extends Fragment implements ScrollHand
             if (iAccount != null) {
                 long start_ms = Utils.getMonthStart_ms(timeInMillis);
                 long end_ms = Utils.getMonthEnd_ms(timeInMillis);
-                String where = ContentConstant.KEY_TRANSACTION_ACCOUNT + "=" + iAccount.getId()
-                        + " AND " + ContentConstant.KEY_TRANSACTION_DATE + ">=" + start_ms
-                        + " AND " + ContentConstant.KEY_TRANSACTION_DATE + "<=" + end_ms;
+                String where = TransactionTable.COLUMN_ACCOUNT + "=" + iAccount.getId()
+                        + " AND " + TransactionTable.COLUMN_DATE + ">=" + start_ms
+                        + " AND " + TransactionTable.COLUMN_DATE + "<=" + end_ms;
                 DataSourceTransaction dataSourceTransaction = new DataSourceTransaction(getContext());
                 dataSourceTransaction.getTransactions(iTransactionArrayList, where);
             }
