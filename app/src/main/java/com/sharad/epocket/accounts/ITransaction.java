@@ -42,7 +42,8 @@ public class ITransaction extends Item {
     public static final int TRANSACTION_SUB_TYPE_ACCOUNT_BOTH = 3;
 
     public ITransaction() {
-        this(Constant.INVALID_ID, 0, "", "", 0, 0, Constant.INVALID_ID, Constant.INVALID_ID, 0);
+        this(Constant.INVALID_ID, 0, "", "", TRANSACTION_TYPE_ACCOUNT_EXPENSE,
+                TRANSACTION_SUB_TYPE_ACCOUNT_CASH, Constant.INVALID_ID, Constant.INVALID_ID, 0);
         Calendar cal = Calendar.getInstance();
         this.date = cal.getTimeInMillis();
     }

@@ -271,7 +271,6 @@ public class AddTransactionActivity extends AppCompatActivity implements
             final SimpleDateFormat df = new SimpleDateFormat("dd MMM yyyy");
             dateButton.setText(df.format(today.getTime()));
         }
-        onAccountSource(findViewById(R.id.source));
 
         ImageButton commentButton = (ImageButton) findViewById(R.id.comment);
         if(iTransaction.getComment().length() > 0) {
