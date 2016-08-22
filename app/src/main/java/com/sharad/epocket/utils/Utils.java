@@ -34,6 +34,15 @@ import java.util.Locale;
 
 public class Utils {
     private static HashMap<String, Locale> localeMap = new HashMap<>();
+    private static HashMap<String, Float> exchangeMap = new HashMap<>();
+
+    public static void updateExchangeRate(String isoCurrency, float rate) {
+        exchangeMap.put(isoCurrency, rate);
+    }
+
+    public static float getExchangeRate(String isoCurrency) {
+        return exchangeMap.get(isoCurrency);
+    }
 
     public static void loadLocaleMap(ArrayList<String> isoCurrencies) {
         for (Locale locale : NumberFormat.getAvailableLocales()) {

@@ -11,6 +11,16 @@ import com.sharad.epocket.accounts.IAccount;
 import com.sharad.epocket.accounts.ICategory;
 import com.sharad.epocket.utils.Utils;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class SplashActivity extends AppCompatActivity {
@@ -26,7 +36,9 @@ public class SplashActivity extends AppCompatActivity {
     /**
      * Async Task to make http call
      */
-    private class PrefetchData extends AsyncTask<Void, Void, Void> {
+    private class PrefetchData extends AsyncTask<Void, Void, String> {
+        HttpURLConnection urlConnection;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -34,7 +46,7 @@ public class SplashActivity extends AppCompatActivity {
         }
 
         @Override
-        protected Void doInBackground(Void... arg0) {
+        protected String doInBackground(Void... arg0) {
             /**
              * Preload currency locale
              */
@@ -42,13 +54,48 @@ public class SplashActivity extends AppCompatActivity {
             final DataSourceAccount dataSourceAccount = new DataSourceAccount(SplashActivity.this);
             dataSourceAccount.getAccounts(iAccountArrayList);
 
+            StringBuilder request = new StringBuilder();
+            StringBuilder result = new StringBuilder();
+            request.append("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.xchange%20where%20pair%20in%20(");
+
+            String to = "INR";
+
             ArrayList<String> isoCurrencies = new ArrayList<>();
             for(IAccount iAccount : iAccountArrayList) {
                 if(!isoCurrencies.contains(iAccount.getIsoCurrency())) {
                     isoCurrencies.add(iAccount.getIsoCurrency());
+
+                    request.append("%22");
+                    request.append(iAccount.getIsoCurrency());
+                    request.append(to);
+                    request.append("%22,");
                 }
             }
             Utils.loadLocaleMap(isoCurrencies);
+
+            request.deleteCharAt(request.lastIndexOf(","));
+            request.append(")&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=");
+
+            try {
+                URL url = new URL(request.toString());
+
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setReadTimeout(1000);
+                urlConnection.setConnectTimeout(1000);
+                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    result.append(line);
+                }
+            }catch( Exception e) {
+                e.printStackTrace();
+            }
+            finally {
+                urlConnection.disconnect();
+            }
 
             /**
              * Add default categories
@@ -68,13 +115,35 @@ public class SplashActivity extends AppCompatActivity {
             }
             ICategory.loadCategoryMap(iCategories);
 
-            return null;
+            return result.toString();
         }
 
         @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            // After completing http call
+        protected void onPostExecute(String exchange_rates) {
+            super.onPostExecute(exchange_rates);
+
+            try {
+                JSONObject jsonRootObject = new JSONObject(exchange_rates);
+
+                //Get the instance of JSONArray that contains JSONObjects
+                jsonRootObject = jsonRootObject.getJSONObject("query");
+                jsonRootObject = jsonRootObject.getJSONObject("results");
+                JSONArray jsonArray  = jsonRootObject.optJSONArray("rate");
+
+                //Iterate the jsonArray and print the info of JSONObjects
+                if(jsonArray != null) {
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        String currency = jsonObject.optString("Name").toString();
+                        currency = currency.substring(0, 3);
+                        float rate = Float.parseFloat(jsonObject.optString("Rate").toString());
+                        Utils.updateExchangeRate(currency, rate);
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
             // will close this activity and launch main activity
             Intent i = new Intent(SplashActivity.this, MainActivity.class);
             startActivity(i);
