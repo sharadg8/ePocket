@@ -50,6 +50,7 @@ import android.widget.TextView;
 
 import com.sharad.epocket.R;
 import com.sharad.epocket.utils.Constant;
+import com.sharad.epocket.utils.Item;
 import com.sharad.epocket.utils.Utils;
 import com.sharad.epocket.widget.recurrencepicker.EventRecurrence;
 import com.sharad.epocket.widget.recurrencepicker.RecurrencePickerDialog;
@@ -356,7 +357,7 @@ public class AddTransactionActivity extends AppCompatActivity implements
         float amount = Float.parseFloat(amountString);
         if(amount > 0.01) {
             iTransaction.setAmount(amount);
-            if(iCategory.getId() == Constant.INVALID_ID) {
+            if(iTransaction.getCategory() == Constant.INVALID_ID) {
                 View view = findViewById(R.id.show_category);
                 ObjectAnimator
                         .ofFloat(view, "translationX", 0, 25, -25, 25, -25, 15, -15, 6, -6, 0)
@@ -821,29 +822,34 @@ public class AddTransactionActivity extends AppCompatActivity implements
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            AddTransactionFragment fragment = AddTransactionFragment.newInstance(position);
+            AddTransactionFragment fragment = AddTransactionFragment.newInstance(position, iAccount.getId());
             fragment.setOnItemSelectedListener(new AddTransactionFragment.OnItemSelectedListener() {
                 @Override
-                public void onItemSelected(int tabNum, ICategory category) {
-                    iTransaction.setCategory(category.getId());
-                    iCategory = category;
+                public void onItemSelected(int tabNum, Item item) {
                     switch (tabNum) {
                         case TAB_EXPENSE:
-                            mCategoryIcon.setImageResource(category.getImageResource());
+                            iCategory = (ICategory)item;
+                            iTransaction.setCategory(iCategory.getId());
+                            mCategoryIcon.setImageResource(iCategory.getImageResource());
                             mTransactionType.setText("Expense");
-                            mCategoryText.setText(category.getTitle());
+                            mCategoryText.setText(iCategory.getTitle());
                             iTransaction.setType(ITransaction.TRANSACTION_TYPE_ACCOUNT_EXPENSE);
                             break;
                         case TAB_INCOME:
-                            mCategoryIcon.setImageResource(category.getImageResource());
+                            iCategory = (ICategory)item;
+                            iTransaction.setCategory(iCategory.getId());
+                            mCategoryIcon.setImageResource(iCategory.getImageResource());
                             mTransactionType.setText("Income");
-                            mCategoryText.setText(category.getTitle());
+                            mCategoryText.setText(iCategory.getTitle());
                             iTransaction.setType(ITransaction.TRANSACTION_TYPE_ACCOUNT_INCOME);
                             break;
                         case TAB_TRANSFER:
+                            IAccount iAccount = (IAccount) item;
+                            iTransaction.setCategory(iAccount.getId());
+                            mCategoryIcon.setImageResource(iAccount.getImageResource());
                             mTransactionType.setText("Transfer");
-                            mCategoryIcon.setImageResource(category.getImageResource());
-                            iTransaction.setType(ITransaction.TRANSACTION_TYPE_ACCOUNT_TRANSFER);
+                            mCategoryText.setText(iAccount.getTitle());
+                            iTransaction.setType(ITransaction.TRANSACTION_TYPE_ACCOUNT_TRANSFER_OUT);
                             break;
                     }
 

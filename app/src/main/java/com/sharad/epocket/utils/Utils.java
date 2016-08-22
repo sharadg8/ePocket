@@ -55,6 +55,11 @@ public class Utils {
         }
     }
 
+    public static String getCurrencySymbol(String isoCurrency) {
+        NumberFormat nf = NumberFormat.getCurrencyInstance(getLocale(isoCurrency));
+        return nf.getCurrency().getSymbol();
+    }
+
     public static String formatCurrency(String isoCurrency, float value) {
         NumberFormat nf = NumberFormat.getCurrencyInstance(getLocale(isoCurrency));
         nf.setRoundingMode(RoundingMode.HALF_DOWN);

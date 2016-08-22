@@ -98,14 +98,25 @@ public class AccountManager {
                                     break;
                             }
                             break;
-                        case ITransaction.TRANSACTION_TYPE_ACCOUNT_TRANSFER:
-                            transfer += iTransaction.getAmount();
+                        case ITransaction.TRANSACTION_TYPE_ACCOUNT_TRANSFER_OUT:
+                            transfer -= iTransaction.getAmount();
                             switch (iTransaction.getSubType()) {
                                 case ITransaction.TRANSACTION_SUB_TYPE_ACCOUNT_CARD:
                                     balanceCard -= iTransaction.getAmount();
                                     break;
                                 case ITransaction.TRANSACTION_SUB_TYPE_ACCOUNT_CASH:
                                     balanceCash -= iTransaction.getAmount();
+                                    break;
+                            }
+                            break;
+                        case ITransaction.TRANSACTION_TYPE_ACCOUNT_TRANSFER_IN:
+                            transfer += iTransaction.getAmount();
+                            switch (iTransaction.getSubType()) {
+                                case ITransaction.TRANSACTION_SUB_TYPE_ACCOUNT_CARD:
+                                    balanceCard += iTransaction.getAmount();
+                                    break;
+                                case ITransaction.TRANSACTION_SUB_TYPE_ACCOUNT_CASH:
+                                    balanceCash += iTransaction.getAmount();
                                     break;
                             }
                             break;
@@ -245,6 +256,7 @@ public class AccountManager {
         for (ITransaction iTransaction : iTransactionArrayList) {
             switch (iTransaction.getType()) {
                 case ITransaction.TRANSACTION_TYPE_ACCOUNT_INCOME:
+                case ITransaction.TRANSACTION_TYPE_ACCOUNT_TRANSFER_IN:
                     inflow += iTransaction.getAmount();
                     break;
             }
@@ -266,7 +278,7 @@ public class AccountManager {
         for (ITransaction iTransaction : iTransactionArrayList) {
             switch (iTransaction.getType()) {
                 case ITransaction.TRANSACTION_TYPE_ACCOUNT_EXPENSE:
-                case ITransaction.TRANSACTION_TYPE_ACCOUNT_TRANSFER:
+                case ITransaction.TRANSACTION_TYPE_ACCOUNT_TRANSFER_OUT:
                     outflow += iTransaction.getAmount();
                     break;
             }
@@ -286,10 +298,12 @@ public class AccountManager {
             switch (iTransaction.getType()) {
                 case ITransaction.TRANSACTION_TYPE_ACCOUNT_EXPENSE:
                 case ITransaction.TRANSACTION_TYPE_ACCOUNT_DEPOSIT:
+                case ITransaction.TRANSACTION_TYPE_ACCOUNT_TRANSFER_OUT:
                     balCash -= iTransaction.getAmount();
                     break;
                 case ITransaction.TRANSACTION_TYPE_ACCOUNT_INCOME:
                 case ITransaction.TRANSACTION_TYPE_ACCOUNT_WITHDRAW:
+                case ITransaction.TRANSACTION_TYPE_ACCOUNT_TRANSFER_IN:
                     balCash += iTransaction.getAmount();
                     break;
             }
@@ -309,10 +323,12 @@ public class AccountManager {
             switch (iTransaction.getType()) {
                 case ITransaction.TRANSACTION_TYPE_ACCOUNT_EXPENSE:
                 case ITransaction.TRANSACTION_TYPE_ACCOUNT_WITHDRAW:
+                case ITransaction.TRANSACTION_TYPE_ACCOUNT_TRANSFER_OUT:
                     balCard -= iTransaction.getAmount();
                     break;
                 case ITransaction.TRANSACTION_TYPE_ACCOUNT_INCOME:
                 case ITransaction.TRANSACTION_TYPE_ACCOUNT_DEPOSIT:
+                case ITransaction.TRANSACTION_TYPE_ACCOUNT_TRANSFER_IN:
                     balCard += iTransaction.getAmount();
                     break;
             }

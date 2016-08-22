@@ -280,8 +280,13 @@ public class OverviewMonthRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
                                             iTransaction.getAmount()));
                         }
                         break;
-                    case ITransaction.TRANSACTION_TYPE_ACCOUNT_TRANSFER:
+                    case ITransaction.TRANSACTION_TYPE_ACCOUNT_TRANSFER_IN:
+                        transaction[index] += iTransaction.getAmount();
                         mTransfer += iTransaction.getAmount();
+                        break;
+                    case ITransaction.TRANSACTION_TYPE_ACCOUNT_TRANSFER_OUT:
+                        transaction[index] -= iTransaction.getAmount();
+                        mTransfer -= iTransaction.getAmount();
                         break;
                     case ITransaction.TRANSACTION_TYPE_ACCOUNT_WITHDRAW:
                         break;
@@ -311,7 +316,7 @@ public class OverviewMonthRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
             }
         }
 
-        mClosingBalance = mOpeningBalance + mIncome - mExpense - mTransfer;
+        mClosingBalance = mOpeningBalance + mIncome - mExpense + mTransfer;
 
         float balance = mOpeningBalance;
         for(int i=0; i<mLineChartData.length; i++) {
@@ -411,9 +416,14 @@ public class OverviewMonthRecyclerAdapter extends RecyclerView.Adapter<RecyclerV
                         amount.setTextColor(ContextCompat.getColor(mContext, R.color.transaction_income));
                         type = "Income";
                         break;
-                    case ITransaction.TRANSACTION_TYPE_ACCOUNT_TRANSFER:
+                    case ITransaction.TRANSACTION_TYPE_ACCOUNT_TRANSFER_IN:
+                        category.setText("");
                         amount.setTextColor(ContextCompat.getColor(mContext, R.color.transaction_transfer));
-                        type = "Transfer";
+                        type = "Transfer - In";
+                        break;
+                    case ITransaction.TRANSACTION_TYPE_ACCOUNT_TRANSFER_OUT:
+                        amount.setTextColor(ContextCompat.getColor(mContext, R.color.transaction_transfer));
+                        type = "Transfer - Out";
                         break;
                     case ITransaction.TRANSACTION_TYPE_ACCOUNT_WITHDRAW:
                         category.setText("Withdraw");

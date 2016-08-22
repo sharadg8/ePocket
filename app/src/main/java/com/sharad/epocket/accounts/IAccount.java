@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.text.format.DateUtils;
 
+import com.sharad.epocket.R;
 import com.sharad.epocket.database.AccountTable;
 import com.sharad.epocket.utils.Constant;
 import com.sharad.epocket.utils.Item;
@@ -37,6 +38,7 @@ public class IAccount extends Item{
     float  balanceCard;
     float  balanceCash;
     long lastUpdate;
+    private int imageResource = R.drawable.ic_home_black_24dp;
 
     public IAccount() {
         this(Constant.INVALID_ID, Currency.getInstance(Locale.getDefault()).getCurrencyCode(),
@@ -176,6 +178,10 @@ public class IAccount extends Item{
         }
 
         return string;
+    }
+
+    public int getImageResource() {
+        return imageResource;
     }
 
     public static class iComparator implements Comparator<IAccount> {

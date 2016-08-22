@@ -6,8 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.sharad.epocket.R;
+import com.sharad.epocket.utils.Item;
+import com.sharad.epocket.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -16,27 +20,61 @@ import java.util.ArrayList;
  */
 
 public class CategoryRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    public ArrayList<ICategory> itemList;
+    public ArrayList<Item> itemList;
     private OnItemClickListener itemClickListener;
     private int iconTint = -1;
 
+    private static final int VIEW_TYPE_CATEGORY = R.layout.item_category_grid;
+    private static final int VIEW_TYPE_TRANSFER = R.layout.item_transfer_account_grid;
+
     public CategoryRecyclerAdapter(ArrayList<ICategory> itemList) {
-        this.itemList = itemList;
+        this.itemList = new ArrayList<>();
+        this.itemList.addAll(itemList);
+    }
+
+    public CategoryRecyclerAdapter(ArrayList<IAccount> itemList, boolean isTransfer) {
+        this.itemList = new ArrayList<>();
+        this.itemList.addAll(itemList);
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
-        View view = LayoutInflater.from(context).inflate(R.layout.item_category_grid, parent, false);
-        return new ViewHolder(view);
+        final View v = LayoutInflater.from(context).inflate(viewType, parent, false /* attachToRoot */);
+        if (viewType == VIEW_TYPE_CATEGORY) {
+            return new CategoryViewHolder(v);
+        } else {
+            return new TransferViewHolder(v);
+        }
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        ViewHolder holder = (ViewHolder) viewHolder;
-        holder.button.setImageResource(itemList.get(position).getImageResource());
-        if(iconTint != -1) {
-            holder.button.setColorFilter(iconTint);
+        switch (viewHolder.getItemViewType()) {
+            case VIEW_TYPE_CATEGORY:
+                CategoryViewHolder categoryViewHolder = (CategoryViewHolder) viewHolder;
+                ICategory iCategory = (ICategory)itemList.get(position);
+                categoryViewHolder.button.setImageResource(iCategory.getImageResource());
+                if(iconTint != -1) {
+                    categoryViewHolder.button.setColorFilter(iconTint);
+                }
+                break;
+            case VIEW_TYPE_TRANSFER:
+                TransferViewHolder transferViewHolder = (TransferViewHolder) viewHolder;
+                IAccount iAccount = (IAccount) itemList.get(position);
+                transferViewHolder.icon.setImageResource(iAccount.getImageResource());
+                transferViewHolder.title.setText(iAccount.getTitle());
+                transferViewHolder.currency.setText(Utils.getCurrencySymbol(iAccount.getIsoCurrency()));
+                break;
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if(itemList.get(position) instanceof IAccount) {
+            return VIEW_TYPE_TRANSFER;
+        } else {
+            return VIEW_TYPE_CATEGORY;
         }
     }
 
@@ -49,9 +87,9 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
         this.iconTint = iconTint;
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class CategoryViewHolder extends RecyclerView.ViewHolder {
         public ImageButton button;
-        public ViewHolder(final View parent) {
+        public CategoryViewHolder(final View parent) {
             super(parent);
             button = (ImageButton) parent.findViewById(R.id.image_button);
 
@@ -66,6 +104,27 @@ public class CategoryRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.V
                 }
             });
 
+            parent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(itemClickListener != null) {
+                        itemClickListener.onItemClick(v, getAdapterPosition());
+                    }
+                }
+            });
+        }
+    }
+
+    class TransferViewHolder extends RecyclerView.ViewHolder {
+        public ImageView icon;
+        public TextView currency;
+        public TextView title;
+
+        public TransferViewHolder(final View parent) {
+            super(parent);
+            icon = (ImageView) parent.findViewById(R.id.icon);
+            title = (TextView) parent.findViewById(R.id.title);
+            currency = (TextView) parent.findViewById(R.id.currency);
             parent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

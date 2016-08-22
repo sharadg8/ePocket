@@ -10,8 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sharad.epocket.R;
+import com.sharad.epocket.database.AccountTable;
 import com.sharad.epocket.database.CategoryTable;
 import com.sharad.epocket.utils.Constant;
+import com.sharad.epocket.utils.Item;
 import com.sharad.epocket.widget.AutofitRecyclerView;
 
 import java.util.ArrayList;
@@ -37,10 +39,11 @@ public class AddTransactionFragment extends Fragment {
      * Returns a new instance of this fragment for the given section
      * number.
      */
-    public static AddTransactionFragment newInstance(int transactionType) {
+    public static AddTransactionFragment newInstance(int transactionType, long accountId) {
         AddTransactionFragment fragment = new AddTransactionFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_TRANSACTION_TYPE, transactionType);
+        args.putLong(Constant.ARG_ACCOUNT_NUMBER_LONG, accountId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -53,8 +56,10 @@ public class AddTransactionFragment extends Fragment {
 
         Bundle args = getArguments();
         transactionType = args.getInt(ARG_TRANSACTION_TYPE, 0);
+        final long accountId = args. getLong(Constant.ARG_ACCOUNT_NUMBER_LONG, Constant.INVALID_ID);
 
         final ArrayList<ICategory> itemList = new ArrayList<>();
+        final ArrayList<IAccount> accountList = new ArrayList<>();
         final DataSourceCategory source = new DataSourceCategory(getActivity());
 
         switch (transactionType) {
@@ -80,6 +85,7 @@ public class AddTransactionFragment extends Fragment {
                             .show();
                 }
                 itemList.add(new ICategory(CategoryImageList.RESOURCE_ADD_NEW));
+                categoryRecyclerAdapter = new CategoryRecyclerAdapter(itemList);
                 break;
             case ICategory.CATEGORY_TYPE_INCOME:
                 where = CategoryTable.COLUMN_TYPE + "=" + ICategory.CATEGORY_TYPE_INCOME;
@@ -103,20 +109,29 @@ public class AddTransactionFragment extends Fragment {
                             .show();
                 }
                 itemList.add(new ICategory(CategoryImageList.RESOURCE_ADD_NEW));
+                categoryRecyclerAdapter = new CategoryRecyclerAdapter(itemList);
                 break;
             case ICategory.CATEGORY_TYPE_TRANSFER:
+                DataSourceAccount dataSourceAccount = new DataSourceAccount(getContext());
+                where = AccountTable.COLUMN_ID + "!=" + accountId;
+                dataSourceAccount.getAccounts(accountList, where);
+                categoryRecyclerAdapter = new CategoryRecyclerAdapter(accountList, true);
+                autofitRecyclerView.setColumnWidth(-1);
                 break;
         }
 
-        categoryRecyclerAdapter = new CategoryRecyclerAdapter(itemList);
         categoryRecyclerAdapter.setOnItemClickListener(new CategoryRecyclerAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                if(position == (itemList.size() - 1)) {
-                    showCategoryDialog(Constant.INVALID_ID);
+                if(transactionType == ICategory.CATEGORY_TYPE_TRANSFER) {
+                    itemSelectedListener.onItemSelected(transactionType, accountList.get(position));
                 } else {
-                    if (itemSelectedListener != null) {
-                        itemSelectedListener.onItemSelected(transactionType, itemList.get(position));
+                    if (position == (itemList.size() - 1)) {
+                        showCategoryDialog(Constant.INVALID_ID);
+                    } else {
+                        if (itemSelectedListener != null) {
+                            itemSelectedListener.onItemSelected(transactionType, itemList.get(position));
+                        }
                     }
                 }
             }
@@ -149,9 +164,10 @@ public class AddTransactionFragment extends Fragment {
                 boolean found = false;
                 for(int i=0; i<categoryRecyclerAdapter.itemList.size(); i++) {
                     if(categoryRecyclerAdapter.itemList.get(i).getId() == category.getId()) {
-                        categoryRecyclerAdapter.itemList.get(i).setTitle(category.getTitle());
-                        categoryRecyclerAdapter.itemList.get(i).setImageIndex(category.getImageIndex());
-                        categoryRecyclerAdapter.itemList.get(i).setColor(category.getColor());
+                        ICategory iCategory = (ICategory)categoryRecyclerAdapter.itemList.get(i);
+                        iCategory.setTitle(category.getTitle());
+                        iCategory.setImageIndex(category.getImageIndex());
+                        iCategory.setColor(category.getColor());
                         found = true;
                         break;
                     }
@@ -181,6 +197,6 @@ public class AddTransactionFragment extends Fragment {
     }
 
     public interface OnItemSelectedListener {
-        void onItemSelected(int tabNum, ICategory category);
+        void onItemSelected(int tabNum, Item category);
     }
 }

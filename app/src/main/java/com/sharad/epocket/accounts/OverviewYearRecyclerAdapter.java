@@ -110,7 +110,7 @@ public class OverviewYearRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
             expense.setText(Utils.formatCurrencyDec(mIsoCurrency, monthItem.getExpense()));
 
             TextView transfer = (TextView)itemView.findViewById(R.id.transfer);
-            if(monthItem.getTransfer() > 0.01f) {
+            if(Math.abs(monthItem.getTransfer()) > 0.01f) {
                 transfer.setText(Utils.formatCurrencyDec(mIsoCurrency, monthItem.getTransfer()));
             } else {
                 transfer.setVisibility(View.GONE);
